@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    /* 基础选项 */
+    "target": "es2017", /* 指定 ECMAScript 目标版本: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' 或 'ESNEXT'。 */
+    "module": "esnext", /* 指定模块代码生成: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 或 'ESNext'。 */
+    "lib": [ /* 指定要包含在编译中的库文件。 */
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "skipLibCheck": true,
+    "allowJs": false, /* 允许 javascript 文件被编译。 */
+    "jsx": "preserve", /* 指定 JSX 代码生成: 'preserve', 'react-native', or 'react'。 */
+    "declaration": true, /* 生成相应的 '.d.ts' 文件。 */
+    "declarationMap": true,
+    "sourceMap": true, /* 生成相应的 '.map' 文件。 */
+    "outDir": "./dist", /* 将输出重定向到目录。 */
+    "downlevelIteration": true, /* 当目标为 'ES5' 或 'ES3' 时，为 'for-of' 、'spread' 和 'destructuring' 中的可迭代对象提供全面支持。 */
+    "resolveJsonModule": true, /* 解析 json 模块。 */
+
+    /* 严格类型检查选项 */
+    "strict": true, /* 启用所有严格的类型检查选项。 */
+
+    /* 额外检查 */
+    "noUnusedLocals": true, /* 报告未使用的本地变量的错误。 */
+    "noImplicitReturns": true, /* import 无结果时报告错误。 */
+
+    /* 模块解析选项 */
+    "moduleResolution": "node", /* 指定模块解析策略: 'node' (Node.js) or 'classic' (TypeScript pre-1.6)。 */
+    "esModuleInterop": true, /* 通过为所有导入创建名称空间对象，实现 CommonJS 和 ES 模块之间的互操作性。意味着 'allowSyntheticDefaultImports'。 */
+
+    /* 实验选项 */
+    "experimentalDecorators": true, /* 启用对 ES7 装饰器的实验性支持。 */
+    "emitDecoratorMetadata": true /* 为 decorator 的发射类型元数据提供实验性支持。 */
+  },
+  "exclude": [
+    "**/dist/**",
+    "**/node_modules/**"
+  ]
+}

@@ -1,0 +1,21 @@
+.DS_Store
+.env
+.vite-ssg-temp
+node_modules/
+lib/
+dist/
+components.d.ts
+
+# Lock
+package-lock.json
+pnpm-lock.yaml
+
+# IDE user config
+.vscode/
+.idea/
+.vs/
+
+# Logs
+yarn-error.log
+npm-debug.log
+lerna-debug.log

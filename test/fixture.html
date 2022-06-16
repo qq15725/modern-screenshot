@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>fixture</title>
+</head>
+<body>
+<div id="app">
+  <div>H1H1H1H1H1H1</div>
+  <div>H2H2H2H2H2</div>
+  <div>H3H3H3H3</div>
+  <div>PPPPPP</div>
+</div>
+<script type="module">
+  import { dom2image } from '/dist/index.mjs'
+  dom2image(document.querySelector('#app')).then(dataURL => {
+    console.log(dataURL)
+  })
+</script>
+</body>
+</html>
