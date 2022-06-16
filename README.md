@@ -31,6 +31,8 @@ npm i egami
 import { dom2image } from 'egami'
 
 dom2image(document.querySelector('#app')).then(dataURL => {
-  console.log(dataURL)
+  const img = new Image()
+  img.src = dataURL
+  document.body.appendChild(img)
 })
 ```
