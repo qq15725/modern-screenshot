@@ -11,6 +11,8 @@
 
 <p align="center">Generate image using HTML5 canvas and SVG</p>
 
+<p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
+
 ## Installation
 
 ### pnpm
@@ -28,11 +30,23 @@ npm i egami
 ## Usage
 
 ```ts
-import { dom2image } from 'egami'
+import { dom2png } from 'egami'
 
-dom2image(document.querySelector('#app')).then(dataURL => {
+dom2png(document.querySelector('#app')).then(png => {
   const img = new Image()
-  img.src = dataURL
+  img.src = png
   document.body.appendChild(img)
 })
+```
+
+exports
+
+```ts
+declare function dom2canvas<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function dom2svg<T extends HTMLElement>(node: T, options?: Options): Promise<SVGSVGElement>;
+declare function svg2canvas<T extends SVGSVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function dom2image<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLImageElement>;
+declare function dom2png<T extends HTMLElement>(node: T, options?: Options): Promise<string>;
+declare function dom2jpeg<T extends HTMLElement>(node: T, options?: Options): Promise<string>;
+declare function dom2blob<T extends HTMLElement>(node: T, options?: Options): Promise<Blob | null>;
 ```

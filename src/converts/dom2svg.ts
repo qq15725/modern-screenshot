@@ -1,28 +1,27 @@
 import { cloneNode } from '../clone-node'
-import { inlineImage } from '../inline-image'
-import { inlineBackground } from '../inline-background'
+import { embedNode } from '../embed-node'
+import { resolveOptions } from '../options'
 
-export interface Dom2svgOptions {
-  width?: number
-  height?: number
-}
+import type { Options } from '../options'
 
-export function resolveOptions(node: HTMLElement, userOptions: Dom2svgOptions) {
-  return {
-    width: userOptions?.width ?? node.scrollWidth,
-    height: userOptions?.height ?? node.scrollHeight,
-  }
-}
-
-export async function dom2svg(node: HTMLElement, userOptions: Dom2svgOptions) {
-  const { width, height } = resolveOptions(node, userOptions)
-  const clone = await cloneNode(node)
-  await inlineImage(clone)
-  await inlineBackground(clone)
+export async function dom2svg<T extends HTMLElement>(
+  node: T,
+  options: Options = {},
+): Promise<SVGSVGElement> {
+  const { width, height } = resolveOptions(node, options)
+  let clone = await cloneNode(node, options)
+  clone = await embedNode(clone, options)
   clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml')
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${ width }" height="${ height }">
-  <foreignObject x="0" y="0" width="100%" height="100%">
-    ${ new XMLSerializer().serializeToString(clone) }
-  </foreignObject>
-</svg>`
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+  svg.setAttribute('width', String(width))
+  svg.setAttribute('height', String(height))
+  const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
+  foreignObject.setAttribute('x', '0')
+  foreignObject.setAttribute('y', '0')
+  foreignObject.setAttribute('width', '100%')
+  foreignObject.setAttribute('height', '100%')
+  foreignObject.innerHTML = new XMLSerializer().serializeToString(clone)
+  svg.appendChild(foreignObject)
+  return svg
 }

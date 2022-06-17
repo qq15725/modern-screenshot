@@ -1,94 +1,49 @@
-import { loadImage, getUid } from './utils'
+import { toArray } from './utils'
+import { clonePseudoElements } from './clone-pseudo'
+import { cloneCssStyle } from './clone-css-style'
+import { cloneInputValue } from './clone-input-value'
+import { cloneSingleNode } from './clone-single-node'
 
-export async function cloneNode(node: HTMLElement) {
-  const clone = await shallowCloneNode(node)
-  copyChildren(node, clone)
-  if (clone instanceof Element) {
-    copyStyle(node, clone)
-    copyUserInput(node, clone)
-    fixSvg(clone)
-    copyPseudo(node, clone)
+import type { Options } from './options'
+
+export async function cloneNode<T extends HTMLElement>(node: T, options: Options) {
+  const cloned = await cloneSingleNode(node, options)
+  if (cloned instanceof Element) {
+    cloneCssStyle(node, cloned)
+    clonePseudoElements(node, cloned)
+    cloneInputValue(node, cloned)
+    fixSvg(cloned)
   }
-  return clone
+  return await cloneChildren(node, cloned, options)
 }
 
-async function shallowCloneNode(node: HTMLElement) {
-  return node instanceof HTMLCanvasElement
-    ? await loadImage(node.toDataURL())
-    : node.cloneNode(false) as HTMLElement
-}
+const isSlotElement = (node: HTMLElement): node is HTMLSlotElement =>
+  node.tagName != null && node.tagName.toUpperCase() === 'SLOT'
 
-function copyChildren(node: HTMLElement, clone: HTMLElement) {
-  node.childNodes.forEach(async child => {
-    clone.appendChild(await cloneNode(child as HTMLElement))
+async function cloneChildren<T extends HTMLElement>(node: T, cloned: T, options: Options): Promise<T> {
+  const children = isSlotElement(node) && node.assignedNodes
+    ? toArray<T>(node.assignedNodes())
+    : toArray<T>((node.shadowRoot ?? node).childNodes)
+
+  if (children.length === 0 || node instanceof HTMLVideoElement) return cloned
+
+  const childNodes = await Promise.all(
+    toArray(children).map(childNode => cloneNode(childNode as HTMLElement, options)),
+  )
+
+  childNodes.forEach(childNode => {
+    cloned.appendChild(childNode)
   })
-}
 
-function copyStyle(node: HTMLElement, clone: HTMLElement) {
-  const source = window.getComputedStyle(node)
-  const target = clone.style
-  if (source.cssText) {
-    target.cssText = source.cssText
-  } else {
-    Object.keys(source).forEach(name => {
-      target.setProperty(
-        name,
-        source.getPropertyValue(name),
-        source.getPropertyPriority(name)
-      )
-    })
-  }
-}
-
-function copyUserInput(node: HTMLElement, clone: HTMLElement) {
-  if (node instanceof HTMLTextAreaElement) clone.innerHTML = node.value
-  if (node instanceof HTMLInputElement) clone.setAttribute('value', node.value)
+  return cloned
 }
 
 function fixSvg(node: HTMLElement) {
   if (node instanceof SVGElement) node.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
   if (node instanceof SVGRectElement) {
-    ['width', 'height'].forEach(function (attribute) {
-      var value = node.getAttribute(attribute)
+    ['width', 'height'].forEach((attribute) => {
+      const value = node.getAttribute(attribute)
       if (value) node.style.setProperty(attribute, value)
     })
   }
-}
-
-function copyPseudo(node: HTMLElement, clone: HTMLElement) {
-  [':before', ':after'].forEach(element => {
-    var style = window.getComputedStyle(node, element)
-    var content = style.getPropertyValue('content')
-    if (content === '' || content === 'none') return
-    const klass = getUid()
-    clone.className = clone.className + ' ' + klass
-    const styleEl = document.createElement('style')
-    styleEl.appendChild(formatPseudoStyle(klass, element, style))
-    clone.appendChild(styleEl)
-  })
-}
-
-function formatPseudoStyle(klass: string, pseudo: string, style: CSSStyleDeclaration) {
-  const cssText = style.cssText
-    ? formatCssText(style)
-    : formatCssProperties(style)
-  return document.createTextNode(
-    `.${ klass }:${ pseudo }{${ cssText }}`
-  )
-}
-
-function formatCssText(style: CSSStyleDeclaration) {
-  return `${ style.cssText } content: ${ style.getPropertyValue('content') }`
-}
-
-function formatCssProperties(style: CSSStyleDeclaration) {
-  return `${
-    Object.keys(style)
-      .map(name => {
-        return `${ name }: ${ style.getPropertyValue(name) } ${
-          style.getPropertyPriority(name) ? '!important' : ''
-        }`
-      })
-      .join('; ')
-  };`
 }
