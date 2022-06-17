@@ -3,7 +3,14 @@
   "version": "0.0.2",
   "packageManager": "pnpm@7.0.0",
   "description": "Generate image using HTML5 canvas and SVG",
-  "repository": "https://github.com/qq15725/egami",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qq15725/egami.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qq15725/egami/issues"
+  },
+  "homepage": "https://github.com/qq15725/egami",
   "engines": {
     "node": ">=14"
   },
