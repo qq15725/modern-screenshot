@@ -1,6 +1,6 @@
 import { cloneNode } from '../clone-node'
 import { embedNode } from '../embed-node'
-import { getImageSize } from '../utils'
+import { getImageSize, toArray } from '../utils'
 
 import type { Options } from '../options'
 
@@ -8,23 +8,49 @@ export async function dom2svg<T extends HTMLElement>(
   node: T,
   options?: Options,
 ): Promise<SVGSVGElement> {
+  await waitLoaded(node)
   const { width, height } = getImageSize(node, options)
   let clone = await cloneNode(node, options)
   clone = await embedNode(clone, options)
   clone = applyStyle(clone, options)
-  clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml')
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+  const xmlns = 'http://www.w3.org/2000/svg'
+  const svg = document.createElementNS(xmlns, 'svg')
+  const foreignObject = document.createElementNS(xmlns, 'foreignObject')
   svg.setAttribute('width', String(width))
   svg.setAttribute('height', String(height))
-  const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
+  svg.setAttribute('viewBox', `0 0 ${ width } ${ height }`)
   foreignObject.setAttribute('x', '0')
   foreignObject.setAttribute('y', '0')
   foreignObject.setAttribute('width', '100%')
   foreignObject.setAttribute('height', '100%')
-  foreignObject.innerHTML = new XMLSerializer().serializeToString(clone)
+  foreignObject.setAttribute('externalResourcesRequired', 'true')
+  foreignObject.append(clone)
   svg.appendChild(foreignObject)
   return svg
+}
+
+export async function waitLoaded<T extends HTMLElement>(node: T) {
+  const imgs = toArray<HTMLImageElement>(node.querySelectorAll('img'))
+  return Promise.all(
+    imgs.map(img => {
+      return new Promise<void>(resolve => {
+        if (img.complete) {
+          resolve()
+        } else {
+          const rawLoad = img.onload
+          const rawError = img.onerror
+          img.onload = function (...args) {
+            resolve()
+            rawLoad?.call(this, ...args)
+          }
+          img.onerror = function (...args) {
+            resolve()
+            rawError?.(...args)
+          }
+        }
+      })
+    }),
+  )
 }
 
 export function applyStyle<T extends HTMLElement>(

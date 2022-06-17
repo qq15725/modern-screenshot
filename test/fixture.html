@@ -6,15 +6,16 @@
 </head>
 <body>
 <div id="app">
-  <div>H1H1H1H1H1H1</div>
+  <div style="font-size: 20px; color: red;">H1H1H1H1H1H1</div>
   <div>H2H2H2H2H2</div>
   <div>H3H3H3H3</div>
   <div>PPPPPP</div>
+  <img src="https://avatar-static.segmentfault.com/309/980/3099806835-57ad264730029_huge128" alt="">
 </div>
 <script type="module">
   import { dom2image } from '/dist/index.mjs'
-  dom2image(document.querySelector('#app')).then(dataURL => {
-    console.log(dataURL)
+  dom2image(document.querySelector('#app')).then(image => {
+    document.body.appendChild(image)
   })
 </script>
 </body>

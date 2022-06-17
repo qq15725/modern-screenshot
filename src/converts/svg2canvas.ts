@@ -1,4 +1,4 @@
-import { createImage, escapeXhtml, getImageSize, getPixelRatio } from '../utils'
+import { createImage, getImageSize, getPixelRatio } from '../utils'
 
 import type { Options } from '../options'
 
@@ -10,7 +10,9 @@ export async function svg2canvas<T extends SVGSVGElement>(
   const canvasWidth = options?.canvasWidth ?? width
   const canvasHeight = options?.canvasHeight ?? height
   const ratio = options?.pixelRatio ?? getPixelRatio()
-  const dataUrl = `data:image/svg+xml;charset=utf-8,${ escapeXhtml(svg.outerHTML) }`
+  const dataUrl = `data:image/svg+xml;charset=utf-8,${
+    encodeURIComponent(new XMLSerializer().serializeToString(svg))
+  }`
   const image = await createImage(dataUrl)
   const canvas = document.createElement('canvas')
   canvas.width = canvasWidth * ratio

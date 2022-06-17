@@ -11,7 +11,8 @@ export async function embedNode<T extends HTMLElement>(
   if (!(cloned instanceof Element)) return cloned
   cloned = await embedBackground(cloned, options)
   cloned = await embedImage(cloned, options)
-  return await embedChildren(cloned, options)
+  cloned = await embedChildren(cloned, options)
+  return cloned
 }
 
 async function embedChildren<T extends HTMLElement>(

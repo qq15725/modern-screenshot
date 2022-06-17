@@ -50,22 +50,13 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
 
 export function createImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    const image = new Image()
-    image.onload = () => resolve(image)
-    image.onerror = reject
-    image.src = url
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.crossOrigin = 'anonymous'
+    img.decoding = 'sync'
+    img.src = url
   })
-}
-
-export function escapeXhtml(string: string) {
-  return string
-    .replace(/#/g, '%23')
-    .replace(/\n/g, '%0A')
-}
-
-export function escape(string: string) {
-  return string
-    .replace(/([.*+?^${}()|\[\]\/\\])/g, '\\$1')
 }
 
 export const uuid = (function uuid() {
