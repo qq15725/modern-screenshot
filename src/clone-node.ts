@@ -8,13 +8,16 @@ import type { Options } from './options'
 
 export async function cloneNode<T extends HTMLElement>(node: T, options?: Options) {
   const cloned = await cloneSingleNode(node, options)
+
   if (cloned instanceof Element) {
     cloneCssStyle(node, cloned)
     clonePseudoElements(node, cloned)
     cloneInputValue(node, cloned)
-    fixSvg(cloned)
   }
-  return await cloneChildren(node, cloned, options)
+
+  await cloneChildren(node, cloned, options)
+
+  return cloned
 }
 
 const isSlotElement = (node: HTMLElement): node is HTMLSlotElement =>
@@ -36,14 +39,4 @@ async function cloneChildren<T extends HTMLElement>(node: T, cloned: T, options?
   })
 
   return cloned
-}
-
-function fixSvg(node: HTMLElement) {
-  if (node instanceof SVGElement) node.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-  if (node instanceof SVGRectElement) {
-    ['width', 'height'].forEach((attribute) => {
-      const value = node.getAttribute(attribute)
-      if (value) node.style.setProperty(attribute, value)
-    })
-  }
 }

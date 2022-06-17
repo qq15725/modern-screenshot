@@ -9,9 +9,11 @@ export async function embedNode<T extends HTMLElement>(
   options?: Options,
 ): Promise<T> {
   if (!(cloned instanceof Element)) return cloned
-  cloned = await embedBackground(cloned, options)
-  cloned = await embedImage(cloned, options)
-  cloned = await embedChildren(cloned, options)
+
+  await embedBackground(cloned, options)
+  await embedImage(cloned, options)
+  await embedChildren(cloned, options)
+
   return cloned
 }
 

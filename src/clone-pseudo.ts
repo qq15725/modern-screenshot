@@ -3,33 +3,34 @@ import { toArray, uuid } from './utils'
 type Pseudo = ':before' | ':after'
 
 export function clonePseudoElements<T extends HTMLElement>(
-  nativeNode: T,
-  clonedNode: T,
+  node: T,
+  cloned: T,
 ) {
-  clonePseudoElement(nativeNode, clonedNode, ':before')
-  clonePseudoElement(nativeNode, clonedNode, ':after')
+  clonePseudoElement(node, cloned, ':before')
+  clonePseudoElement(node, cloned, ':after')
+  return cloned
 }
 
 function clonePseudoElement<T extends HTMLElement>(
-  nativeNode: T,
-  clonedNode: T,
+  node: T,
+  cloned: T,
   pseudo: Pseudo,
 ) {
-  const style = window.getComputedStyle(nativeNode, pseudo)
+  const style = window.getComputedStyle(node, pseudo)
   const content = style.getPropertyValue('content')
   if (content === '' || content === 'none') return
 
   const klass = uuid()
 
   try {
-    clonedNode.className = `${ clonedNode.className } ${ klass }`
+    cloned.className = `${ cloned.className } ${ klass }`
   } catch (err) {
     return
   }
 
   const styleElement = document.createElement('style')
   styleElement.appendChild(getPseudoElementStyle(klass, pseudo, style))
-  clonedNode.appendChild(styleElement)
+  cloned.appendChild(styleElement)
 }
 
 function getPseudoElementStyle(

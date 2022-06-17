@@ -1,6 +1,6 @@
 import { toArray } from './utils'
 
-const STYLES = getDefaultComputedStyle()
+const DEFAULT_STYLE = getDefaultComputedStyle()
 
 export function cloneCssStyle<T extends HTMLElement>(node: T, cloned: T): T {
   const source = window.getComputedStyle(node)
@@ -12,7 +12,7 @@ export function cloneCssStyle<T extends HTMLElement>(node: T, cloned: T): T {
       toArray<string>(source).forEach((name) => {
         const value = source.getPropertyValue(name)
         const priority = source.getPropertyPriority(name)
-        if (STYLES[name] === value && !priority) return
+        if (DEFAULT_STYLE[name] === value && !priority) return
         target.setProperty(name, value, priority)
       })
     }
@@ -21,11 +21,11 @@ export function cloneCssStyle<T extends HTMLElement>(node: T, cloned: T): T {
 }
 
 function getDefaultComputedStyle() {
+  const style: Record<string, string> = {}
   const el = document.createElement(`egami--${ new Date().getTime() }`)
   document.body.appendChild(el)
-  const styles: Record<string, string> = {}
   const source = window.getComputedStyle(el)
-  toArray<string>(source).forEach((name) => styles[name] = source.getPropertyValue(name))
+  toArray<string>(source).forEach((name) => style[name] = source.getPropertyValue(name))
   el.remove()
-  return styles
+  return style
 }
