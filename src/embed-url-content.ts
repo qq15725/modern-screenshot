@@ -22,20 +22,20 @@ function getCacheKey(url: string) {
   return key
 }
 
-export function urlGetContent(url: string, options: Options): Promise<Metadata> {
+export function urlGetContent(url: string, options?: Options): Promise<Metadata> {
   const cacheKey = getCacheKey(url)
 
   if (cache[cacheKey] != null) return cache[cacheKey]
 
   // cache bypass so we dont have CORS issues with cached images
   // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
-  if (options.cacheBust) {
+  if (options?.cacheBust) {
     // eslint-disable-next-line no-param-reassign
     url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
   }
 
   const deferred = window
-    .fetch(url, options.fetchRequestInit)
+    .fetch(url, options?.fetchRequestInit)
     .then(async rep => {
       const blob = await rep.blob()
       return new Promise<Metadata>((resolve, reject) => {
@@ -51,7 +51,7 @@ export function urlGetContent(url: string, options: Options): Promise<Metadata> 
     // on failed
     .catch((reason: any): Metadata => {
       let placeholder = ''
-      if (options.imagePlaceholder) {
+      if (options?.imagePlaceholder) {
         const parts = options.imagePlaceholder.split(/,/)
         if (parts && parts[1]) {
           placeholder = parts[1]
@@ -79,7 +79,7 @@ export function urlGetContent(url: string, options: Options): Promise<Metadata> 
   return deferred
 }
 
-export async function createDataUrl(url: string, options: Options) {
+export async function createDataUrl(url: string, options?: Options) {
   const { blob, contentType } = await urlGetContent(url, options)
   const mimeType = getMimeType(url) ?? contentType
   return `data:${ mimeType };base64,${ blob }`

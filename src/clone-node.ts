@@ -6,7 +6,7 @@ import { cloneSingleNode } from './clone-single-node'
 
 import type { Options } from './options'
 
-export async function cloneNode<T extends HTMLElement>(node: T, options: Options) {
+export async function cloneNode<T extends HTMLElement>(node: T, options?: Options) {
   const cloned = await cloneSingleNode(node, options)
   if (cloned instanceof Element) {
     cloneCssStyle(node, cloned)
@@ -20,7 +20,7 @@ export async function cloneNode<T extends HTMLElement>(node: T, options: Options
 const isSlotElement = (node: HTMLElement): node is HTMLSlotElement =>
   node.tagName != null && node.tagName.toUpperCase() === 'SLOT'
 
-async function cloneChildren<T extends HTMLElement>(node: T, cloned: T, options: Options): Promise<T> {
+async function cloneChildren<T extends HTMLElement>(node: T, cloned: T, options?: Options): Promise<T> {
   const children = isSlotElement(node) && node.assignedNodes
     ? toArray<T>(node.assignedNodes())
     : toArray<T>((node.shadowRoot ?? node).childNodes)

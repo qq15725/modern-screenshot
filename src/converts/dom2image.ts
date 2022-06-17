@@ -5,7 +5,7 @@ import type { Options } from '../options'
 
 export async function dom2image<T extends HTMLElement>(
   node: T,
-  options: Options = {},
+  options?: Options,
 ): Promise<HTMLImageElement> {
   return createImage(await dom2png(node, options))
 }

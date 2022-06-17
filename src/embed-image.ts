@@ -5,7 +5,7 @@ import type { Options } from './options'
 
 export async function embedImage<T extends HTMLElement | SVGImageElement>(
   cloned: T,
-  options: Options,
+  options?: Options,
 ): Promise<T> {
   if (
     !(cloned instanceof HTMLImageElement && !isDataUrl(cloned.src))

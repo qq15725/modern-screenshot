@@ -5,7 +5,7 @@ import type { Options } from './options'
 
 export async function cloneVideo(
   node: HTMLVideoElement,
-  options: Options,
+  options?: Options,
 ): Promise<HTMLImageElement> {
   return createImage(await createDataUrl(node.poster, options))
 }

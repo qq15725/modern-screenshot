@@ -104,6 +104,55 @@ export function getMimeType(url: string): string {
   return MIMES[ext as keyof typeof MIMES] ?? ext
 }
 
+function px(node: HTMLElement | SVGSVGElement, styleProperty: string) {
+  const val = window.getComputedStyle(node).getPropertyValue(styleProperty)
+  return val ? parseFloat(val.replace('px', '')) : 0
+}
+
+export function getNodeWidth(node: HTMLElement | SVGSVGElement) {
+  const leftBorder = px(node, 'border-left-width')
+  const rightBorder = px(node, 'border-right-width')
+  return (
+    node.clientWidth || Number(node.getAttribute('width'))
+  ) + leftBorder + rightBorder
+}
+
+export function getNodeHeight(node: HTMLElement | SVGSVGElement) {
+  const topBorder = px(node, 'border-top-width')
+  const bottomBorder = px(node, 'border-bottom-width')
+  return (
+    node.clientHeight || Number(node.getAttribute('height'))
+  ) + topBorder + bottomBorder
+}
+
+export function getImageSize(node: HTMLElement | SVGSVGElement, options?: Options) {
+  return {
+    width: options?.width ?? getNodeWidth(node),
+    height: options?.height ?? getNodeHeight(node),
+  }
+}
+
+export function getPixelRatio() {
+  let ratio
+  let FINAL_PROCESS
+  try {
+    FINAL_PROCESS = process
+  } catch (e) {
+    // pass
+  }
+  const val
+    = FINAL_PROCESS && FINAL_PROCESS.env
+      ? FINAL_PROCESS.env.devicePixelRatio
+      : null
+  if (val) {
+    ratio = parseInt(val, 10)
+    if (Number.isNaN(ratio)) {
+      ratio = 1
+    }
+  }
+  return ratio || window.devicePixelRatio || 1
+}
+
 export function canvasToBlob(
   canvas: HTMLCanvasElement,
   options: Options = {},

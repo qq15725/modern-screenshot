@@ -4,7 +4,7 @@ import type { Options } from './options'
 
 export async function embedBackground<T extends HTMLElement>(
   cloned: T,
-  options: Options,
+  options?: Options,
 ): Promise<T> {
   const background = cloned.style?.getPropertyValue('background')
   if (!background) return cloned

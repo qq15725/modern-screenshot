@@ -28,7 +28,7 @@ export async function embed(
   cssText: string,
   resourceURL: string,
   baseURL: string | null,
-  options: Options,
+  options?: Options,
   get?: (url: string) => Promise<string>,
 ): Promise<string> {
   const url = baseURL
@@ -55,23 +55,23 @@ export async function embed(
 
 function filterPreferredFontFormat(
   str: string,
-  { preferredFontFormat }: Options,
+  options?: Options,
 ): string {
-  return !preferredFontFormat
-    ? str
-    : str.replace(FONT_SRC_REGEX, (match: string) => {
+  return options?.preferredFontFormat
+    ? str.replace(FONT_SRC_REGEX, (match: string) => {
       while (true) {
         const [src, , format] = URL_WITH_FORMAT_REGEX.exec(match) || []
         if (!format) return ''
-        if (format === preferredFontFormat) return `src: ${ src };`
+        if (format === options.preferredFontFormat) return `src: ${ src };`
       }
     })
+    : str
 }
 
 export async function embedResource(
   cssText: string,
   baseUrl: string | null,
-  options: Options,
+  options?: Options,
 ): Promise<string> {
   if (!URL_REGEX.test(cssText)) return cssText
 

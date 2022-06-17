@@ -5,7 +5,7 @@ import type { Options } from '../options'
 
 export async function dom2blob<T extends HTMLElement>(
   node: T,
-  options: Options = {},
+  options?: Options,
 ): Promise<Blob | null> {
   return dom2canvas(node, options).then(canvasToBlob)
 }

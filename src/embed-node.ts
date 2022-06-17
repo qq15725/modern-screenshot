@@ -6,7 +6,7 @@ import type { Options } from './options'
 
 export async function embedNode<T extends HTMLElement>(
   cloned: T,
-  options: Options,
+  options?: Options,
 ): Promise<T> {
   if (!(cloned instanceof Element)) return cloned
   cloned = await embedBackground(cloned, options)
@@ -16,7 +16,7 @@ export async function embedNode<T extends HTMLElement>(
 
 async function embedChildren<T extends HTMLElement>(
   cloned: T,
-  options: Options,
+  options?: Options,
 ): Promise<T> {
   await Promise.all(
     toArray<HTMLElement>(cloned.childNodes)
