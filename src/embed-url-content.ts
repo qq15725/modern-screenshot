@@ -11,19 +11,8 @@ const cache: {
   [url: string]: Promise<Metadata>
 } = {}
 
-function getCacheKey(url: string) {
-  let key = url.replace(/\?.*/, '')
-
-  // font resourse
-  if (/ttf|otf|eot|woff2?/i.test(key)) {
-    key = key.replace(/.*\//, '')
-  }
-
-  return key
-}
-
 export function urlGetContent(url: string, options?: Options): Promise<Metadata> {
-  const cacheKey = getCacheKey(url)
+  const cacheKey = url
 
   if (cache[cacheKey] != null) return cache[cacheKey]
 
