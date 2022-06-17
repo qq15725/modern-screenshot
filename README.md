@@ -39,14 +39,14 @@ dom2png(document.querySelector('#app')).then(png => {
 })
 ```
 
-exports
+## All exports
 
 ```ts
+declare function dom2blob<T extends HTMLElement>(node: T, options?: Options): Promise<Blob | null>;
 declare function dom2canvas<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function dom2svg<T extends HTMLElement>(node: T, options?: Options): Promise<SVGSVGElement>;
-declare function svg2canvas<T extends SVGSVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
 declare function dom2image<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLImageElement>;
 declare function dom2png<T extends HTMLElement>(node: T, options?: Options): Promise<string>;
 declare function dom2jpeg<T extends HTMLElement>(node: T, options?: Options): Promise<string>;
-declare function dom2blob<T extends HTMLElement>(node: T, options?: Options): Promise<Blob | null>;
+declare function dom2svg<T extends HTMLElement>(node: T, options?: Options): Promise<SVGSVGElement>;
+declare function svg2canvas<T extends SVGSVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
 ```
