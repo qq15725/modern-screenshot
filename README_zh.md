@@ -1,4 +1,4 @@
-<h1 align="center">Egami => Image</h1>
+<h1 align="center">egami → image</h1>
 
 <p align="center">
   <a href="https://github.com/qq15725/egami/blob/master/LICENSE" class="mr-3">
