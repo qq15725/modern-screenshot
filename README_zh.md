@@ -11,11 +11,11 @@
 
 <p align="center"><a href="README.md">README</a> | <a href="README_zh.md">中文文档</a></p>
 
-<p align="center">Generate image using HTML5 canvas and SVG</p>
+<p align="center">使用 HTML5 canvas 和 SVG 生成图像</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
-## Installation
+## 安装
 
 ### pnpm
 
@@ -29,7 +29,7 @@ pnpm add egami
 npm i egami
 ```
 
-## Usage
+## 使用
 
 ```ts
 import { dom2png } from 'egami'
@@ -41,7 +41,7 @@ dom2png(document.querySelector('#app')).then(png => {
 })
 ```
 
-## All converts
+## 所有转换
 
 ```ts
 declare function dom2blob<T extends HTMLElement>(node: T, options?: Options): Promise<Blob | null>;
@@ -54,7 +54,7 @@ declare function dom2svg<T extends HTMLElement>(node: T, options?: Options): Pro
 declare function svg2canvas<T extends SVGSVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
 ```
 
-## Options
+## 选项
 
 ```ts
 export interface Options {
