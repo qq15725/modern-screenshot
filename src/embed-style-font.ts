@@ -14,12 +14,14 @@ export async function embedStyleFont(
 ): Promise<HTMLElement> {
   if (options?.font?.skip) return cloned
 
-  const style = document.createElement('style')
-
   let cssText = options?.font?.css
     ?? await parseStyleFontCss(cloned, options)
 
+  if (!cssText) return cloned
+
   cssText = filterPreferredFormat(cssText)
+
+  const style = document.createElement('style')
 
   style.appendChild(document.createTextNode(cssText))
 
