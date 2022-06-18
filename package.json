@@ -1,6 +1,6 @@
 {
   "name": "egami",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "packageManager": "pnpm@7.0.0",
   "description": "Generate image using HTML5 canvas and SVG",
   "repository": {
