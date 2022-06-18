@@ -1,3 +1,4 @@
+export { canvas2blob } from './converts/canvas2blob'
 export { dom2blob } from './converts/dom2blob'
 export { dom2canvas } from './converts/dom2canvas'
 export { dom2image } from './converts/dom2image'

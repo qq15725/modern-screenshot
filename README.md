@@ -44,6 +44,7 @@ dom2png(document.querySelector('#app')).then(png => {
 ## All converts
 
 ```ts
+declare function canvas2blob(canvas: HTMLCanvasElement, options?: Options): Promise<Blob | null>;
 declare function dom2blob<T extends HTMLElement>(node: T, options?: Options): Promise<Blob | null>;
 declare function dom2canvas<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLCanvasElement>;
 declare function dom2image<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLImageElement>;
