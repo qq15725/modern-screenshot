@@ -1,4 +1,4 @@
-import { createImage, getImageSize, getPixelRatio } from '../utils'
+import { getImageSize, getPixelRatio, loadImage } from '../utils'
 
 import type { Options } from '../options'
 
@@ -7,16 +7,19 @@ export async function svg2canvas<T extends SVGSVGElement>(
   options?: Options,
 ): Promise<HTMLCanvasElement> {
   const { width, height } = getImageSize(svg, options)
-  const canvasWidth = options?.canvasWidth ?? width
-  const canvasHeight = options?.canvasHeight ?? height
-  const ratio = options?.pixelRatio ?? getPixelRatio()
+  const canvasWidth = options?.canvas?.width ?? width
+  const canvasHeight = options?.canvas?.height ?? height
+  const ratio = options?.canvas?.pixelRatio ?? getPixelRatio()
   const dataUrl = `data:image/svg+xml;charset=utf-8,${
     encodeURIComponent(new XMLSerializer().serializeToString(svg))
   }`
-  const image = await createImage(dataUrl)
+  const image = await loadImage(dataUrl)
   const canvas = document.createElement('canvas')
   canvas.width = canvasWidth * ratio
   canvas.height = canvasHeight * ratio
+  if (!options?.canvas?.skipAutoScale) {
+    checkDimension(canvas)
+  }
   canvas.style.width = `${ canvasWidth }px`
   canvas.style.height = `${ canvasHeight }px`
   const context = canvas.getContext('2d')!
@@ -26,4 +29,33 @@ export async function svg2canvas<T extends SVGSVGElement>(
   }
   context.drawImage(image, 0, 0, canvas.width, canvas.height)
   return canvas
+}
+
+// as per https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+const LIMIT = 16384
+
+function checkDimension(canvas: HTMLCanvasElement) {
+  if (
+    canvas.width > LIMIT
+    || canvas.height > LIMIT
+  ) {
+    if (
+      canvas.width > LIMIT
+      && canvas.height > LIMIT
+    ) {
+      if (canvas.width > canvas.height) {
+        canvas.height *= LIMIT / canvas.width
+        canvas.width = LIMIT
+      } else {
+        canvas.width *= LIMIT / canvas.height
+        canvas.height = LIMIT
+      }
+    } else if (canvas.width > LIMIT) {
+      canvas.height *= LIMIT / canvas.width
+      canvas.width = LIMIT
+    } else {
+      canvas.width *= LIMIT / canvas.height
+      canvas.height = LIMIT
+    }
+  }
 }

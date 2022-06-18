@@ -1,6 +1,6 @@
 import { cloneNode } from '../clone-node'
 import { embedNode } from '../embed-node'
-import { getImageSize, toArray } from '../utils'
+import { arrayFrom, getImageSize } from '../utils'
 
 import type { Options } from '../options'
 
@@ -10,7 +10,7 @@ export async function dom2svg<T extends HTMLElement>(
 ): Promise<SVGSVGElement> {
   await waitLoaded(node)
   const { width, height } = getImageSize(node, options)
-  let clone = await cloneNode(node, options)
+  let clone = (await cloneNode(node, options, true))!
   clone = await embedNode(clone, options)
   clone = applyStyle(clone, options)
   const xmlns = 'http://www.w3.org/2000/svg'
@@ -30,7 +30,7 @@ export async function dom2svg<T extends HTMLElement>(
 }
 
 export async function waitLoaded<T extends HTMLElement>(node: T) {
-  const imgs = toArray<HTMLImageElement>(node.querySelectorAll('img'))
+  const imgs = arrayFrom<HTMLImageElement>(node.querySelectorAll('img'))
   return Promise.all(
     imgs.map(img => {
       return new Promise<void>(resolve => {

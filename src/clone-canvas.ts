@@ -1,4 +1,4 @@
-import { createImage } from './utils'
+import { loadImage } from './utils'
 
 export async function cloneCanvas(
   node: HTMLCanvasElement,
@@ -6,5 +6,5 @@ export async function cloneCanvas(
   const dataURL = node.toDataURL()
   return dataURL === 'data:,'
     ? node.cloneNode(false) as HTMLCanvasElement
-    : await createImage(dataURL)
+    : await loadImage(dataURL)
 }

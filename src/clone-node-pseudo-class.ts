@@ -1,24 +1,27 @@
-import { toArray, uuid } from './utils'
+import { arrayFrom, uuid } from './utils'
 
 type Pseudo = ':before' | ':after'
 
-export function clonePseudoElements<T extends HTMLElement>(
+export function cloneNodePseudoClass<T extends HTMLElement>(
   node: T,
   cloned: T,
 ) {
-  clonePseudoElement(node, cloned, ':before')
-  clonePseudoElement(node, cloned, ':after')
+  if (node instanceof Element) {
+    _cloneNodePseudoClass(node, cloned, ':before')
+    _cloneNodePseudoClass(node, cloned, ':after')
+  }
   return cloned
 }
 
-function clonePseudoElement<T extends HTMLElement>(
+function _cloneNodePseudoClass<T extends HTMLElement>(
   node: T,
   cloned: T,
   pseudo: Pseudo,
 ) {
   const style = window.getComputedStyle(node, pseudo)
   const content = style.getPropertyValue('content')
-  if (content === '' || content === 'none') return
+
+  if (!content || content === 'none') return
 
   const klass = uuid()
 
@@ -29,30 +32,30 @@ function clonePseudoElement<T extends HTMLElement>(
   }
 
   const styleElement = document.createElement('style')
-  styleElement.appendChild(getPseudoElementStyle(klass, pseudo, style))
+  styleElement.appendChild(getPseudoClassStyle(klass, pseudo, style))
   cloned.appendChild(styleElement)
 }
 
-function getPseudoElementStyle(
+function getPseudoClassStyle(
   klass: string,
   pseudo: Pseudo,
   style: CSSStyleDeclaration,
 ): Text {
   const selector = `.${ klass }:${ pseudo }`
   const cssText = style.cssText
-    ? formatCSSText(style)
-    : formatCSSProperties(style)
+    ? formatCssText(style)
+    : formatCssProps(style)
 
   return document.createTextNode(`${ selector }{${ cssText }}`)
 }
 
-function formatCSSText(style: CSSStyleDeclaration) {
+function formatCssText(style: CSSStyleDeclaration) {
   const content = style.getPropertyValue('content')
   return `${ style.cssText } content: '${ content.replace(/'|"/g, '') }';`
 }
 
-function formatCSSProperties(style: CSSStyleDeclaration) {
-  return toArray<string>(style)
+function formatCssProps(style: CSSStyleDeclaration) {
+  return arrayFrom<string>(style)
     .map((name) => {
       const value = style.getPropertyValue(name)
       const priority = style.getPropertyPriority(name)

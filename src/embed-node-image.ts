@@ -1,9 +1,9 @@
 import { isDataUrl } from './utils'
-import { createDataUrl } from './embed-url-content'
+import { fetchToDataUrl } from './fetch'
 
 import type { Options } from './options'
 
-export async function embedImage<T extends HTMLElement | SVGImageElement>(
+export async function embedNodeImage<T extends HTMLElement | SVGImageElement>(
   cloned: T,
   options?: Options,
 ): Promise<T> {
@@ -18,7 +18,7 @@ export async function embedImage<T extends HTMLElement | SVGImageElement>(
     ? cloned.src
     : cloned.href.baseVal
 
-  const dataUrl = await createDataUrl(src, options)
+  const dataUrl = await fetchToDataUrl(src, options)
 
   await new Promise((resolve, reject) => {
     cloned.onload = resolve

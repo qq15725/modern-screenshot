@@ -4,7 +4,7 @@ export function isDataUrl(url: string) {
   return url.startsWith('data:')
 }
 
-export function toArray<T>(arrayLike: any): T[] {
+export function arrayFrom<T>(arrayLike: any): T[] {
   const arr: T[] = []
   for (let i = 0, l = arrayLike.length; i < l; i += 1) {
     arr.push(arrayLike[i])
@@ -48,7 +48,7 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
   return a.href
 }
 
-export function createImage(url: string): Promise<HTMLImageElement> {
+export function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => resolve(img)
@@ -142,30 +142,4 @@ export function getPixelRatio() {
     }
   }
   return ratio || window.devicePixelRatio || 1
-}
-
-export function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  options: Options = {},
-): Promise<Blob | null> {
-  const type = options.type ?? 'image/png'
-  const quality = options.quality ?? 1
-
-  if (canvas.toBlob) {
-    return new Promise((resolve) => canvas.toBlob(resolve, type, quality))
-  }
-
-  return new Promise((resolve) => {
-    const binaryString = window.atob(
-      canvas
-        .toDataURL(type, quality)
-        .split(',')[1],
-    )
-    const len = binaryString.length
-    const binaryArray = new Uint8Array(len)
-    for (let i = 0; i < len; i += 1) {
-      binaryArray[i] = binaryString.charCodeAt(i)
-    }
-    resolve(new Blob([binaryArray], { type }))
-  })
 }

@@ -1,4 +1,4 @@
-export function cloneInputValue<T extends HTMLElement>(node: T, cloned: T): T {
+export function cloneNodeInput<T extends HTMLElement>(node: T, cloned: T): T {
   if (node instanceof HTMLTextAreaElement) {
     cloned.innerHTML = node.value
   }
