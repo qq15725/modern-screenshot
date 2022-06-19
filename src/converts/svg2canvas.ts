@@ -2,7 +2,7 @@ import { getImageSize, getPixelRatio, loadImage } from '../utils'
 
 import type { Options } from '../options'
 
-export async function svg2canvas<T extends SVGSVGElement>(
+export async function svg2canvas<T extends SVGElement>(
   svg: T,
   options?: Options,
 ): Promise<HTMLCanvasElement> {

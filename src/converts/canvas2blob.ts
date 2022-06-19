@@ -8,10 +8,10 @@ export function canvas2blob(
   const quality = options?.quality ?? 1
 
   if (canvas.toBlob) {
-    return new Promise((resolve) => canvas.toBlob(resolve, type, quality))
+    return new Promise(resolve => canvas.toBlob(resolve, type, quality))
   }
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const binaryString = window.atob(
       canvas
         .toDataURL(type, quality)

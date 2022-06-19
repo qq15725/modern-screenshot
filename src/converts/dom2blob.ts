@@ -7,6 +7,8 @@ export async function dom2blob<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<Blob | null> {
-  const canvas = await dom2canvas(node, options)
-  return await canvas2blob(canvas, options)
+  return await canvas2blob(
+    await dom2canvas(node, options),
+    options,
+  )
 }
