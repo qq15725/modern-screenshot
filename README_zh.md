@@ -45,14 +45,14 @@ dom2png(document.querySelector('#app')).then(png => {
 
 ```ts
 declare function canvas2blob(canvas: HTMLCanvasElement, options?: Options): Promise<Blob | null>;
-declare function dom2blob<T extends HTMLElement>(node: T, options?: Options): Promise<Blob | null>;
-declare function dom2canvas<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function dom2image<T extends HTMLElement>(node: T, options?: Options): Promise<HTMLImageElement>;
-declare function dom2png<T extends HTMLElement>(node: T, options?: Options): Promise<string>;
-declare function dom2jpeg<T extends HTMLElement>(node: T, options?: Options): Promise<string>;
-declare function dom2pixel<T extends HTMLElement>(node: T, options?: Options): Promise<Uint8ClampedArray>;
-declare function dom2svg<T extends HTMLElement>(node: T, options?: Options): Promise<SVGSVGElement>;
-declare function svg2canvas<T extends SVGSVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function dom2blob<T extends Node>(node: T, options?: Options): Promise<Blob | null>;
+declare function dom2canvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function dom2image<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>;
+declare function dom2png<T extends Node>(node: T, options?: Options): Promise<string>;
+declare function dom2jpeg<T extends Node>(node: T, options?: Options): Promise<string>;
+declare function dom2pixel<T extends Node>(node: T, options?: Options): Promise<Uint8ClampedArray>;
+declare function dom2svg<T extends Node>(node: T, options?: Options): Promise<SVGSVGElement>;
+declare function svg2canvas<T extends SVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
 ```
 
 ## 选项
@@ -95,7 +95,12 @@ export interface Options {
    * node should be included in the output. Excluding node means excluding
    * it's children as well.
    */
-  filter?: (el: HTMLElement) => boolean
+  filter?: (el: Node) => boolean
+
+  /**
+   * Global window
+   */
+  window?: any
 
   /**
    * Canvas
