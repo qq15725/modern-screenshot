@@ -3,7 +3,7 @@ import { svg2canvas } from './svg2canvas'
 
 import type { Options } from '../options'
 
-export async function dom2canvas<T extends HTMLElement>(
+export async function dom2canvas<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<HTMLCanvasElement> {

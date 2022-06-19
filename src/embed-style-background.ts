@@ -1,17 +1,14 @@
 import { replaceCssUrlToDataUrl } from './css-url'
 
-import type { Options } from './options'
+import type { HandleNodeFunc } from './types'
 
 const STYLE_BACKGROUND_PROPS = [
   'background',
   'background-image',
 ] as const
 
-export async function embedStyleBackground<T extends HTMLElement>(
-  cloned: T,
-  options?: Options,
-): Promise<T> {
-  if (cloned instanceof Element) {
+export const embedStyleBackground: HandleNodeFunc = async (cloned, options) => {
+  if (cloned instanceof HTMLElement) {
     const style = cloned.style
     await Promise.all(
       STYLE_BACKGROUND_PROPS.map(async property => {
@@ -25,6 +22,4 @@ export async function embedStyleBackground<T extends HTMLElement>(
       }),
     )
   }
-
-  return cloned
 }

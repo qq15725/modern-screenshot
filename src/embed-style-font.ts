@@ -1,6 +1,7 @@
 import { arrayFrom } from './utils'
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 
+import type { HandleNodeFunc } from './types'
 import type { Options } from './options'
 
 interface Metadata {
@@ -8,16 +9,13 @@ interface Metadata {
   cssText: Promise<string>
 }
 
-export async function embedStyleFont(
-  cloned: HTMLElement,
-  options?: Options,
-): Promise<HTMLElement> {
-  if (options?.font?.skip) return cloned
+export const embedStyleFont: HandleNodeFunc = async (cloned, options) => {
+  if (options?.font?.skip || !(cloned instanceof HTMLElement)) return
 
   let cssText = options?.font?.css
     ?? await parseStyleFontCss(cloned, options)
 
-  if (!cssText) return cloned
+  if (!cssText) return
 
   cssText = filterPreferredFormat(cssText)
 
@@ -30,8 +28,6 @@ export async function embedStyleFont(
   } else {
     cloned.appendChild(style)
   }
-
-  return cloned
 }
 
 export async function parseStyleFontCss<T extends HTMLElement>(

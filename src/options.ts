@@ -35,7 +35,7 @@ export interface Options {
    * node should be included in the output. Excluding node means excluding
    * it's children as well.
    */
-  filter?: (el: HTMLElement) => boolean
+  filter?: (el: Node) => boolean
 
   /**
    * Canvas

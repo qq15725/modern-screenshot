@@ -3,7 +3,7 @@ import { dom2canvas } from './dom2canvas'
 
 import type { Options } from '../options'
 
-export async function dom2pixel<T extends HTMLElement>(
+export async function dom2pixel<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<Uint8ClampedArray> {

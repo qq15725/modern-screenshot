@@ -4,37 +4,31 @@ import { cloneNodePseudoClass } from './clone-node-pseudo-class'
 import { cloneNodeInput } from './clone-node-input'
 import { cloneStyle } from './clone-style'
 
-import type { Options } from './options'
+import type { CloneFilteredNodeFunc, CloneNodeFunc } from './types'
 
-export async function cloneNode<T extends HTMLElement>(
-  node: T,
-  options?: Options,
-  isRoot?: boolean,
-) {
-  if (!isRoot && options?.filter && !options.filter(node)) return null
+const isSlotElement = (node: Node): node is HTMLSlotElement =>
+  node instanceof Element
+  && node.tagName != null
+  && node.tagName.toUpperCase() === 'SLOT'
 
+export const cloneNode: CloneNodeFunc = async (node, options) => {
   const cloned = await cloneNodeShallow(node, options)
   await cloneNodePseudoClass(node, cloned)
   await cloneNodeInput(node, cloned)
   await cloneStyle(node, cloned)
-  await cloneChildren(node, cloned, options)
-  return cloned
-}
 
-const isSlotElement = (node: HTMLElement): node is HTMLSlotElement =>
-  node.tagName != null && node.tagName.toUpperCase() === 'SLOT'
-
-async function cloneChildren<T extends HTMLElement>(node: T, cloned: T, options?: Options): Promise<T> {
+  const cloneByFilteredNode: CloneFilteredNodeFunc = async (node, options) => {
+    if (options?.filter && !options.filter(node)) return null
+    return cloneNode(node, options)
+  }
   const children = isSlotElement(node) && node.assignedNodes
-    ? arrayFrom<T>(node.assignedNodes())
-    : arrayFrom<T>((node.shadowRoot ?? node).childNodes)
-
+    ? arrayFrom<typeof node>(node.assignedNodes())
+    : arrayFrom<typeof node>(((node as any).shadowRoot ?? node).childNodes)
   if (children.length === 0 || node instanceof HTMLVideoElement) return cloned
-
   const childNodes = await Promise.all(
-    arrayFrom(children).map(childNode => cloneNode(childNode as HTMLElement, options)),
+    arrayFrom(children)
+      .map(childNode => cloneByFilteredNode(childNode as HTMLElement, options)),
   )
-
   childNodes.forEach(childNode => {
     childNode && cloned.appendChild(childNode)
   })

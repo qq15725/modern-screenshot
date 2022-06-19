@@ -2,7 +2,7 @@ import { dom2canvas } from './dom2canvas'
 
 import type { Options } from '../options'
 
-export async function dom2jpeg<T extends HTMLElement>(
+export async function dom2jpeg<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<string> {

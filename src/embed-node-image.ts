@@ -1,17 +1,14 @@
 import { isDataUrl } from './utils'
 import { fetchToDataUrl } from './fetch'
 
-import type { Options } from './options'
+import type { HandleNodeFunc } from './types'
 
-export async function embedNodeImage<T extends HTMLElement | SVGImageElement>(
-  cloned: T,
-  options?: Options,
-): Promise<T> {
+export const embedNodeImage: HandleNodeFunc = async (cloned, options) => {
   if (
     !(cloned instanceof HTMLImageElement && !isDataUrl(cloned.src))
     && !(cloned instanceof SVGImageElement && !isDataUrl(cloned.href.baseVal))
   ) {
-    return cloned
+    return
   }
 
   const src = cloned instanceof HTMLImageElement
@@ -30,6 +27,4 @@ export async function embedNodeImage<T extends HTMLElement | SVGImageElement>(
       cloned.href.baseVal = dataUrl
     }
   })
-
-  return cloned
 }

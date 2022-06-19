@@ -1,23 +1,18 @@
 import { arrayFrom, uuid } from './utils'
 
+import type { DepthCloneNodeFunc } from './types'
+
 type Pseudo = ':before' | ':after'
 
-export function cloneNodePseudoClass<T extends HTMLElement>(
-  node: T,
-  cloned: T,
-) {
-  if (node instanceof Element) {
+export const cloneNodePseudoClass: DepthCloneNodeFunc = async (node, cloned) => {
+  if (node instanceof Element
+    && cloned instanceof Element) {
     _cloneNodePseudoClass(node, cloned, ':before')
     _cloneNodePseudoClass(node, cloned, ':after')
   }
-  return cloned
 }
 
-function _cloneNodePseudoClass<T extends HTMLElement>(
-  node: T,
-  cloned: T,
-  pseudo: Pseudo,
-) {
+function _cloneNodePseudoClass(node: Element, cloned: Element, pseudo: Pseudo) {
   const style = window.getComputedStyle(node, pseudo)
   const content = style.getPropertyValue('content')
 

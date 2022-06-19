@@ -1,34 +1,35 @@
 import { arrayFrom } from './utils'
 
+import type { DepthCloneNodeFunc } from './types'
+
 const DEFAULT_STYLE = getDefaultComputedStyle()
 
-export function cloneStyle<T extends HTMLElement>(node: T, cloned: T): T {
-  if (node instanceof Element) {
-    const source = window.getComputedStyle(node)
-    const style = cloned.style
+export const cloneStyle: DepthCloneNodeFunc = async (node, cloned) => {
+  if (!(node instanceof HTMLElement
+    && cloned instanceof HTMLElement)) return
 
-    if (style) {
-      if (source.cssText) {
-        style.cssText = source.cssText
-      } else {
-        arrayFrom<string>(source).forEach((name) => {
-          const value = source.getPropertyValue(name)
-          const priority = source.getPropertyPriority(name)
-          if (DEFAULT_STYLE[name] === value && !priority) return
-          style.setProperty(name, value, priority)
-        })
-      }
-    }
+  const source = window.getComputedStyle(node)
+  const style = cloned.style
 
-    // Css fixes
-    // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
-    if (window.navigator.userAgent.match(/\bChrome\//)) {
-      applyChromiumKerningFix(cloned)
-      applyChromiumEllipsisFix(node, cloned)
+  if (style) {
+    if (source.cssText) {
+      style.cssText = source.cssText
+    } else {
+      arrayFrom<string>(source).forEach((name) => {
+        const value = source.getPropertyValue(name)
+        const priority = source.getPropertyPriority(name)
+        if (DEFAULT_STYLE[name] === value && !priority) return
+        style.setProperty(name, value, priority)
+      })
     }
   }
 
-  return cloned
+  // Css fixes
+  // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
+  if (window.navigator.userAgent.match(/\bChrome\//)) {
+    applyChromiumKerningFix(cloned)
+    applyChromiumEllipsisFix(node, cloned)
+  }
 }
 
 function getDefaultComputedStyle() {

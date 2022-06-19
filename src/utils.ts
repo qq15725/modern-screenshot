@@ -95,28 +95,35 @@ export function getMimeType(url: string): string {
   return MIMES[ext as keyof typeof MIMES] ?? ext
 }
 
-function px(node: HTMLElement | SVGSVGElement, styleProperty: string) {
-  const val = window.getComputedStyle(node).getPropertyValue(styleProperty)
-  return val ? parseFloat(val.replace('px', '')) : 0
+function px(node: Node, styleProperty: string) {
+  if (node instanceof Element) {
+    const val = window.getComputedStyle(node).getPropertyValue(styleProperty)
+    return val ? parseFloat(val.replace('px', '')) : 0
+  }
+  return 0
 }
 
-export function getNodeWidth(node: HTMLElement | SVGSVGElement) {
-  const leftBorder = px(node, 'border-left-width')
-  const rightBorder = px(node, 'border-right-width')
+export function getNodeWidth(node: Node) {
   return (
-    node.clientWidth || Number(node.getAttribute('width'))
-  ) + leftBorder + rightBorder
+    node instanceof Element
+      ? node.clientWidth ?? Number(node.getAttribute('width'))
+      : 0
+  )
+      + px(node, 'border-left-width')
+      + px(node, 'border-right-width')
 }
 
-export function getNodeHeight(node: HTMLElement | SVGSVGElement) {
-  const topBorder = px(node, 'border-top-width')
-  const bottomBorder = px(node, 'border-bottom-width')
+export function getNodeHeight(node: Node) {
   return (
-    node.clientHeight || Number(node.getAttribute('height'))
-  ) + topBorder + bottomBorder
+    node instanceof Element
+      ? node.clientHeight ?? Number(node.getAttribute('height'))
+      : 0
+  )
+    + px(node, 'border-top-width')
+    + px(node, 'border-bottom-width')
 }
 
-export function getImageSize(node: HTMLElement | SVGSVGElement, options?: Options) {
+export function getImageSize(node: Node, options?: Options) {
   return {
     width: options?.width ?? getNodeWidth(node),
     height: options?.height ?? getNodeHeight(node),

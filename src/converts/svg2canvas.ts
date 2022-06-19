@@ -10,9 +10,8 @@ export async function svg2canvas<T extends SVGSVGElement>(
   const canvasWidth = options?.canvas?.width ?? width
   const canvasHeight = options?.canvas?.height ?? height
   const ratio = options?.canvas?.pixelRatio ?? getPixelRatio()
-  const dataUrl = `data:image/svg+xml;charset=utf-8,${
-    encodeURIComponent(new XMLSerializer().serializeToString(svg))
-  }`
+  const xhtml = new XMLSerializer().serializeToString(svg)
+  const dataUrl = `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
   const image = await loadImage(dataUrl)
   const canvas = document.createElement('canvas')
   canvas.width = canvasWidth * ratio
