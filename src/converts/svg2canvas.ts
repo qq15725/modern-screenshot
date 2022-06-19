@@ -1,4 +1,5 @@
 import { getImageSize, getPixelRatio, loadImage } from '../utils'
+import { getWindow } from '../window'
 
 import type { Options } from '../options'
 
@@ -13,7 +14,7 @@ export async function svg2canvas<T extends SVGElement>(
   const xhtml = new XMLSerializer().serializeToString(svg)
   const dataUrl = `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
   const image = await loadImage(dataUrl)
-  const canvas = document.createElement('canvas')
+  const canvas = getWindow(options).document.createElement('canvas')
   canvas.width = canvasWidth * ratio
   canvas.height = canvasHeight * ratio
   if (!options?.canvas?.skipAutoScale) {

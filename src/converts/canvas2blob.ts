@@ -1,3 +1,5 @@
+import { getWindow } from '../window'
+
 import type { Options } from '../options'
 
 export function canvas2blob(
@@ -12,7 +14,7 @@ export function canvas2blob(
   }
 
   return new Promise(resolve => {
-    const binaryString = window.atob(
+    const binaryString = getWindow(options).atob(
       canvas
         .toDataURL(type, quality)
         .split(',')[1],

@@ -1,4 +1,5 @@
 import { getMimeType } from './utils'
+import { getWindow } from './window'
 
 import type { Options } from './options'
 
@@ -20,7 +21,7 @@ export function fetch(url: string, options?: Options): Promise<FetchResult> {
     url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
   }
 
-  const deferred = window
+  const deferred = getWindow(options)
     .fetch(url, options?.fetch?.requestInit)
     .then(async rep => {
       const blob = await rep.blob()

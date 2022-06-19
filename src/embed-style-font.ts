@@ -1,5 +1,6 @@
 import { arrayFrom } from './utils'
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
+import { getWindow } from './window'
 
 import type { HandleNodeFunc } from './types'
 import type { Options } from './options'
@@ -19,9 +20,8 @@ export const embedStyleFont: HandleNodeFunc = async (cloned, options) => {
 
   cssText = filterPreferredFormat(cssText)
 
-  const style = document.createElement('style')
-
-  style.appendChild(document.createTextNode(cssText))
+  const style = getWindow(options).document.createElement('style')
+  style.appendChild(getWindow(options).document.createTextNode(cssText))
 
   if (cloned.firstChild) {
     cloned.insertBefore(style, cloned.firstChild)
@@ -34,7 +34,7 @@ export async function parseStyleFontCss<T extends HTMLElement>(
   node: T,
   options?: Options,
 ): Promise<string> {
-  const cssRules = await parseCssRules(node)
+  const cssRules = await parseCssRules(node, options)
 
   const cssTexts = await Promise.all(
     cssRules.map((rule) => {
@@ -53,9 +53,10 @@ export async function parseStyleFontCss<T extends HTMLElement>(
 
 async function parseCssRules<T extends HTMLElement>(
   node: T,
+  options?: Options,
 ): Promise<CSSRule[]> {
   if (node.ownerDocument == null) throw new Error('Provided element is not within a Document')
-  const cssRules = await styleSheets2cssRules(arrayFrom(node.ownerDocument.styleSheets))
+  const cssRules = await styleSheets2cssRules(arrayFrom(node.ownerDocument.styleSheets), options)
   return cssRules
     .filter(rule => rule.type === CSSRule.FONT_FACE_RULE)
     .filter(rule => hasCssUrl(rule.style.getPropertyValue('src')))
@@ -63,6 +64,7 @@ async function parseCssRules<T extends HTMLElement>(
 
 async function styleSheets2cssRules(
   styleSheets: CSSStyleSheet[],
+  options?: Options,
 ): Promise<CSSStyleRule[]> {
   const ret: CSSStyleRule[] = []
   const deferreds: Promise<number | void>[] = []
@@ -104,11 +106,11 @@ async function styleSheets2cssRules(
       }
     } catch (e: any) {
       const inline
-        = styleSheets.find((a) => a.href == null) || document.styleSheets[0]
+        = styleSheets.find((a) => a.href == null) || getWindow(options).document.styleSheets[0]
       if (sheet.href != null) {
         deferreds.push(
-          fetchCss(sheet.href)
-            .then((metadata) => (metadata ? embedFonts(metadata) : ''))
+          fetchCss(sheet.href, options)
+            .then((metadata) => (metadata ? embedFonts(metadata, options) : ''))
             .then((cssText) =>
               parseCss(cssText).forEach((rule) => {
                 inline.insertRule(rule, sheet.cssRules.length)
@@ -150,13 +152,13 @@ const cssFetchCache: {
   [href: string]: Promise<void | Metadata>
 } = {}
 
-function fetchCss(url: string): Promise<void | Metadata> {
+function fetchCss(url: string, options?: Options): Promise<void | Metadata> {
   const cache = cssFetchCache[url]
   if (cache != null) {
     return cache
   }
 
-  const deferred = window.fetch(url).then((res) => ({
+  const deferred = getWindow(options).fetch(url).then((res) => ({
     url,
     cssText: res.text(),
   }))
@@ -166,7 +168,7 @@ function fetchCss(url: string): Promise<void | Metadata> {
   return deferred
 }
 
-async function embedFonts(meta: Metadata): Promise<string> {
+async function embedFonts(meta: Metadata, options?: Options): Promise<string> {
   return meta.cssText.then((raw: string) => {
     let cssText = raw
     const regexUrl = /url\(["']?([^"')]+)["']?\)/g
@@ -178,7 +180,7 @@ async function embedFonts(meta: Metadata): Promise<string> {
       }
 
       // eslint-disable-next-line promise/no-nesting
-      return window
+      return getWindow(options)
         .fetch(url)
         .then((res) => res.blob())
         .then(

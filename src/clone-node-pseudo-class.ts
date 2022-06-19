@@ -1,19 +1,22 @@
 import { arrayFrom, uuid } from './utils'
+import { getWindow } from './window'
 
+import type { Options } from './options'
 import type { DepthCloneNodeFunc } from './types'
 
 type Pseudo = ':before' | ':after'
 
-export const cloneNodePseudoClass: DepthCloneNodeFunc = async (node, cloned) => {
+export const cloneNodePseudoClass: DepthCloneNodeFunc = async (node, cloned, options) => {
   if (node instanceof Element
     && cloned instanceof Element) {
-    _cloneNodePseudoClass(node, cloned, ':before')
-    _cloneNodePseudoClass(node, cloned, ':after')
+    _cloneNodePseudoClass(node, cloned, ':before', options)
+    _cloneNodePseudoClass(node, cloned, ':after', options)
   }
 }
 
-function _cloneNodePseudoClass(node: Element, cloned: Element, pseudo: Pseudo) {
-  const style = window.getComputedStyle(node, pseudo)
+function _cloneNodePseudoClass(node: Element, cloned: Element, pseudo: Pseudo, options?: Options) {
+  const style = getWindow(options).getComputedStyle(node, pseudo)
+
   const content = style.getPropertyValue('content')
 
   if (!content || content === 'none') return
@@ -26,8 +29,8 @@ function _cloneNodePseudoClass(node: Element, cloned: Element, pseudo: Pseudo) {
     return
   }
 
-  const styleElement = document.createElement('style')
-  styleElement.appendChild(getPseudoClassStyle(klass, pseudo, style))
+  const styleElement = getWindow(options).document.createElement('style')
+  styleElement.appendChild(getPseudoClassStyle(klass, pseudo, style, options))
   cloned.appendChild(styleElement)
 }
 
@@ -35,13 +38,13 @@ function getPseudoClassStyle(
   klass: string,
   pseudo: Pseudo,
   style: CSSStyleDeclaration,
+  options?: Options,
 ): Text {
   const selector = `.${ klass }:${ pseudo }`
   const cssText = style.cssText
     ? formatCssText(style)
     : formatCssProps(style)
-
-  return document.createTextNode(`${ selector }{${ cssText }}`)
+  return getWindow(options).document.createTextNode(`${ selector }{${ cssText }}`)
 }
 
 function formatCssText(style: CSSStyleDeclaration) {

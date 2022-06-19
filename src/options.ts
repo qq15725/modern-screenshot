@@ -1,4 +1,5 @@
 export interface Options {
+
   /**
    * Width in pixels to be applied to node before rendering.
    */
@@ -36,6 +37,11 @@ export interface Options {
    * it's children as well.
    */
   filter?: (el: Node) => boolean
+
+  /**
+   * Global window
+   */
+  window?: any
 
   /**
    * Canvas

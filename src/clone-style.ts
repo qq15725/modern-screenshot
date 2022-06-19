@@ -1,14 +1,15 @@
-import { arrayFrom } from './utils'
+import { IN_BROWSER, arrayFrom } from './utils'
+import { getWindow } from './window'
 
 import type { DepthCloneNodeFunc } from './types'
 
 const DEFAULT_STYLE = getDefaultComputedStyle()
 
-export const cloneStyle: DepthCloneNodeFunc = async (node, cloned) => {
+export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
   if (!(node instanceof HTMLElement
     && cloned instanceof HTMLElement)) return
 
-  const source = window.getComputedStyle(node)
+  const source = getWindow(options).getComputedStyle(node)
   const style = cloned.style
 
   if (style) {
@@ -26,7 +27,7 @@ export const cloneStyle: DepthCloneNodeFunc = async (node, cloned) => {
 
   // Css fixes
   // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
-  if (window.navigator.userAgent.match(/\bChrome\//)) {
+  if (getWindow(options).navigator.userAgent.match(/\bChrome\//)) {
     applyChromiumKerningFix(cloned)
     applyChromiumEllipsisFix(node, cloned)
   }
@@ -34,6 +35,7 @@ export const cloneStyle: DepthCloneNodeFunc = async (node, cloned) => {
 
 function getDefaultComputedStyle() {
   const style: Record<string, string> = {}
+  if (!IN_BROWSER) return style
   const el = document.createElement(`egami--${ new Date().getTime() }`)
   document.body.appendChild(el)
   const source = window.getComputedStyle(el)

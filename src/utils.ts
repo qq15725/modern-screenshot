@@ -1,5 +1,7 @@
 import type { Options } from './options'
 
+export const IN_BROWSER = typeof window !== 'undefined'
+
 export function isDataUrl(url: string) {
   return url.startsWith('data:')
 }
@@ -23,12 +25,16 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
   }
 
   // url is absolute already, without protocol
-  if (url.match(/^\/\//)) {
+  if (IN_BROWSER && url.match(/^\/\//)) {
     return window.location.protocol + url
   }
 
   // dataURI, mailto:, tel:, etc.
   if (url.match(/^[a-z]+:/i)) {
+    return url
+  }
+
+  if (!IN_BROWSER) {
     return url
   }
 
@@ -96,9 +102,11 @@ export function getMimeType(url: string): string {
 }
 
 function px(node: Node, styleProperty: string) {
-  if (node instanceof Element) {
+  if (node instanceof Element && IN_BROWSER) {
     const val = window.getComputedStyle(node).getPropertyValue(styleProperty)
-    return val ? parseFloat(val.replace('px', '')) : 0
+    return val
+      ? parseFloat(val.replace('px', ''))
+      : 0
   }
   return 0
 }
@@ -106,7 +114,7 @@ function px(node: Node, styleProperty: string) {
 export function getNodeWidth(node: Node) {
   return (
     node instanceof Element
-      ? node.clientWidth ?? Number(node.getAttribute('width'))
+      ? (node.clientWidth || Number(node.getAttribute('width')))
       : 0
   )
       + px(node, 'border-left-width')
@@ -116,7 +124,7 @@ export function getNodeWidth(node: Node) {
 export function getNodeHeight(node: Node) {
   return (
     node instanceof Element
-      ? node.clientHeight ?? Number(node.getAttribute('height'))
+      ? (node.clientHeight || Number(node.getAttribute('height')))
       : 0
   )
     + px(node, 'border-top-width')
@@ -148,5 +156,5 @@ export function getPixelRatio() {
       ratio = 1
     }
   }
-  return ratio || window.devicePixelRatio || 1
+  return ratio || (IN_BROWSER && window.devicePixelRatio) || 1
 }

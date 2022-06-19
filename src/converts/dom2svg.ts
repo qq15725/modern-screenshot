@@ -1,6 +1,7 @@
 import { cloneNode } from '../clone-node'
 import { embedNode } from '../embed-node'
 import { arrayFrom, getImageSize } from '../utils'
+import { getWindow } from '../window'
 
 import type { HandleNodeFunc } from '../types'
 import type { Options } from '../options'
@@ -52,8 +53,8 @@ export async function dom2svg<T extends Node>(
   await embedNode(clone, options)
   applyStyle(clone, options)
   const xmlns = 'http://www.w3.org/2000/svg'
-  const svg = document.createElementNS(xmlns, 'svg')
-  const foreignObject = document.createElementNS(xmlns, 'foreignObject')
+  const svg = getWindow(options).document.createElementNS(xmlns, 'svg')
+  const foreignObject = getWindow(options).document.createElementNS(xmlns, 'foreignObject')
   svg.setAttribute('width', String(width))
   svg.setAttribute('height', String(height))
   svg.setAttribute('viewBox', `0 0 ${ width } ${ height }`)
