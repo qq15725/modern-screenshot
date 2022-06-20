@@ -6,7 +6,7 @@ import type { HandleNodeFunc } from './types'
 import type { Options } from './options'
 
 export const embedWebFont: HandleNodeFunc = async (cloned, options) => {
-  if (options?.font === false || !(cloned instanceof HTMLElement)) return
+  if (options?.font === false || !(cloned instanceof Element)) return
 
   let cssText = options?.font?.css
     ?? await parseWebFontCss(cloned.ownerDocument, options)

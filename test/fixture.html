@@ -39,14 +39,16 @@
   </select>
   <img src="https://avatar-static.segmentfault.com/309/980/3099806835-57ad264730029_huge128" alt="">
 </div>
-<script async type="module">
+<script type="module">
   import { dom2image } from '../dist/index.mjs'
 
-  const image = await dom2image(document.querySelector('#app'), {
-    scale: 2,
-  })
+  window.onload = async () => {
+    const image = await dom2image(document.querySelector('#app'), {
+      scale: 2,
+    })
 
-  document.body.appendChild(image)
+    document.body.appendChild(image)
+  }
 </script>
 </body>
 </html>

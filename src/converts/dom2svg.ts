@@ -1,4 +1,5 @@
 import { cloneNode } from '../clone-node'
+import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
 import { getSize } from '../get-size'
 import { getWindow } from '../get-window'
@@ -52,6 +53,7 @@ export async function dom2svg<T extends Node>(
   const { width, height } = getSize(node, options)
   const clone = await cloneNode(node, options)
   removeDefaultStyleSandbox()
+  await embedWebFont(clone, options)
   await embedNode(clone, options)
   applyStyle(clone, options)
   const xmlns = 'http://www.w3.org/2000/svg'
