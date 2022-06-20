@@ -1,9 +1,8 @@
-import { IN_BROWSER, arrayFrom } from './utils'
+import { arrayFrom } from './utils'
 import { getWindow } from './window'
+import { getDefaultStyle } from './default-style'
 
 import type { DepthCloneNodeFunc } from './types'
-
-const DEFAULT_STYLE = getDefaultComputedStyle()
 
 export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
   if (!(node instanceof HTMLElement
@@ -16,10 +15,11 @@ export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
     if (source.cssText) {
       style.cssText = source.cssText
     } else {
+      const defaultStyle = getDefaultStyle(node.tagName)
       arrayFrom<string>(source).forEach((name) => {
         const value = source.getPropertyValue(name)
         const priority = source.getPropertyPriority(name)
-        if (DEFAULT_STYLE[name] === value && !priority) return
+        if (defaultStyle[name] === value && !priority) return
         style.setProperty(name, value, priority)
       })
     }
@@ -31,17 +31,6 @@ export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
     applyChromiumKerningFix(cloned)
     applyChromiumEllipsisFix(node, cloned)
   }
-}
-
-function getDefaultComputedStyle() {
-  const style: Record<string, string> = {}
-  if (!IN_BROWSER) return style
-  const el = document.createElement(`egami--${ new Date().getTime() }`)
-  document.body.appendChild(el)
-  const source = window.getComputedStyle(el)
-  arrayFrom<string>(source).forEach((name) => style[name] = source.getPropertyValue(name))
-  el.remove()
-  return style
 }
 
 /*
