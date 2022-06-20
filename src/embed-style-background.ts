@@ -16,7 +16,7 @@ export const embedStyleBackground: HandleNodeFunc = async (cloned, options) => {
         if (!value) return
         style.setProperty(
           'background',
-          await replaceCssUrlToDataUrl(value, null, options),
+          await replaceCssUrlToDataUrl(value, null, options, true),
           style.getPropertyPriority(property),
         )
       }),

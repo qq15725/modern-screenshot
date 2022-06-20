@@ -1,4 +1,4 @@
-import { IN_BROWSER, arrayFrom } from './utils'
+import { IN_BROWSER } from './utils'
 
 const SANDBOX_ID = 'egami__sandbox'
 let sandbox: HTMLIFrameElement | undefined
@@ -25,7 +25,7 @@ export function getDefaultStyle(tagName: string) {
   el.textContent = '.'
   const style = win.getComputedStyle(el)
   const styles: Record<string, any> = {}
-  arrayFrom<string>(style).forEach(name => {
+  Array.from(style).forEach(name => {
     if (name === 'width' || name === 'height') {
       styles[name] = 'auto'
     } else {

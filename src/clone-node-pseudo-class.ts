@@ -1,4 +1,4 @@
-import { arrayFrom, uuid } from './utils'
+import { uuid } from './utils'
 import { getWindow } from './get-window'
 
 import type { Options } from './options'
@@ -53,7 +53,7 @@ function formatCssText(style: CSSStyleDeclaration) {
 }
 
 function formatCssProps(style: CSSStyleDeclaration) {
-  return arrayFrom<string>(style)
+  return Array.from(style)
     .map((name) => {
       const value = style.getPropertyValue(name)
       const priority = style.getPropertyPriority(name)

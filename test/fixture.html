@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>fixture</title>
+  <link
+    rel="stylesheet"
+    href="../node_modules/@fortawesome/fontawesome-free/css/all.css"
+  />
   <style>
     * {
       box-sizing: border-box;
@@ -26,6 +30,7 @@
       <b>bbbb</b>
     </menu>
     <div>divdivdivdiv</div>
+    <i class="fab fa-apper"></i>
   </div>
   <select>
     <option value="1">option1</option>
@@ -38,8 +43,6 @@
   import { dom2image } from '../dist/index.mjs'
 
   const image = await dom2image(document.querySelector('#app'), {
-    width: 600,
-    height: 800,
     scale: 2,
   })
 

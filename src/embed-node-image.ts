@@ -1,5 +1,5 @@
 import { isDataUrl } from './utils'
-import { fetchToDataUrl } from './fetch'
+import { fetchDataUrl } from './fetch'
 
 import type { HandleNodeFunc } from './types'
 
@@ -15,7 +15,7 @@ export const embedNodeImage: HandleNodeFunc = async (cloned, options) => {
     ? cloned.src
     : cloned.href.baseVal
 
-  const dataUrl = await fetchToDataUrl(src, options)
+  const dataUrl = await fetchDataUrl(src, options, true)
 
   await new Promise((resolve, reject) => {
     cloned.onload = resolve

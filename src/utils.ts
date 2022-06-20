@@ -5,51 +5,25 @@ export function isDataUrl(url: string) {
   return url.startsWith('data:')
 }
 
-export function arrayFrom<T>(arrayLike: any): T[] {
-  const arr: T[] = []
-  for (let i = 0, l = arrayLike.length; i < l; i += 1) {
-    arr.push(arrayLike[i])
-  }
-  return arr
-}
-
-export function makeDataUrl(content: string, mimeType: string) {
-  return `data:${ mimeType };base64,${ content }`
-}
-
 export function resolveUrl(url: string, baseUrl: string | null): string {
   // url is absolute already
-  if (url.match(/^[a-z]+:\/\//i)) {
-    return url
-  }
+  if (url.match(/^[a-z]+:\/\//i)) return url
 
   // url is absolute already, without protocol
-  if (IN_BROWSER && url.match(/^\/\//)) {
-    return window.location.protocol + url
-  }
+  if (IN_BROWSER && url.match(/^\/\//)) return window.location.protocol + url
 
   // dataURI, mailto:, tel:, etc.
-  if (url.match(/^[a-z]+:/i)) {
-    return url
-  }
+  if (url.match(/^[a-z]+:/i)) return url
 
-  if (!IN_BROWSER) {
-    return url
-  }
+  if (!IN_BROWSER) return url
 
   const doc = document.implementation.createHTMLDocument()
   const base = doc.createElement('base')
   const a = doc.createElement('a')
-
   doc.head.appendChild(base)
   doc.body.appendChild(a)
-
-  if (baseUrl) {
-    base.href = baseUrl
-  }
-
+  if (baseUrl) base.href = baseUrl
   a.href = url
-
   return a.href
 }
 

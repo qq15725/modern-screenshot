@@ -1,4 +1,3 @@
-import { arrayFrom } from './utils'
 import { cloneNodeShallow } from './clone-node-shallow'
 import { cloneNodePseudoClass } from './clone-node-pseudo-class'
 import { cloneNodeInput } from './clone-node-input'
@@ -22,11 +21,11 @@ export const cloneNode: CloneNodeFunc = async (node, options) => {
     return cloneNode(node, options)
   }
   const children = isSlotElement(node) && node.assignedNodes
-    ? arrayFrom<typeof node>(node.assignedNodes())
-    : arrayFrom<typeof node>(((node as any).shadowRoot ?? node).childNodes)
+    ? Array.from(node.assignedNodes())
+    : Array.from(((node as any).shadowRoot ?? node).childNodes)
   if (children.length === 0 || node instanceof HTMLVideoElement) return cloned
   const childNodes = await Promise.all(
-    arrayFrom(children)
+    Array.from(children)
       .map(childNode => cloneByFilteredNode(childNode as HTMLElement, options)),
   )
   childNodes.forEach(childNode => {

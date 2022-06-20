@@ -1,4 +1,3 @@
-import { arrayFrom } from './utils'
 import { getWindow } from './get-window'
 import { getDefaultStyle } from './get-default-style'
 
@@ -16,7 +15,7 @@ export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
       style.cssText = source.cssText
     } else {
       const defaultStyle = getDefaultStyle(node.tagName)
-      arrayFrom<string>(source).forEach((name) => {
+      Array.from(source).forEach((name) => {
         const value = source.getPropertyValue(name)
         const priority = source.getPropertyPriority(name)
         if (defaultStyle[name] === value && !priority) return

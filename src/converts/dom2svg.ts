@@ -1,6 +1,5 @@
 import { cloneNode } from '../clone-node'
 import { embedNode } from '../embed-node'
-import { arrayFrom } from '../utils'
 import { getSize } from '../get-size'
 import { getWindow } from '../get-window'
 import { removeDefaultStyleSandbox } from '../get-default-style'
@@ -22,7 +21,7 @@ const applyStyle: HandleNodeFunc = async (node, options) => {
 
 const waitLoaded: HandleNodeFunc = async node => {
   if (!(node instanceof HTMLElement)) return
-  const imgs = arrayFrom<HTMLImageElement>(node.querySelectorAll('img'))
+  const imgs = Array.from(node.querySelectorAll('img'))
   await Promise.all(
     imgs.map(img => {
       return new Promise<void>(resolve => {
