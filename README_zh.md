@@ -105,7 +105,7 @@ export interface Options {
   /**
    * Canvas
    */
-  canvas: {
+  canvas?: {
     /**
      * Width in pixels to be applied to canvas on export.
      */
