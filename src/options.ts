@@ -10,6 +10,12 @@ export interface Options {
   height?: number
 
   /**
+   * The pixel ratio of captured image. Defalut is the actual pixel ratio of
+   * the device. Set 1 to use as initial-scale 1 for the image
+   */
+  scale?: number
+
+  /**
    * A string value for the background color, any valid CSS color value.
    */
   backgroundColor?: string
@@ -38,38 +44,19 @@ export interface Options {
   filter?: (el: Node) => boolean
 
   /**
+   * Maximum canvas size (pixels).
+   *
+   * default: 16384
+   */
+  maximumCanvasSize?: number
+
+  /**
    * Global window
    */
   window?: any
 
   /**
-   * Canvas
-   */
-  canvas?: {
-    /**
-     * Width in pixels to be applied to canvas on export.
-     */
-    width?: number
-
-    /**
-     * Height in pixels to be applied to canvas on export.
-     */
-    height?: number
-
-    /**
-     * The pixel ratio of captured image. Defalut is the actual pixel ratio of
-     * the device. Set 1 to use as initial-scale 1 for the image
-     */
-    pixelRatio?: number
-
-    /**
-     * A boolean to turn off auto scaling for truly massive images..
-     */
-    skipAutoScale?: boolean
-  }
-
-  /**
-   * Fetch
+   * Fetch resources
    */
   fetch?: {
     /**
@@ -92,14 +79,9 @@ export interface Options {
   }
 
   /**
-   * Font
+   * Fonts download and embed.
    */
-  font?: {
-    /**
-     * Option to skip the fonts download and embed.
-     */
-    skip?: boolean
-
+  font?: false | {
     /**
      * The preferred font format. If specified all other font formats are ignored.
      */

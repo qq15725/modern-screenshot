@@ -1,5 +1,4 @@
-import type { Options } from './options'
-
+export const IS_NODE = typeof process !== 'undefined'
 export const IN_BROWSER = typeof window !== 'undefined'
 
 export function isDataUrl(url: string) {
@@ -99,62 +98,4 @@ const EXT_RE = /\.([^.\/]+?)$/
 export function getMimeType(url: string): string {
   const ext = url.match(EXT_RE)?.[1]?.toLowerCase()
   return MIMES[ext as keyof typeof MIMES] ?? ext
-}
-
-function px(node: Node, styleProperty: string) {
-  if (node instanceof Element && IN_BROWSER) {
-    const val = window.getComputedStyle(node).getPropertyValue(styleProperty)
-    return val
-      ? parseFloat(val.replace('px', ''))
-      : 0
-  }
-  return 0
-}
-
-export function getNodeWidth(node: Node) {
-  return (
-    node instanceof Element
-      ? (node.clientWidth || Number(node.getAttribute('width')))
-      : 0
-  )
-      + px(node, 'border-left-width')
-      + px(node, 'border-right-width')
-}
-
-export function getNodeHeight(node: Node) {
-  return (
-    node instanceof Element
-      ? (node.clientHeight || Number(node.getAttribute('height')))
-      : 0
-  )
-    + px(node, 'border-top-width')
-    + px(node, 'border-bottom-width')
-}
-
-export function getImageSize(node: Node, options?: Options) {
-  return {
-    width: options?.width ?? getNodeWidth(node),
-    height: options?.height ?? getNodeHeight(node),
-  }
-}
-
-export function getPixelRatio() {
-  let ratio
-  let FINAL_PROCESS
-  try {
-    FINAL_PROCESS = process
-  } catch (e) {
-    // pass
-  }
-  const val
-    = FINAL_PROCESS && FINAL_PROCESS.env
-      ? FINAL_PROCESS.env.devicePixelRatio
-      : null
-  if (val) {
-    ratio = parseInt(val, 10)
-    if (Number.isNaN(ratio)) {
-      ratio = 1
-    }
-  }
-  return ratio || (IN_BROWSER && window.devicePixelRatio) || 1
 }

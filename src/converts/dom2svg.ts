@@ -1,8 +1,9 @@
 import { cloneNode } from '../clone-node'
 import { embedNode } from '../embed-node'
-import { arrayFrom, getImageSize } from '../utils'
-import { getWindow } from '../window'
-import { removeSandbox } from '../default-style'
+import { arrayFrom } from '../utils'
+import { getSize } from '../get-size'
+import { getWindow } from '../get-window'
+import { removeDefaultStyleSandbox } from '../get-default-style'
 
 import type { HandleNodeFunc } from '../types'
 import type { Options } from '../options'
@@ -49,9 +50,9 @@ export async function dom2svg<T extends Node>(
   options?: Options,
 ): Promise<SVGSVGElement> {
   await waitLoaded(node)
-  const { width, height } = getImageSize(node, options)
+  const { width, height } = getSize(node, options)
   const clone = await cloneNode(node, options)
-  removeSandbox()
+  removeDefaultStyleSandbox()
   await embedNode(clone, options)
   applyStyle(clone, options)
   const xmlns = 'http://www.w3.org/2000/svg'

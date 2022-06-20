@@ -1,5 +1,7 @@
-import { getImageSize, getPixelRatio, loadImage } from '../utils'
-import { getWindow } from '../window'
+import { loadImage } from '../utils'
+import { getSize } from '../get-size'
+import { getScale } from '../get-scale'
+import { getWindow } from '../get-window'
 
 import type { Options } from '../options'
 
@@ -7,21 +9,19 @@ export async function svg2canvas<T extends SVGElement>(
   svg: T,
   options?: Options,
 ): Promise<HTMLCanvasElement> {
-  const { width, height } = getImageSize(svg, options)
-  const canvasWidth = options?.canvas?.width ?? width
-  const canvasHeight = options?.canvas?.height ?? height
-  const ratio = options?.canvas?.pixelRatio ?? getPixelRatio()
+  const { width, height } = getSize(svg, options)
+  const scale = getScale(options)
   const xhtml = new XMLSerializer().serializeToString(svg)
   const dataUrl = `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
   const image = await loadImage(dataUrl)
   const canvas = getWindow(options).document.createElement('canvas')
-  canvas.width = canvasWidth * ratio
-  canvas.height = canvasHeight * ratio
-  if (!options?.canvas?.skipAutoScale) {
-    checkDimension(canvas)
-  }
-  canvas.style.width = `${ canvasWidth }px`
-  canvas.style.height = `${ canvasHeight }px`
+  canvas.width = width * scale
+  canvas.height = height * scale
+  // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+  const maximum = options?.maximumCanvasSize ?? 16384
+  if (maximum) checkMaximumCanvasSize(canvas, maximum)
+  canvas.style.width = `${ width }px`
+  canvas.style.height = `${ height }px`
   const context = canvas.getContext('2d')!
   if (options?.backgroundColor) {
     context.fillStyle = options.backgroundColor
@@ -31,31 +31,22 @@ export async function svg2canvas<T extends SVGElement>(
   return canvas
 }
 
-// as per https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
-const LIMIT = 16384
-
-function checkDimension(canvas: HTMLCanvasElement) {
-  if (
-    canvas.width > LIMIT
-    || canvas.height > LIMIT
-  ) {
-    if (
-      canvas.width > LIMIT
-      && canvas.height > LIMIT
-    ) {
+function checkMaximumCanvasSize(canvas: HTMLCanvasElement, max: number) {
+  if (canvas.width > max || canvas.height > max) {
+    if (canvas.width > max && canvas.height > max) {
       if (canvas.width > canvas.height) {
-        canvas.height *= LIMIT / canvas.width
-        canvas.width = LIMIT
+        canvas.height *= max / canvas.width
+        canvas.width = max
       } else {
-        canvas.width *= LIMIT / canvas.height
-        canvas.height = LIMIT
+        canvas.width *= max / canvas.height
+        canvas.height = max
       }
-    } else if (canvas.width > LIMIT) {
-      canvas.height *= LIMIT / canvas.width
-      canvas.width = LIMIT
+    } else if (canvas.width > max) {
+      canvas.height *= max / canvas.width
+      canvas.width = max
     } else {
-      canvas.width *= LIMIT / canvas.height
-      canvas.height = LIMIT
+      canvas.width *= max / canvas.height
+      canvas.height = max
     }
   }
 }

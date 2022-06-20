@@ -37,7 +37,7 @@ export function getDefaultStyle(tagName: string) {
   return styles
 }
 
-export function removeSandbox() {
+export function removeDefaultStyleSandbox() {
   if (!sandbox) return
   document.body.removeChild(sandbox)
   defaultStyles.clear()

@@ -1,6 +1,6 @@
 import { arrayFrom } from './utils'
-import { getWindow } from './window'
-import { getDefaultStyle } from './default-style'
+import { getWindow } from './get-window'
+import { getDefaultStyle } from './get-default-style'
 
 import type { DepthCloneNodeFunc } from './types'
 

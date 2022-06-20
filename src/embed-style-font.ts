@@ -1,6 +1,6 @@
 import { arrayFrom } from './utils'
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
-import { getWindow } from './window'
+import { getWindow } from './get-window'
 
 import type { HandleNodeFunc } from './types'
 import type { Options } from './options'
@@ -11,7 +11,7 @@ interface Metadata {
 }
 
 export const embedStyleFont: HandleNodeFunc = async (cloned, options) => {
-  if (options?.font?.skip || !(cloned instanceof HTMLElement)) return
+  if (options?.font === false || !(cloned instanceof HTMLElement)) return
 
   let cssText = options?.font?.css
     ?? await parseStyleFontCss(cloned, options)
@@ -259,12 +259,16 @@ function filterPreferredFormat(
   str: string,
   options?: Options,
 ): string {
-  return options?.font?.preferredFormat
+  const preferredFormat = options?.font
+    ? options?.font?.preferredFormat
+    : undefined
+
+  return preferredFormat
     ? str.replace(FONT_SRC_REGEX, (match: string) => {
       while (true) {
         const [src, , format] = URL_WITH_FORMAT_REGEX.exec(match) || []
         if (!format) return ''
-        if (format === options!.font!.preferredFormat) return `src: ${ src };`
+        if (format === preferredFormat) return `src: ${ src };`
       }
     })
     : str

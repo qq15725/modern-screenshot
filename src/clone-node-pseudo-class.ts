@@ -1,5 +1,5 @@
 import { arrayFrom, uuid } from './utils'
-import { getWindow } from './window'
+import { getWindow } from './get-window'
 
 import type { Options } from './options'
 import type { DepthCloneNodeFunc } from './types'
