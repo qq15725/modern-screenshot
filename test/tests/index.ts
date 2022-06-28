@@ -1,7 +1,0 @@
-export * from './bgcolor'
-export * from './border'
-export * from './svg-color'
-export * from './svg-ns'
-export * from './svg-rect'
-export * from './text'
-export * from './textarea'
