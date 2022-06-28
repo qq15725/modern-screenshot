@@ -42,13 +42,18 @@
     "lint:fix": "eslint . --fix",
     "build": "unbuild",
     "stub": "unbuild --stub",
-    "release": "bumpp package.json --commit \"chore(release): publish v%s\" --push --tag && pnpm publish"
+    "release": "bumpp package.json --commit \"chore(release): publish v%s\" --push --tag && pnpm publish",
+    "coverage": "vitest run --coverage",
+    "test": "pnpm build && vitest",
+    "test:ui": "pnpm build && vitest --ui"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@qq15725/eslint-config": "^1.1.0",
+    "@vitest/ui": "^0.16.0",
     "bumpp": "^7.2.0",
     "eslint": "^8.17.0",
+    "puppeteer": "^15.1.1",
     "typescript": "^4.7.3",
     "unbuild": "^0.7.4",
     "vitest": "^0.12.10"

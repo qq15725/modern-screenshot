@@ -22,7 +22,7 @@ export function getDefaultStyle(tagName: string) {
   const el = document.createElement(tagName)
   win.document.body.appendChild(el)
   // Ensure that there is some content, so properties like margin are applied
-  el.textContent = '.'
+  el.textContent = ' '
   const style = win.getComputedStyle(el)
   const styles: Record<string, any> = {}
   Array.from(style).forEach(name => {

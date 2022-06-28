@@ -4,21 +4,28 @@ import { getDefaultStyle } from './get-default-style'
 import type { DepthCloneNodeFunc } from './types'
 
 export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
-  if (!(node instanceof HTMLElement
-    && cloned instanceof HTMLElement)) return
+  if (!(
+    node instanceof Element
+    && cloned instanceof Element
+    && 'style' in cloned
+  )) return
 
   const source = getWindow(options).getComputedStyle(node)
-  const style = cloned.style
+  const style = (cloned as any).style as CSSStyleDeclaration
 
   if (style) {
     if (source.cssText) {
       style.cssText = source.cssText
     } else {
       const defaultStyle = getDefaultStyle(node.tagName)
-      Array.from(source).forEach((name) => {
+      Array.from(source).forEach(name => {
         const value = source.getPropertyValue(name)
         const priority = source.getPropertyPriority(name)
-        if (defaultStyle[name] === value && !priority) return
+        if (
+          defaultStyle[name] === value
+          && !node.getAttribute(name)
+          && !priority
+        ) return
         style.setProperty(name, value, priority)
       })
     }
@@ -26,7 +33,7 @@ export const cloneStyle: DepthCloneNodeFunc = async (node, cloned, options) => {
 
   // Css fixes
   // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
-  if (getWindow(options).navigator.userAgent.match(/\bChrome\//)) {
+  if ('style' in node && getWindow(options).navigator.userAgent.match(/\bChrome\//)) {
     applyChromiumKerningFix(cloned)
     applyChromiumEllipsisFix(node, cloned)
   }

@@ -9,8 +9,8 @@ import type { HandleNodeFunc } from '../types'
 import type { Options } from '../options'
 
 const applyStyle: HandleNodeFunc = async (node, options) => {
-  if (!(node instanceof HTMLElement)) return
-  const { style } = node
+  if (!('style' in node)) return
+  const style = (node as any).style as CSSStyleDeclaration
   if (options?.backgroundColor) style.backgroundColor = options?.backgroundColor
   if (options?.width) style.width = `${ options?.width }px`
   if (options?.height) style.height = `${ options?.height }px`
@@ -21,8 +21,8 @@ const applyStyle: HandleNodeFunc = async (node, options) => {
 }
 
 const waitLoaded: HandleNodeFunc = async node => {
-  if (!(node instanceof HTMLElement)) return
-  const imgs = Array.from(node.querySelectorAll('img'))
+  if (!('querySelectorAll' in node)) return
+  const imgs = Array.from((node as unknown as ParentNode).querySelectorAll('img'))
   await Promise.all(
     imgs.map(img => {
       return new Promise<void>(resolve => {
