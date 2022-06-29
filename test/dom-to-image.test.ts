@@ -34,7 +34,14 @@ describe('dom to image', async () => {
 
   beforeAll(async () => {
     process.env.devicePixelRatio = '1'
-    server = await preview({ preview: { port: 3000 } })
+    server = await preview({
+      build: {
+        outDir: join(__dirname, '..'),
+      },
+      preview: {
+        port: 3000,
+      },
+    })
     browser = await puppeteer.launch()
     page = await browser.newPage()
     await page.setContent(`<!DOCTYPE html>
@@ -43,7 +50,7 @@ describe('dom to image', async () => {
   <meta charset="utf-8">
   <title>Puppeteer Vitest Test Page</title>
   <script type="module">
-    import * as egami from 'http://localhost:3000/index.mjs'
+    import * as egami from 'http://localhost:3000/dist/index.mjs'
     window.egami = egami
   </script>
   <style id="style"></style>
