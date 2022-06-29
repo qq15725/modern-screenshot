@@ -80,13 +80,18 @@ describe('dom to image', async () => {
       await style.evaluate((el, val) => el.innerHTML = val, styleCode)
       await body.evaluate((el, val) => el.innerHTML = val, templateCode)
       // eslint-disable-next-line no-new-func
-      let result = await page.evaluate((val) => new Function(`return ${ val }`)(), scriptCode)
-      result = result.replace('data:image/png;base64,', '')
-      const buffer = Buffer.from(result, 'base64')
-      expect(buffer).toMatchImageSnapshot({
-        customSnapshotIdentifier: name,
-        customSnapshotsDir: fixturesDir,
-      })
+      const png = await page.evaluate((val) => new Function(`return ${ val }`)(), scriptCode)
+      const base64 = png.replace('data:image/png;base64,', '')
+      const buffer = Buffer.from(base64, 'base64')
+      try {
+        expect(buffer).toMatchImageSnapshot({
+          customSnapshotIdentifier: name,
+          customSnapshotsDir: fixturesDir,
+        })
+      } catch (e) {
+        console.error(e)
+        expect(buffer).toBeUndefined()
+      }
     })
   })
 })
