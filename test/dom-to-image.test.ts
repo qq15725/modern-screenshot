@@ -16,10 +16,12 @@ function parseHTML(str: string) {
     ?? '<div>template</div>'
   const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
     ?? 'window.egami.dom2png(document.querySelector(\'body > *\'))'
+  const skipExpect = !!str.match(/<skip-expect.*\/>/s)?.[0]
   return {
     styleCode,
     templateCode,
     scriptCode,
+    skipExpect,
   }
 }
 
@@ -81,7 +83,7 @@ describe('dom to image', async () => {
       }),
   )
 
-  fixtures.forEach(({ path, scriptCode, styleCode, templateCode }) => {
+  fixtures.forEach(({ path, scriptCode, styleCode, templateCode, skipExpect }) => {
     const name = basename(path).replace('.html', '')
     test(name, async () => {
       await style.evaluate((el, val) => el.innerHTML = val, styleCode)
@@ -89,17 +91,21 @@ describe('dom to image', async () => {
       // eslint-disable-next-line no-new-func
       const png = await page.evaluate((val) => new Function(`return ${ val }`)(), scriptCode)
       const base64 = png.replace('data:image/png;base64,', '')
-      const buffer = Buffer.from(base64, 'base64')
-      const options = {
-        customSnapshotIdentifier: name,
-        customSnapshotsDir: fixturesDir,
-      }
-      try {
-        expect(buffer).toMatchImageSnapshot(options)
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(png)
-        expect(buffer).toMatchImageSnapshot(options)
+      if (!skipExpect) {
+        const buffer = Buffer.from(base64, 'base64')
+        const options = {
+          customSnapshotIdentifier: name,
+          customSnapshotsDir: fixturesDir,
+        }
+        try {
+          expect(buffer).toMatchImageSnapshot(options)
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.log(png)
+          expect(buffer).toMatchImageSnapshot(options)
+        }
+      } else {
+        expect(base64).not.toBe('')
       }
     })
   })
