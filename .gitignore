@@ -6,10 +6,6 @@ lib/
 dist/
 components.d.ts
 
-# Lock
-package-lock.json
-pnpm-lock.yaml
-
 # IDE user config
 .vscode/
 .idea/
