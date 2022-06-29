@@ -91,21 +91,21 @@ describe('dom to image', async () => {
       // eslint-disable-next-line no-new-func
       const png = await page.evaluate((val) => new Function(`return ${ val }`)(), scriptCode)
       const base64 = png.replace('data:image/png;base64,', '')
-      if (!skipExpect) {
-        const buffer = Buffer.from(base64, 'base64')
-        const options = {
-          customSnapshotIdentifier: name,
-          customSnapshotsDir: fixturesDir,
-        }
-        try {
-          expect(buffer).toMatchImageSnapshot(options)
-        } catch (e) {
+      const buffer = Buffer.from(base64, 'base64')
+      const options = {
+        customSnapshotIdentifier: name,
+        customSnapshotsDir: fixturesDir,
+      }
+      try {
+        expect(buffer).toMatchImageSnapshot(options)
+      } catch (e) {
+        if (!skipExpect) {
           // eslint-disable-next-line no-console
           console.log(png)
           expect(buffer).toMatchImageSnapshot(options)
+        } else {
+          expect(base64).not.toBe('')
         }
-      } else {
-        expect(base64).not.toBe('')
       }
     })
   })
