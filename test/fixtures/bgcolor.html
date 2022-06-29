@@ -1,0 +1,27 @@
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #root {
+    height: 100px;
+    width: 100px;
+    background-color: #F00;
+  }
+
+  #content {
+    height: 50px;
+    width: 50px;
+    background-color: black;
+  }
+</style>
+
+<template>
+  <div id="root">
+    <div id="content"></div>
+  </div>
+</template>
+
+<script type="module">
+  export default window.egami.dom2png(document.querySelector('#root'))
+</script>

@@ -1,0 +1,30 @@
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #root {
+    width: 400px;
+    height: 200px;
+    background-color: white;
+    padding: 1em;
+  }
+  textarea {
+    height: 100%;
+    width: 100%;
+    font-family: monospace;
+    font-size: 20px;
+    border: 1px solid grey;
+    padding: 1em;
+  }
+</style>
+
+<template>
+  <div id="root">
+    <textarea id="input"></textarea>
+  </div>
+</template>
+
+<script type="module">
+  export default window.egami.dom2png(document.querySelector('#root'))
+</script>

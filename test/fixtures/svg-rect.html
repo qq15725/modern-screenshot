@@ -1,0 +1,27 @@
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #root {
+    width: 120px;
+    overflow: hidden;
+  }
+</style>
+
+<template>
+  <div id="root">
+    <svg
+      width="120"
+      height="120"
+      viewBox="0 0 120 120"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="10" y="10" width="100" height="100" />
+    </svg>
+  </div>
+</template>
+
+<script type="module">
+  export default window.egami.dom2png(document.querySelector('#root'))
+</script>
