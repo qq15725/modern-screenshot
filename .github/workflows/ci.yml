@@ -1,0 +1,25 @@
+name: 👷　CI
+on:
+  pull_request_target:
+  push:
+    branches:
+      - master
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: ⤵️　Checkout
+        uses: actions/checkout@v2
+      - name: 🎉　Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: 🚧　Install
+        run: pnpm install
+      - name: 📦　Build
+        run: pnpm build
+      - name: ✅　Test
+        run: pnpm test
