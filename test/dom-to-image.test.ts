@@ -83,14 +83,16 @@ describe('dom to image', async () => {
       const png = await page.evaluate((val) => new Function(`return ${ val }`)(), scriptCode)
       const base64 = png.replace('data:image/png;base64,', '')
       const buffer = Buffer.from(base64, 'base64')
+      const options = {
+        customSnapshotIdentifier: name,
+        customSnapshotsDir: fixturesDir,
+      }
       try {
-        expect(buffer).toMatchImageSnapshot({
-          customSnapshotIdentifier: name,
-          customSnapshotsDir: fixturesDir,
-        })
+        expect(buffer).toMatchImageSnapshot(options)
       } catch (e) {
-        console.error(e)
-        expect(buffer).toBeUndefined()
+        // eslint-disable-next-line no-console
+        console.log(png)
+        expect(buffer).toMatchImageSnapshot(options)
       }
     })
   })
