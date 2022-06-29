@@ -1,0 +1,30 @@
+<style>
+  #root {
+    width: 100px;
+    height: 100px;
+    background-color: grey;
+  }
+
+  #child {
+    height: 30px;
+    width: 30px;
+    background-color: lightgrey;
+  }
+</style>
+
+<template>
+  <div id="root">
+    <div id="child"></div>
+  </div>
+</template>
+
+<script type="module">
+  export default window.egami.dom2png(document.querySelector('#root'), {
+    width: 200,
+    height: 200,
+    style: {
+      transform: 'scale(2)',
+      transformOrigin: 'top left',
+    },
+  })
+</script>

@@ -1,0 +1,31 @@
+<style>
+  #root {
+    background-color: white;
+    font-family: sans-serif;
+    font-size: 20px;
+  }
+
+  .with-before::before {
+    content: 'JUSTBEFORE';
+  }
+
+  .with-after::after {
+    content: 'JUSTAFTER';
+  }
+
+  .with-both::before {
+    content: 'BOTHBEFORE';
+  }
+
+  .with-both::after {
+    content: 'BOTHAFTER';
+  }
+</style>
+
+<template>
+  <div id="root">
+    <div class="with-before"></div>
+    <div class="with-after"></div>
+    <div class="with-both"></div>
+  </div>
+</template>

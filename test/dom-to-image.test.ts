@@ -9,10 +9,13 @@ import glob from 'glob'
 import type { Browser, ElementHandle, Page } from 'puppeteer'
 import type { PreviewServer } from 'vite'
 
-function compileHTML(str: string) {
-  const styleCode = str.match(/<style>(.*)<\/style>/s)?.[1] ?? ''
-  const templateCode = str.match(/<template.*?>(.*)<\/template>/s)?.[1] ?? ''
-  const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1] ?? ''
+function parseHTML(str: string) {
+  const styleCode = str.match(/<style>(.*)<\/style>/s)?.[1]
+    ?? '* { box-sizing: border-box; }'
+  const templateCode = str.match(/<template.*?>(.*)<\/template>/s)?.[1]
+    ?? '<div>template</div>'
+  const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
+    ?? 'window.egami.dom2png(document.querySelector(\'body > *\'))'
   return {
     styleCode,
     templateCode,
@@ -66,7 +69,7 @@ describe('dom to image', async () => {
       .map(async path => {
         return {
           path,
-          ...compileHTML(await readFile(path, 'utf-8')),
+          ...parseHTML(await readFile(path, 'utf-8')),
         }
       }),
   )

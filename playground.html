@@ -7,31 +7,26 @@
     * {
       box-sizing: border-box;
     }
-  </style>
-  <style>
-    #app {
+
+    #root {
+      font-size: 16px;
       width: 100px;
       height: 100px;
-      background-color: blue;
-    }
-
-    .child {
-      width: 100%;
-      height: 50%;
       background-color: red;
+      border-color: black;
+      border: solid;
+      border-width: 10px 10px 0.625em 10px;
     }
   </style>
 </head>
 <body>
-<div id="app">
-  <div class="child"></div>
-</div>
+<div id="root"></div>
 <script type="module">
   import { dom2image } from './dist/index.mjs'
 
   window.onload = async () => {
     document.body.appendChild(
-      await dom2image(document.querySelector('#app'), { scale: 1 }),
+      await dom2image(document.querySelector('#root'), { scale: 1 }),
     )
   }
 </script>
