@@ -49,43 +49,38 @@ export function createImage(url: string, ownerDocument: Document): HTMLImageElem
   return img
 }
 
-export function loadImage<T extends HTMLImageElement | SVGImageElement>(image: T): Promise<T>
-export function loadImage(image: string, ownerDocument: Document): Promise<HTMLImageElement>
-export function loadImage(image: any, ownerDocument?: any): Promise<any> {
-  const img = (
-    typeof image === 'string'
-      ? createImage(image, ownerDocument)
-      : image
-  ) as HTMLImageElement | SVGImageElement
+type Media = HTMLVideoElement | HTMLImageElement | SVGImageElement
+
+export function loadMedia<T extends Media>(media: T): Promise<T>
+export function loadMedia(media: string, ownerDocument: Document): Promise<HTMLImageElement>
+export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
+  const node: Media = typeof media === 'string'
+    ? createImage(media, ownerDocument)
+    : media
+
   return new Promise(resolve => {
-    if (isSVGImageElementNode(img)) {
-      if (!img.href.baseVal) {
-        resolve(img)
-        return
-      }
+    if (isVideoElement(node)) {
+      if (node.readyState >= 2 || (!node.src && !node.currentSrc)) return resolve(node)
+
+      node.addEventListener('loadeddata', () => resolve(node), { once: true })
     } else {
-      if (img.complete) {
-        resolve(img)
-        return
+      if (isSVGImageElementNode(node)) {
+        if (!node.href.baseVal) return resolve(node)
+      } else {
+        if (node.complete || (!node.src && !node.currentSrc)) return resolve(node)
       }
 
-      if (!img.src) {
-        resolve(img)
-        return
-      }
-    }
+      node.addEventListener(
+        'load',
+        () => resolve(node),
+        { once: true },
+      )
 
-    const onload = img.onload
-    const onerror = img.onerror
-
-    img.onload = function (e) {
-      resolve(img)
-      onload?.call(this, e)
-    }
-
-    img.onerror = function (event, source, lineno, colnor, error) {
-      resolve(img)
-      onerror?.(event, source, lineno, colnor, error)
+      node.addEventListener(
+        'error',
+        () => resolve(node),
+        { once: true },
+      )
     }
   })
 }
@@ -127,8 +122,8 @@ export function getMimeType(url: string): string {
 }
 
 export async function waitLoaded(el: HTMLElement) {
-  await Promise.all(
-    Array.from(el.querySelectorAll('img'))
-      .map(img => loadImage(img)),
-  )
+  await Promise.all([
+    ...Array.from(el.querySelectorAll('img')).map(loadMedia),
+    ...Array.from(el.querySelectorAll('video')).map(loadMedia),
+  ])
 }

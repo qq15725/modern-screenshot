@@ -8,7 +8,8 @@ import {
   isScriptElement,
   isSlotElement,
   isStyleElement,
-  isTextNode, isVideoElement,
+  isTextNode,
+  isVideoElement,
 } from './utils'
 import { applyCssStyleWithOptions } from './options'
 import { createElementClone } from './create-element-clone'

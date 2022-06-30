@@ -1,5 +1,5 @@
 import { resolveOptions } from '../options'
-import { loadImage } from '../utils'
+import { loadMedia } from '../utils'
 
 import type { Options, ResolvedOptions } from '../options'
 
@@ -43,7 +43,7 @@ export async function image2canvas<T extends HTMLImageElement>(
 ): Promise<HTMLCanvasElement> {
   const resolved = await resolveOptions(image, options)
 
-  const loaded = await loadImage(image)
+  const loaded = await loadMedia(image)
 
   const { canvas, context } = createCanvas(image.ownerDocument, resolved)
 

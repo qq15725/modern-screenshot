@@ -1,4 +1,4 @@
-import { isDataUrl, isImageElement, isSVGElementNode, loadImage } from './utils'
+import { isDataUrl, isImageElement, isSVGElementNode, loadMedia } from './utils'
 import { fetchDataUrl } from './fetch'
 
 import type { ResolvedOptions } from './options'
@@ -16,5 +16,5 @@ export async function embedImageElement<T extends HTMLImageElement | SVGImageEle
     return
   }
 
-  return await loadImage(clone)
+  return await loadMedia(clone)
 }

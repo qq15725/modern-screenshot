@@ -9,14 +9,26 @@ import glob from 'glob'
 import type { Browser, ElementHandle, Page } from 'puppeteer'
 import type { PreviewServer } from 'vite'
 
+const port = 3000
+const indexURL = `http://localhost:${ port }/dist/index.mjs`
+const assetsBaseURL = `http://localhost:${ port }/test/assets`
+
 function parseHTML(str: string) {
-  const styleCode = str.match(/<style>(.*)<\/style>/s)?.[1]
+  const styleCode = (
+    str.match(/<style>(.*)<\/style>/s)?.[1]
     ?? '* { box-sizing: border-box; }'
-  const templateCode = str.match(/<template.*?>(.*)<\/template>/s)?.[1]
+  ).replace(/__BASE_URL__/g, assetsBaseURL)
+
+  const templateCode = (
+    str.match(/<template.*?>(.*)<\/template>/s)?.[1]
     ?? '<div>template</div>'
+  ).replace(/__BASE_URL__/g, assetsBaseURL)
+
   const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
     ?? 'window.egami.dom2png(document.querySelector(\'body > *\'))'
+
   const skipExpect = !!str.match(/<skip-expect.*\/>/s)?.[0]
+
   return {
     styleCode,
     templateCode,
@@ -41,7 +53,7 @@ describe('dom to image in browser', async () => {
         outDir: join(__dirname, '..'),
       },
       preview: {
-        port: 3000,
+        port,
       },
     })
     browser = await puppeteer.launch()
@@ -52,7 +64,7 @@ describe('dom to image in browser', async () => {
   <meta charset="utf-8">
   <title>Puppeteer Vitest Test Page</title>
   <script type="module">
-    import * as egami from 'http://localhost:3000/dist/index.mjs'
+    import * as egami from '${ indexURL }'
     window.egami = egami
   </script>
   <style id="style"></style>
