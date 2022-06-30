@@ -2,24 +2,14 @@ import { describe, expect, test } from 'vitest'
 import { Window } from 'happy-dom'
 import { dom2svg } from '..'
 
-describe('nodejs', async () => {
+describe('use happy-dom in nodejs', async () => {
   test('dom to svg', async () => {
     const window = new Window()
     const document = window.document
     document.write(`
 <html>
-  <head>
-   <title>Test page</title>
-   <style>
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-   </style>
-  </head>
   <body>
-    <div class="container">
+    <div style="display: flex; justify-content: center; align-items: center;">
       <span>test1</span>
       <span>test2</span>
     </div>

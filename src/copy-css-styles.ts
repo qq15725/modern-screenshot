@@ -12,7 +12,9 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   for (let i = style.length - 1; i >= 0; i--) {
     const name = style.item(i)
     const value = style.getPropertyValue(name)
-    const priority = style.getPropertyPriority(name)
+    const priority = style.getPropertyPriority
+      ? style.getPropertyPriority(name)
+      : ''
     if (
       defaultStyle[name] === value
       && !node.getAttribute(name)
