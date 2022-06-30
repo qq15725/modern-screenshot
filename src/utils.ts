@@ -1,10 +1,10 @@
 export const IS_NODE = typeof process !== 'undefined'
 export const IN_BROWSER = typeof window !== 'undefined'
-export const isElementNode = (node: Node): node is Element => node.nodeType === Node.ELEMENT_NODE
+export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'
 export const isSVGImageElementNode = (node: Element): node is SVGImageElement => isSVGElementNode(node) && node.tagName === 'IMAGE'
 export const isHTMLElementNode = (node: Node): node is HTMLElement => isElementNode(node) && typeof (node as HTMLElement).style !== 'undefined' && !isSVGElementNode(node)
-export const isTextNode = (node: Node): node is Text => node.nodeType === Node.TEXT_NODE
+export const isTextNode = (node: Node): node is Text => node.nodeType === 3 // Node.TEXT_NODE
 export const isImageElement = (node: Element): node is HTMLImageElement => node.tagName === 'IMG'
 export const isVideoElement = (node: Element): node is HTMLVideoElement => node.tagName === 'VIDEO'
 export const isCanvasElement = (node: Element): node is HTMLCanvasElement => node.tagName === 'CANVAS'

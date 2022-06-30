@@ -27,7 +27,7 @@ function parseHTML(str: string) {
 
 const fixturesDir = join(__dirname, 'fixtures')
 
-describe('dom to image', async () => {
+describe('dom to image in browser', async () => {
   let server: PreviewServer
   let browser: Browser
   let page: Page
