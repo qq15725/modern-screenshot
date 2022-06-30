@@ -48,11 +48,13 @@ declare function canvas2blob(canvas: HTMLCanvasElement, options?: Options): Prom
 declare function dom2blob<T extends Node>(node: T, options?: Options): Promise<Blob | null>;
 declare function dom2canvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>;
 declare function dom2image<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>;
-declare function dom2png<T extends Node>(node: T, options?: Options): Promise<string>;
 declare function dom2jpeg<T extends Node>(node: T, options?: Options): Promise<string>;
 declare function dom2pixel<T extends Node>(node: T, options?: Options): Promise<Uint8ClampedArray>;
-declare function dom2svg<T extends Node>(node: T, options?: Options): Promise<SVGSVGElement>;
+declare function dom2png<T extends Node>(node: T, options?: Options): Promise<string>;
+declare function dom2svg<T extends Node>(node: T, options?: Options): Promise<SVGElement>;
+declare function image2canvas<T extends HTMLImageElement>(image: T, options?: Options): Promise<HTMLCanvasElement>;
 declare function svg2canvas<T extends SVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function svg2image<T extends SVGElement>(svg: T, _options?: Options): HTMLImageElement;
 ```
 
 ## 选项
@@ -106,14 +108,11 @@ export interface Options {
   /**
    * Maximum canvas size (pixels).
    *
+   * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+   *
    * default: 16384
    */
   maximumCanvasSize?: number
-
-  /**
-   * Global window
-   */
-  window?: any
 
   /**
    * Fetch resources
@@ -151,7 +150,7 @@ export interface Options {
      * A CSS string to specify for font embeds. If specified only this CSS will
      * be present in the resulting image.
      */
-    css?: string
+    cssText?: string
   }
 }
 ```
