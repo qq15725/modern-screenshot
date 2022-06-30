@@ -1,7 +1,6 @@
 import { getMimeType } from './utils'
-import { getWindow } from './get-window'
 
-import type { Options } from './options'
+import type { ResolvedOptions } from './options'
 
 export interface Base64Response {
   base64: string
@@ -10,17 +9,19 @@ export interface Base64Response {
 
 const cache = new Map<string, Promise<Base64Response | string>>()
 
-export function fetch(url: string, options?: Options) {
+export function fetch(url: string, options: ResolvedOptions) {
+  const { fetch } = options
+
   // cache bypass so we dont have CORS issues with cached images
   // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
-  if (options?.fetch?.bypassingCache) {
+  if (fetch?.bypassingCache) {
     url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
   }
 
-  return getWindow(options).fetch(url, options?.fetch?.requestInit)
+  return window.fetch(url, fetch?.requestInit)
 }
 
-export function fetchBase64(url: string, options?: Options, isImage?: boolean): Promise<Base64Response> {
+export function fetchBase64(url: string, options: ResolvedOptions, isImage?: boolean): Promise<Base64Response> {
   const cacheKey = url
 
   if (!cache.has(cacheKey)) {
@@ -45,7 +46,7 @@ export function fetchBase64(url: string, options?: Options, isImage?: boolean): 
 
           let placeholder = ''
 
-          if (isImage && options?.fetch?.placeholderImage) {
+          if (isImage && options.fetch?.placeholderImage) {
             const parts = options.fetch.placeholderImage.split(/,/)
             if (parts && parts[1]) placeholder = parts[1]
           }
@@ -63,13 +64,13 @@ export function fetchBase64(url: string, options?: Options, isImage?: boolean): 
   return cache.get(cacheKey)! as Promise<Base64Response>
 }
 
-export async function fetchDataUrl(url: string, options?: Options, isImage?: boolean) {
+export async function fetchDataUrl(url: string, options: ResolvedOptions, isImage?: boolean) {
   const { base64, contentType } = await fetchBase64(url, options, isImage)
   const mimeType = getMimeType(url) ?? contentType
   return `data:${ mimeType };base64,${ base64 }`
 }
 
-export async function fetchText(url: string, options?: Options): Promise<string> {
+export async function fetchText(url: string, options: ResolvedOptions): Promise<string> {
   const cacheKey = url
 
   if (!cache.has(cacheKey)) {

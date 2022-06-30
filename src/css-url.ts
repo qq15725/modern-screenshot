@@ -1,14 +1,14 @@
 import { fetchDataUrl } from './fetch'
 import { isDataUrl, resolveUrl } from './utils'
 
-import type { Options } from './options'
+import type { ResolvedOptions } from './options'
 
 const CSS_URL_RE = /url\((['"]?)([^'"]+?)\1\)/g
 
 export async function replaceCssUrlToDataUrl(
   cssText: string,
-  baseUrl?: string | null,
-  options?: Options,
+  baseUrl: string | null,
+  options: ResolvedOptions,
   isImage?: boolean,
 ): Promise<string> {
   if (!hasCssUrl(cssText)) return cssText

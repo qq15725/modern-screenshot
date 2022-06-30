@@ -6,7 +6,7 @@ export async function dom2png<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<string> {
-  return (
-    await dom2canvas(node, options)
-  ).toDataURL()
+  const canvas = await dom2canvas(node, options)
+
+  return canvas.toDataURL()
 }

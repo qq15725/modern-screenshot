@@ -1,5 +1,7 @@
+import { resolveOptions } from '../options'
 import { dom2svg } from './dom2svg'
-import { svg2canvas } from './svg2canvas'
+import { svg2image } from './svg2image'
+import { image2canvas } from './image2canvas'
 
 import type { Options } from '../options'
 
@@ -7,10 +9,11 @@ export async function dom2canvas<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<HTMLCanvasElement> {
-  return await svg2canvas(
-    node instanceof SVGElement
-      ? node
-      : await dom2svg(node, options),
-    options,
-  )
+  const resolved = await resolveOptions(node, options)
+
+  const svg = await dom2svg(node, resolved)
+
+  const image = await svg2image(svg, resolved)
+
+  return await image2canvas(image, resolved)
 }

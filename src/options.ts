@@ -1,3 +1,5 @@
+import { IS_NODE, isElementNode, isHTMLElementNode, waitLoaded } from './utils'
+
 export interface Options {
   /**
    * Width in pixels to be applied to node before rendering.
@@ -46,14 +48,11 @@ export interface Options {
   /**
    * Maximum canvas size (pixels).
    *
+   * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+   *
    * default: 16384
    */
   maximumCanvasSize?: number
-
-  /**
-   * Global window
-   */
-  window?: any
 
   /**
    * Fetch resources
@@ -91,6 +90,65 @@ export interface Options {
      * A CSS string to specify for font embeds. If specified only this CSS will
      * be present in the resulting image.
      */
-    css?: string
+    cssText?: string
+  }
+}
+
+export interface ResolvedOptions extends Options {
+  width: number
+  height: number
+  scale: number
+  type: string
+  quality: number
+  maximumCanvasSize: number
+  loaded: boolean
+}
+
+export async function resolveOptions(node: Node, options?: Options): Promise<ResolvedOptions> {
+  const resolved = { ...options } as ResolvedOptions
+
+  if (isHTMLElementNode(node) && !resolved.loaded) {
+    await waitLoaded(node)
+    resolved.loaded = true
+  }
+
+  resolved.width = resolved.width ?? 0
+  resolved.height = resolved.height ?? 0
+  resolved.type = resolved.type ?? 'image/png'
+  resolved.quality = resolved.quality ?? 1
+  resolved.maximumCanvasSize = resolved.maximumCanvasSize ?? 16384
+
+  if (!resolved.scale) {
+    resolved.scale = Number(
+      (IS_NODE ? process.env.devicePixelRatio : 0)
+      || node.ownerDocument?.defaultView?.devicePixelRatio
+      || 1,
+    )
+  }
+
+  if ((!resolved.width || !resolved.height) && isElementNode(node)) {
+    const box = node.getBoundingClientRect()
+    resolved.width = resolved.width
+      || box.width
+      || Number(node.getAttribute('width'))
+      || 0
+    resolved.height = resolved.height
+      || box.height
+      || Number(node.getAttribute('height'))
+      || 0
+  }
+
+  return resolved
+}
+
+export function applyCssStyleWithOptions(style: CSSStyleDeclaration, options: ResolvedOptions) {
+  const { backgroundColor, width, height, style: styles } = options
+  if (backgroundColor) style.backgroundColor = backgroundColor
+  if (width) style.width = `${ width }px`
+  if (height) style.height = `${ height }px`
+  if (styles) {
+    for (const name in styles) {
+      style[name] = styles[name]!
+    }
   }
 }

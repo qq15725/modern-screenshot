@@ -1,40 +1,35 @@
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
-import { getWindow } from './get-window'
 import { fetch, fetchText } from './fetch'
 
-import type { HandleNodeFunc } from './types'
-import type { Options } from './options'
+import type { ResolvedOptions } from './options'
 
-export const embedWebFont: HandleNodeFunc = async (cloned, options) => {
-  if (options?.font === false || !(cloned instanceof Element)) return
+export async function embedWebFont<T extends Element>(
+  clone: T,
+  options: ResolvedOptions,
+) {
+  const ownerDocument = clone.ownerDocument
 
-  let cssText = options?.font?.css
-    ?? await parseWebFontCss(cloned.ownerDocument, options)
+  let cssText = (options.font as any)?.cssText
+    ?? await parseWebFontCss(ownerDocument.styleSheets, options)
 
   if (!cssText) return
 
-  cssText = filterPreferredFormat(cssText)
+  cssText = filterPreferredFormat(cssText, options)
 
-  const style = getWindow(options).document.createElement('style')
-  style.appendChild(getWindow(options).document.createTextNode(cssText))
-
-  if (cloned.firstChild) {
-    cloned.insertBefore(style, cloned.firstChild)
+  const style = ownerDocument.createElement('style')
+  style.appendChild(ownerDocument.createTextNode(cssText))
+  if (clone.firstChild) {
+    clone.insertBefore(style, clone.firstChild)
   } else {
-    cloned.appendChild(style)
+    clone.appendChild(style)
   }
 }
 
 export async function parseWebFontCss(
-  document?: Document,
-  options?: Options,
+  styleSheets: StyleSheetList,
+  options: ResolvedOptions,
 ): Promise<string> {
-  if (!document) return ''
-
-  const cssRules = await getCssRules(
-    Array.from(document.styleSheets),
-    options,
-  )
+  const cssRules = await getCssRules(Array.from(styleSheets), options)
 
   const cssTexts = await Promise.all(
     cssRules
@@ -58,7 +53,7 @@ export async function parseWebFontCss(
 
 async function getCssRules(
   styleSheets: CSSStyleSheet[],
-  options?: Options,
+  options: ResolvedOptions,
 ): Promise<CSSRule[]> {
   const ret: CSSRule[] = []
 
@@ -74,7 +69,7 @@ async function getCssRules(
               const url = (rule as CSSImportRule).href
               try {
                 const cssText = await fetchText(url, options)
-                const embedCssText = await embedFonts(cssText, url)
+                const embedCssText = await embedFonts(cssText, url, options)
                 for (const rule of parseCss(embedCssText)) {
                   try {
                     sheet.insertRule(
@@ -112,7 +107,7 @@ async function getCssRules(
 const URL_MATCH_RE = /url\([^)]+\)/g
 const URL_REPLACE_RE = /url\(["']?([^"')]+)["']?\)/g
 
-async function embedFonts(cssText: string, baseUrl: string, options?: Options): Promise<string> {
+async function embedFonts(cssText: string, baseUrl: string, options: ResolvedOptions): Promise<string> {
   await Promise.all(
     cssText.match(URL_MATCH_RE)?.map(async location => {
       let url = location.replace(URL_REPLACE_RE, '$1')
@@ -178,10 +173,10 @@ const FONT_SRC_RE = /src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g
 
 function filterPreferredFormat(
   str: string,
-  options?: Options,
+  options: ResolvedOptions,
 ): string {
-  const preferredFormat = options?.font
-    ? options?.font?.preferredFormat
+  const preferredFormat = options.font
+    ? options.font?.preferredFormat
     : undefined
 
   return preferredFormat

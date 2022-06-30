@@ -1,13 +1,27 @@
-import { embedNodeImage } from './embed-node-image'
-import { embedStyleBackground } from './embed-style-background'
+import { embedImageElement } from './embed-image-element'
+import { embedCssStyleImage } from './embed-css-style-image'
+import {
+  isElementNode,
+  isHTMLElementNode,
+  isImageElement,
+  isSVGImageElementNode,
+} from './utils'
 
-import type { HandleNodeFunc } from './types'
+import type { ResolvedOptions } from './options'
 
-export const embedNode: HandleNodeFunc = async (cloned, options) => {
-  await embedNodeImage(cloned, options)
-  await embedStyleBackground(cloned, options)
+export async function embedNode<T extends Node>(clone: T, options: ResolvedOptions) {
+  if (isElementNode(clone)) {
+    if (isImageElement(clone) || isSVGImageElementNode(clone)) {
+      await embedImageElement(clone, options)
+    }
+  }
+
+  if (isHTMLElementNode(clone)) {
+    await embedCssStyleImage(clone.style, options)
+  }
+
   await Promise.all(
-    Array.from(cloned.childNodes)
+    Array.from(clone.childNodes)
       .map((child) => embedNode(child, options)),
   )
 }
