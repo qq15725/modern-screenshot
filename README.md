@@ -58,9 +58,7 @@ dom2png(document.querySelector('#app')).then(png => {
   <script>
     window.onload = async () => {
       document.body.appendChild(
-        await window.egami.dom2image(document.querySelector('body > *'), {
-          scale: 1,
-        }),
+        await window.egami.dom2image(document.querySelector('body > *')),
       )
     }
   </script>
