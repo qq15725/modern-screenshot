@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { Window } from 'happy-dom'
-import { dom2svg } from '..'
+import { dom2svg } from '../src'
 
 describe('use happy-dom in nodejs', async () => {
   test('dom to svg', async () => {
