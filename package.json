@@ -45,7 +45,7 @@
     "release": "bumpp package.json --commit \"chore(release): publish v%s\" --push --tag && pnpm publish",
     "coverage": "vitest run --coverage",
     "test": "vitest --no-threads --no-isolate",
-    "test:ui": "pnpm build && vitest --ui"
+    "test:ui": "vitest --no-threads --no-isolate --ui"
   },
   "devDependencies": {
     "@qq15725/eslint-config": "^1.1.0",
