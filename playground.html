@@ -8,15 +8,16 @@
       box-sizing: border-box;
     }
   </style>
+  <script src="./dist/egami.js"></script>
 </head>
 <body>
-<div></div>
-<script type="module">
-  import { dom2image } from './dist/index.mjs'
-
+<div>Playground</div>
+<script>
   window.onload = async () => {
     document.body.appendChild(
-      await dom2image(document.querySelector('body > *')),
+      await window.egami.dom2image(document.querySelector('body > *'), {
+        scale: 1,
+      }),
     )
   }
 </script>

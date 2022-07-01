@@ -10,7 +10,7 @@ import type { Browser, ElementHandle, Page } from 'puppeteer'
 import type { PreviewServer } from 'vite'
 
 const port = 3000
-const indexURL = `http://localhost:${ port }/dist/index.mjs`
+const indexURL = `http://localhost:${ port }/dist/egami.js`
 const assetsBaseURL = `http://localhost:${ port }/test/assets`
 
 function parseHTML(str: string) {
@@ -63,11 +63,8 @@ describe('dom to image in browser', async () => {
 <head>
   <meta charset="utf-8">
   <title>Puppeteer Vitest Test Page</title>
-  <script type="module">
-    import * as egami from '${ indexURL }'
-    window.egami = egami
-  </script>
   <style id="style"></style>
+  <script src="${ indexURL }"></script>
 </head>
 <body></body>
 </html>`)
