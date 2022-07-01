@@ -3,23 +3,27 @@
 <head>
   <meta charset="utf-8">
   <title>Playground</title>
+  <script src="./dist/egami.js"></script>
+  <script>
+    window.onload = async () => {
+      document.body.appendChild(
+        await window.egami.dom2image(document.querySelector('body > *'), {
+          style: {
+            opacity: '1',
+          },
+        }),
+      )
+    }
+  </script>
   <style>
     * {
-      box-sizing: border-box;
+      text-align: center;
     }
   </style>
-  <script src="./dist/egami.js"></script>
 </head>
 <body>
-<div>Playground</div>
-<script>
-  window.onload = async () => {
-    document.body.appendChild(
-      await window.egami.dom2image(document.querySelector('body > *'), {
-        scale: 1,
-      }),
-    )
-  }
-</script>
+  <h1 style="opacity: 0;">image</h1>
+  <h1>egami</h1>
+  <h1>→</h1>
 </body>
 </html>

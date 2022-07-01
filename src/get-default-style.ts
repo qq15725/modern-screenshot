@@ -12,6 +12,8 @@ export function getDefaultStyle(tagName: string) {
     if (!sandbox) {
       sandbox = document.createElement('iframe')
       sandbox.id = SANDBOX_ID
+      sandbox.width = '0'
+      sandbox.height = '0'
       sandbox.style.visibility = 'hidden'
       sandbox.style.position = 'fixed'
       document.body.appendChild(sandbox)

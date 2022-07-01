@@ -4,6 +4,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   node: T,
   clone: T,
   ownerWindow: Window,
+  isRootNode: boolean,
 ) {
   const style = ownerWindow.getComputedStyle(node)
   const cloneStyle = clone.style
@@ -12,14 +13,27 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   for (let i = style.length - 1; i >= 0; i--) {
     const name = style.item(i)
     const value = style.getPropertyValue(name)
-    const priority = style.getPropertyPriority
-      ? style.getPropertyPriority(name)
-      : ''
+    const priority = style.getPropertyPriority?.(name) ?? ''
+
+    // clean "margin" of root node
+    if (
+      isRootNode
+      && name.startsWith('margin')
+      && value
+    ) {
+      cloneStyle.setProperty(name, '0', priority)
+      continue
+    }
+
+    // skip non user style
     if (
       defaultStyle[name] === value
       && !node.getAttribute(name)
       && !priority
-    ) continue
+    ) {
+      continue
+    }
+
     cloneStyle.setProperty(name, value, priority)
   }
 

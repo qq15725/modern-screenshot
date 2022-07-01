@@ -8,13 +8,22 @@
     window.onload = async () => {
       document.body.appendChild(
         await window.egami.dom2image(document.querySelector('body > *'), {
-          scale: 1,
+          style: {
+            opacity: '1',
+          },
         }),
       )
     }
   </script>
+  <style>
+    * {
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <div>egami → image</div>
+  <h1 style="opacity: 0;">image</h1>
+  <h1>egami</h1>
+  <h1>→</h1>
 </body>
 </html>

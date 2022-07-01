@@ -78,7 +78,7 @@ export function cloneNode<T extends Node>(
 
     clone.style.transitionProperty = 'none'
 
-    copyCssStyles(node, clone, ownerWindow)
+    copyCssStyles(node, clone, ownerWindow, isRootNode)
 
     copyPseudoContent(node, clone, ownerWindow)
 

@@ -104,41 +104,43 @@ export interface ResolvedOptions extends Options {
   loaded: boolean
 }
 
-export async function resolveOptions(node: Node, options?: Options): Promise<ResolvedOptions> {
-  const resolved = { ...options } as ResolvedOptions
+export async function resolveOptions(node: Node, userOptions?: Options): Promise<ResolvedOptions> {
+  const ownerWindow = node.ownerDocument?.defaultView
 
-  if (isHTMLElementNode(node) && !resolved.loaded) {
+  const options = { ...userOptions } as ResolvedOptions
+
+  if (isHTMLElementNode(node) && !options.loaded) {
     await waitLoaded(node)
-    resolved.loaded = true
+    options.loaded = true
   }
 
-  resolved.width = resolved.width ?? 0
-  resolved.height = resolved.height ?? 0
-  resolved.type = resolved.type ?? 'image/png'
-  resolved.quality = resolved.quality ?? 1
-  resolved.maximumCanvasSize = resolved.maximumCanvasSize ?? 16384
+  options.width = options.width ?? 0
+  options.height = options.height ?? 0
+  options.type = options.type ?? 'image/png'
+  options.quality = options.quality ?? 1
+  options.maximumCanvasSize = options.maximumCanvasSize ?? 16384
 
-  if (!resolved.scale) {
-    resolved.scale = Number(
+  if (!options.scale) {
+    options.scale = Number(
       (IS_NODE ? process.env.devicePixelRatio : 0)
-      || node.ownerDocument?.defaultView?.devicePixelRatio
+      || ownerWindow?.devicePixelRatio
       || 1,
     )
   }
 
-  if ((!resolved.width || !resolved.height) && isElementNode(node)) {
+  if ((!options.width || !options.height) && isElementNode(node)) {
     const box = node.getBoundingClientRect()
-    resolved.width = resolved.width
+    options.width = options.width
       || box.width
       || Number(node.getAttribute('width'))
       || 0
-    resolved.height = resolved.height
+    options.height = options.height
       || box.height
       || Number(node.getAttribute('height'))
       || 0
   }
 
-  return resolved
+  return options
 }
 
 export function applyCssStyleWithOptions(style: CSSStyleDeclaration, options: ResolvedOptions) {
