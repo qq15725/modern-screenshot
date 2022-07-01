@@ -34,6 +34,8 @@ npm i egami
 
 ## 使用
 
+### 基本用法
+
 ```ts
 import { dom2png } from 'egami'
 
@@ -42,6 +44,31 @@ dom2png(document.querySelector('#app')).then(png => {
   img.src = png
   document.body.appendChild(img)
 })
+```
+
+### CDN 的用法
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>egami → image</title>
+  <script src="https://cdn.jsdelivr.net/npm/egami/dist/egami.js"></script>
+  <script>
+    window.onload = async () => {
+      document.body.appendChild(
+        await window.egami.dom2image(document.querySelector('body > *'), {
+          scale: 1,
+        }),
+      )
+    }
+  </script>
+</head>
+<body>
+  <div>egami → image</div>
+</body>
+</html>
 ```
 
 ## 所有转换
