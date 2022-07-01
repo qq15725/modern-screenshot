@@ -7,6 +7,9 @@
   <a href="https://www.npmjs.com/package/egami">
     <img src="https://img.shields.io/npm/v/egami.svg" alt="Version">
   </a>
+  <a href="https://cdn.jsdelivr.net/npm/egami/dist/egami.js">
+    <img src="https://img.shields.io/bundlephobia/minzip/egami" alt="Minzip">
+  </a>
 </p>
 
 <p align="center"><a href="README.md">README</a> | <a href="README_zh.md">中文文档</a></p>
