@@ -1,0 +1,27 @@
+<style>
+  @import url(__CORS_BASE_URL__/font/font.css);
+
+  * {
+    box-sizing: border-box;
+  }
+
+  #root {
+    font-family: 'CustomFont';
+  }
+</style>
+
+<template>
+  <div id="root">
+    <h1>External image (CORS)</h1>
+    <div>
+      <img src="__CORS_BASE_URL__/image.png">
+    </div>
+    <span>
+      <span>
+        <img src="__CORS_BASE_URL__/image.jpeg">
+      </span>
+    </span>
+  </div>
+</template>
+
+<skip-expect />

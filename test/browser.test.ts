@@ -13,16 +13,23 @@ const port = 3000
 const indexURL = `http://localhost:${ port }/dist/egami.js`
 const assetsBaseURL = `http://localhost:${ port }/test/assets`
 
+const corsPort = 3001
+const corsAssetsBaseURL = `http://localhost:${ corsPort }/test/assets`
+
 function parseHTML(str: string) {
   const styleCode = (
     str.match(/<style>(.*)<\/style>/s)?.[1]
     ?? '* { box-sizing: border-box; }'
-  ).replace(/__BASE_URL__/g, assetsBaseURL)
+  )
+    .replace(/__BASE_URL__/g, assetsBaseURL)
+    .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
 
   const templateCode = (
     str.match(/<template.*?>(.*)<\/template>/s)?.[1]
     ?? '<div>template</div>'
-  ).replace(/__BASE_URL__/g, assetsBaseURL)
+  )
+    .replace(/__BASE_URL__/g, assetsBaseURL)
+    .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
 
   const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
     ?? 'window.egami.dom2png(document.querySelector(\'body > *\'))'
@@ -41,6 +48,7 @@ const fixturesDir = join(__dirname, 'fixtures')
 
 describe('dom to image in browser', async () => {
   let server: PreviewServer
+  let corsServer: PreviewServer
   let browser: Browser
   let page: Page
   let body: ElementHandle<HTMLBodyElement>
@@ -49,12 +57,12 @@ describe('dom to image in browser', async () => {
   beforeAll(async () => {
     process.env.devicePixelRatio = '1'
     server = await preview({
-      build: {
-        outDir: join(__dirname, '..'),
-      },
-      preview: {
-        port,
-      },
+      build: { outDir: join(__dirname, '..') },
+      preview: { port },
+    })
+    corsServer = await preview({
+      build: { outDir: join(__dirname, '..') },
+      preview: { port: corsPort },
     })
     browser = await puppeteer.launch()
     page = await browser.newPage()
@@ -77,6 +85,9 @@ describe('dom to image in browser', async () => {
     await browser.close()
     await new Promise<void>((resolve, reject) => {
       server.httpServer.close(error => error ? reject(error) : resolve())
+    })
+    await new Promise<void>((resolve, reject) => {
+      corsServer.httpServer.close(error => error ? reject(error) : resolve())
     })
   })
 
