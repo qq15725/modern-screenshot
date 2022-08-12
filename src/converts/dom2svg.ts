@@ -28,8 +28,11 @@ function createForeignObject(document: Document): SVGForeignObjectElement {
 }
 
 const fixStyles = `<style>
-  .egami__background-clip--text { -webkit-background-clip: text; }
-</style>`.replace(/\n/g, '')
+  .egami__background-clip--text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+</style>`
 
 export async function dom2svg<T extends Node>(
   node: T,

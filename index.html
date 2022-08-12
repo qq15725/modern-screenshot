@@ -15,10 +15,10 @@
     body > div > #root {
       display: inline;
       font-weight: 700;
-      font-size: 20px;
+      font-size: 60px;
       -webkit-text-fill-color: transparent;
       -webkit-background-clip: text;
-      background-image: linear-gradient(90deg, rgb(236, 245, 244) 10%, rgb(56, 239, 125) 50%, rgb(246, 79, 89) 90%);
+      background-image: linear-gradient(90deg, rgb(0, 0, 0) 10%, rgb(9, 124, 51) 50%, rgb(247, 9, 20) 90%);
     }
   </style>
 </head>
@@ -28,9 +28,9 @@
   </div>
 
   <script type="module" async>
-    import { dom2svg } from './src'
+    import { dom2image } from './src'
 
-    document.body.appendChild(await dom2svg(document.querySelector('#root')))
+    document.body.appendChild(await dom2image(document.querySelector('#root')))
   </script>
 </body>
 </html>
