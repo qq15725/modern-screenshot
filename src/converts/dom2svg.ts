@@ -27,6 +27,10 @@ function createForeignObject(document: Document): SVGForeignObjectElement {
   return foreignObject
 }
 
+const fixStyles = `<style>
+  .egami__background-clip--text { -webkit-background-clip: text; }
+</style>`.replace(/\n/g, '')
+
 export async function dom2svg<T extends Node>(
   node: T,
   options?: Options,
@@ -47,6 +51,7 @@ export async function dom2svg<T extends Node>(
   const ownerDocument = node.ownerDocument ?? document
   const { width, height } = resolvedOptions
   const svg = createSvg(width, height, ownerDocument)
+  svg.innerHTML = fixStyles
   const foreignObject = createForeignObject(ownerDocument)
   foreignObject.append(clone)
   svg.appendChild(foreignObject)

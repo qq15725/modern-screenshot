@@ -27,13 +27,14 @@ export function getDefaultStyle(tagName: string) {
   el.textContent = ' '
   const style = win.getComputedStyle(el)
   const styles: Record<string, any> = {}
-  Array.from(style).forEach(name => {
+  for (let i = style.length - 1; i >= 0; i--) {
+    const name = style.item(i)
     if (name === 'width' || name === 'height') {
       styles[name] = 'auto'
     } else {
       styles[name] = style.getPropertyValue(name)
     }
-  })
+  }
   win.document.body.removeChild(el)
   defaultStyles.set(tagName, styles)
   return styles

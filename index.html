@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Playground</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+    }
+
+    body > div > #root {
+      display: inline;
+      font-weight: 700;
+      font-size: 20px;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      background-image: linear-gradient(90deg, rgb(236, 245, 244) 10%, rgb(56, 239, 125) 50%, rgb(246, 79, 89) 90%);
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div id="root">TEXT BACKGROUND CLIP</div>
+  </div>
+
+  <script type="module" async>
+    import { dom2svg } from './src'
+
+    document.body.appendChild(await dom2svg(document.querySelector('#root')))
+  </script>
+</body>
+</html>

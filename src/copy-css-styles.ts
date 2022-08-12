@@ -34,7 +34,11 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
       continue
     }
 
-    cloneStyle.setProperty(name, value, priority)
+    if (name === 'background-clip' && value === 'text') {
+      clone.classList.add('egami__background-clip--text')
+    } else {
+      cloneStyle.setProperty(name, value, priority)
+    }
   }
 
   // Css fixes

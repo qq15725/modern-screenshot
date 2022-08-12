@@ -1,6 +1,6 @@
 {
   "name": "egami",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "packageManager": "pnpm@7.0.0",
   "description": "Generate image using HTML5 canvas and SVG",
   "main": "dist/egami.js",
@@ -41,6 +41,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "dev": "vite",
     "build": "vite build && tsc --project tsconfig.build.json",
     "release": "bumpp package.json --commit \"chore(release): publish v%s\" --push --tag && pnpm publish",
     "coverage": "vitest run --coverage",
