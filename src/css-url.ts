@@ -3,8 +3,6 @@ import { isDataUrl, resolveUrl } from './utils'
 
 import type { ResolvedOptions } from './options'
 
-const CSS_URL_RE = /url\((['"]?)([^'"]+?)\1\)/g
-
 export async function replaceCssUrlToDataUrl(
   cssText: string,
   baseUrl: string | null,
@@ -32,13 +30,13 @@ export async function replaceCssUrlToDataUrl(
 }
 
 export function hasCssUrl(cssText: string): boolean {
-  return CSS_URL_RE.test(cssText)
+  return /url\((['"]?)([^'"]+?)\1\)/.test(cssText)
 }
 
 function parseCssUrls(cssText: string): string[] {
   const result: string[] = []
 
-  cssText.replace(CSS_URL_RE, (raw, quotation, url) => {
+  cssText.replace(/url\((['"]?)([^'"]+?)\1\)/g, (raw, quotation, url) => {
     result.push(url)
     return raw
   })
