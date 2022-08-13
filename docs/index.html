@@ -3,27 +3,52 @@
 <head>
   <meta charset="utf-8">
   <title>egami → image</title>
-  <script src="https://cdn.jsdelivr.net/npm/egami/dist/egami.js"></script>
-  <script>
-    window.onload = async () => {
-      document.body.appendChild(
-        await window.egami.dom2image(document.querySelector('body > *'), {
-          style: {
-            opacity: '1',
-          },
-        }),
-      )
-    }
-  </script>
-  <style>
-    * {
-      text-align: center;
-    }
-  </style>
+  <script src="https://unpkg.com/egami/dist/egami.js"></script>
+  <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body>
-  <h1 style="opacity: 0;">image</h1>
+  <div id="app">
+    <div style="display: flex;">
+      <textarea rows="10" style="min-width: 500px;" v-model="code"></textarea>
+      <div style="flex: 1;" class="egami" v-html="code"></div>
+    </div>
+    <div style="margin: 30px 0;">dom to image:</div>
+    <div style="text-align: center;">
+      <img width="500" :src="src"/>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = window.Vue
+    const { dom2png } = window.egami
+
+    createApp({
+      data() {
+        return {
+          code: `<div style="text-align: center;">
   <h1>egami</h1>
   <h1>→</h1>
+  <h1>image</h1>
+</div>`,
+          src: null,
+        }
+      },
+      mounted() {
+        this.genSrc()
+      },
+      watch: {
+        code() {
+          this.genSrc()
+        },
+      },
+      methods: {
+        genSrc() {
+          dom2png(document.querySelector('.egami')).then(src => {
+            this.src = src
+          })
+        },
+      },
+    }).mount('#app')
+  </script>
 </body>
 </html>
