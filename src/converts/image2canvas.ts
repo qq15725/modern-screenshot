@@ -4,10 +4,15 @@ import { loadMedia } from '../utils'
 import type { Options, ResolvedOptions } from '../options'
 
 function createCanvas(document: Document, options: ResolvedOptions) {
-  const { maximumCanvasSize: max, width, height, scale, backgroundColor } = options
+  const { width, height, scale, backgroundColor, maximumCanvasSize: max } = options
+
   const canvas = document.createElement('canvas')
-  canvas.width = width * scale
-  canvas.height = height * scale
+
+  canvas.width = Math.floor(width * scale)
+  canvas.height = Math.floor(height * scale)
+  canvas.style.width = `${ width }px`
+  canvas.style.height = `${ height }px`
+
   if (max) {
     if (canvas.width > max || canvas.height > max) {
       if (canvas.width > max && canvas.height > max) {
@@ -27,13 +32,14 @@ function createCanvas(document: Document, options: ResolvedOptions) {
       }
     }
   }
-  canvas.style.width = `${ width }px`
-  canvas.style.height = `${ height }px`
+
   const context = canvas.getContext('2d')
+
   if (context && backgroundColor) {
     context.fillStyle = backgroundColor
     context.fillRect(0, 0, canvas.width, canvas.height)
   }
+
   return { canvas, context }
 }
 

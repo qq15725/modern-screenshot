@@ -10,7 +10,7 @@ export async function svg2canvas<T extends SVGElement>(
 ): Promise<HTMLCanvasElement> {
   const resolved = await resolveOptions(svg, options)
 
-  const image = await svg2image(svg, resolved)
+  const image = await svg2image(svg)
 
   return await image2canvas(image, resolved)
 }

@@ -9,7 +9,7 @@ export async function embedImageElement<T extends HTMLImageElement | SVGImageEle
 ) {
   if (isImageElement(clone) && !isDataUrl(clone.src)) {
     clone.srcset = ''
-    clone.src = await fetchDataUrl(clone.src, options, true)
+    clone.src = await fetchDataUrl(clone.currentSrc || clone.src, options, true)
   } else if (isSVGElementNode(clone) && !isDataUrl(clone.href.baseVal)) {
     clone.href.baseVal = await fetchDataUrl(clone.href.baseVal, options, true)
   } else {

@@ -1,6 +1,6 @@
 import path from 'path'
 import { defineConfig } from 'vite'
-import { main, module, name } from './package.json'
+import { browser, module, name } from './package.json'
 
 const resolvePath = (str: string) => path.resolve(__dirname, str)
 
@@ -10,8 +10,8 @@ export default defineConfig({
       formats: ['es', 'cjs', 'umd'],
       fileName: format => {
         if (format === 'es') return path.basename(module)
-        if (format === 'umd') return path.basename(main)
-        return `${ name }.${ format }.js`
+        if (format === 'umd') return path.basename(browser)
+        return `${ name }.cjs`
       },
       entry: resolvePath('./src/index.ts'),
       name: 'egami',

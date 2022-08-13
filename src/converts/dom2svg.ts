@@ -5,27 +5,7 @@ import { removeDefaultStyleSandbox } from '../get-default-style'
 import { resolveOptions } from '../options'
 import { isElementNode, isSVGElementNode } from '../utils'
 
-import type { Options } from '../options'
-
-const xmlns = 'http://www.w3.org/2000/svg'
-
-function createSvg(width: number, height: number, document: Document): SVGSVGElement {
-  const svg = document.createElementNS(xmlns, 'svg')
-  svg.setAttribute('width', String(width))
-  svg.setAttribute('height', String(height))
-  svg.setAttribute('viewBox', `0 0 ${ width } ${ height }`)
-  return svg
-}
-
-function createForeignObject(document: Document): SVGForeignObjectElement {
-  const foreignObject = document.createElementNS(xmlns, 'foreignObject')
-  foreignObject.setAttribute('x', '0')
-  foreignObject.setAttribute('y', '0')
-  foreignObject.setAttribute('width', '100%')
-  foreignObject.setAttribute('height', '100%')
-  foreignObject.setAttribute('externalResourcesRequired', 'true')
-  return foreignObject
-}
+import type { Options, ResolvedOptions } from '../options'
 
 const fixStyles = `<style>
   .egami__background-clip--text {
@@ -33,6 +13,24 @@ const fixStyles = `<style>
     background-clip: text;
   }
 </style>`
+
+function createForeignObjectSvg(clone: Node, options: ResolvedOptions): SVGSVGElement {
+  const { width, height } = options
+  const ownerDocument = clone.ownerDocument ?? document
+  const xmlns = 'http://www.w3.org/2000/svg'
+  const svg = ownerDocument.createElementNS(xmlns, 'svg')
+  svg.setAttribute('viewBox', `0 0 ${ width } ${ height }`)
+  const foreignObject = ownerDocument.createElementNS(xmlns, 'foreignObject')
+  svg.innerHTML = fixStyles
+  foreignObject.setAttributeNS(null, 'x', '0%')
+  foreignObject.setAttributeNS(null, 'y', '0%')
+  foreignObject.setAttributeNS(null, 'width', '100%')
+  foreignObject.setAttributeNS(null, 'height', '100%')
+  foreignObject.setAttributeNS(null, 'externalResourcesRequired', 'true')
+  foreignObject.append(clone)
+  svg.appendChild(foreignObject)
+  return svg
+}
 
 export async function dom2svg<T extends Node>(
   node: T,
@@ -42,21 +40,17 @@ export async function dom2svg<T extends Node>(
     return node
   }
 
-  const resolvedOptions = await resolveOptions(node, options)
-  const clone = await cloneNode(node, resolvedOptions)
+  const resolved = await resolveOptions(node, options)
+
+  const clone = await cloneNode(node, resolved)
+
   removeDefaultStyleSandbox()
 
-  if (resolvedOptions.font !== false && isElementNode(clone)) {
-    await embedWebFont(clone, resolvedOptions)
+  if (resolved.font !== false && isElementNode(clone)) {
+    await embedWebFont(clone, resolved)
   }
 
-  await embedNode(clone, resolvedOptions)
-  const ownerDocument = node.ownerDocument ?? document
-  const { width, height } = resolvedOptions
-  const svg = createSvg(width, height, ownerDocument)
-  svg.innerHTML = fixStyles
-  const foreignObject = createForeignObject(ownerDocument)
-  foreignObject.append(clone)
-  svg.appendChild(foreignObject)
-  return svg
+  await embedNode(clone, resolved)
+
+  return createForeignObjectSvg(clone, resolved)
 }

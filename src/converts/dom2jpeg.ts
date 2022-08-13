@@ -1,10 +1,9 @@
 import { dom2canvas } from './dom2canvas'
-
-import type { Options } from '../options'
+import type { JpegOptions, Options } from '../options'
 
 export async function dom2jpeg<T extends Node>(
   node: T,
-  options?: Options,
+  options?: Options & JpegOptions,
 ): Promise<string> {
   const canvas = await dom2canvas(node, options)
 

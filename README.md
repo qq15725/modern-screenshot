@@ -69,20 +69,20 @@ dom2png(document.querySelector('#app')).then(png => {
 </html>
 ```
 
-## All converts
+## All convert
 
 ```ts
-declare function canvas2blob(canvas: HTMLCanvasElement, options?: Options): Promise<Blob | null>;
-declare function dom2blob<T extends Node>(node: T, options?: Options): Promise<Blob | null>;
+declare function canvas2blob(canvas: HTMLCanvasElement, options?: BlobOptions): Promise<Blob | null>;
+declare function dom2blob<T extends Node>(node: T, options?: Options & BlobOptions): Promise<Blob | null>;
 declare function dom2canvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>;
 declare function dom2image<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>;
-declare function dom2jpeg<T extends Node>(node: T, options?: Options): Promise<string>;
+declare function dom2jpeg<T extends Node>(node: T, options?: Options & JpegOptions): Promise<string>;
 declare function dom2pixel<T extends Node>(node: T, options?: Options): Promise<Uint8ClampedArray>;
 declare function dom2png<T extends Node>(node: T, options?: Options): Promise<string>;
 declare function dom2svg<T extends Node>(node: T, options?: Options): Promise<SVGElement>;
 declare function image2canvas<T extends HTMLImageElement>(image: T, options?: Options): Promise<HTMLCanvasElement>;
 declare function svg2canvas<T extends SVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function svg2image<T extends SVGElement>(svg: T, _options?: Options): HTMLImageElement;
+declare function svg2image<T extends SVGElement>(svg: T): HTMLImageElement;
 ```
 
 ## Options
@@ -109,17 +109,6 @@ export interface Options {
    * A string value for the background color, any valid CSS color value.
    */
   backgroundColor?: string
-
-  /**
-   * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
-   */
-  type?: string
-
-  /**
-   * A number between `0` and `1` indicating image quality (e.g. 0.92 => 92%)
-   * of the JPEG image.
-   */
-  quality?: number
 
   /**
    * An object whose properties to be copied to node's style before rendering.
@@ -180,5 +169,21 @@ export interface Options {
      */
     cssText?: string
   }
+}
+
+export interface JpegOptions {
+
+  /**
+   * A number between `0` and `1` indicating image quality (e.g. 0.92 => 92%)
+   * of the JPEG image.
+   */
+  quality?: number
+}
+
+export interface BlobOptions extends JpegOptions {
+  /**
+   * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
+   */
+  type?: string
 }
 ```

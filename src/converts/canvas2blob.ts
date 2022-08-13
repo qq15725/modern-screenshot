@@ -1,13 +1,11 @@
-import { resolveOptions } from '../options'
 import { IN_BROWSER } from '../utils'
-
-import type { Options } from '../options'
+import type { BlobOptions } from '../options'
 
 export async function canvas2blob(
   canvas: HTMLCanvasElement,
-  options?: Options,
+  options?: BlobOptions,
 ): Promise<Blob | null> {
-  const { type, quality } = await resolveOptions(canvas, options)
+  const { type = 'image/png', quality = 1 } = options || {}
 
   if (canvas.toBlob) {
     return new Promise(resolve => canvas.toBlob(resolve, type, quality))

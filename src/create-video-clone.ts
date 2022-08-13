@@ -18,7 +18,7 @@ export function createVideoClone<T extends HTMLVideoElement>(
       }
       return canvas
     } else if (video.poster) {
-      return createImage(video.poster, ownerDocument)
+      return createImage(video.poster, ownerDocument, true)
     }
   }
 

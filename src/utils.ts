@@ -41,9 +41,11 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
   return a.href
 }
 
-export function createImage(url: string, ownerDocument: Document): HTMLImageElement {
+export function createImage(url: string, ownerDocument: Document, useCORS = false): HTMLImageElement {
   const img = ownerDocument.createElement('img')
-  img.crossOrigin = 'anonymous'
+  if (useCORS) {
+    img.crossOrigin = 'anonymous'
+  }
   img.decoding = 'sync'
   img.src = url
   return img
@@ -67,7 +69,11 @@ export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
       if (isSVGImageElementNode(node)) {
         if (!node.href.baseVal) return resolve(node)
       } else {
-        if (node.complete || (!node.src && !node.currentSrc)) return resolve(node)
+        if (!node.src && !node.currentSrc) {
+          return resolve(node)
+        } else if (node.complete) {
+          setTimeout(() => resolve(node), 500)
+        }
       }
 
       node.addEventListener(

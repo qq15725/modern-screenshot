@@ -13,7 +13,7 @@ export async function dom2canvas<T extends Node>(
 
   const svg = await dom2svg(node, resolved)
 
-  const image = await svg2image(svg, resolved)
+  const image = await svg2image(svg)
 
   return await image2canvas(image, resolved)
 }

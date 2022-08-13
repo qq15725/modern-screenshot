@@ -44,7 +44,7 @@ export function fetchBase64(url: string, options: ResolvedOptions, isImage?: boo
         } catch (err) {
           console.error(err)
 
-          let placeholder = ''
+          let placeholder = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
           if (isImage && options.fetch?.placeholderImage) {
             const parts = options.fetch.placeholderImage.split(/,/)

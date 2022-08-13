@@ -14,9 +14,12 @@ export async function dom2image<T extends Node>(
 
   const image = createImage(png, node.ownerDocument!)
 
-  image.width = resolved.width
+  const { width, height, scale } = resolved
 
-  image.height = resolved.height
+  image.width = Math.floor(width * scale)
+  image.height = Math.floor(height * scale)
+  image.style.width = `${ width }px`
+  image.style.height = `${ height }px`
 
   return image
 }

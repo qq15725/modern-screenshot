@@ -2,13 +2,13 @@ import { resolveOptions } from '../options'
 import { dom2canvas } from './dom2canvas'
 import { canvas2blob } from './canvas2blob'
 
-import type { Options } from '../options'
+import type { BlobOptions, Options } from '../options'
 
 export async function dom2blob<T extends Node>(
   node: T,
-  options?: Options,
+  options?: Options & BlobOptions,
 ): Promise<Blob | null> {
-  const resolved = await resolveOptions(node, options)
+  const resolved = (await resolveOptions(node, options)) as Options & BlobOptions
 
   const canvas = await dom2canvas(node, resolved)
 

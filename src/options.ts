@@ -1,4 +1,4 @@
-import { IS_NODE, isElementNode, isHTMLElementNode, waitLoaded } from './utils'
+import { IS_NODE, isElementNode, isHTMLElementNode, isImageElement, loadMedia, waitLoaded } from './utils'
 
 export interface Options {
   /**
@@ -21,17 +21,6 @@ export interface Options {
    * A string value for the background color, any valid CSS color value.
    */
   backgroundColor?: string
-
-  /**
-   * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
-   */
-  type?: string
-
-  /**
-   * A number between `0` and `1` indicating image quality (e.g. 0.92 => 92%)
-   * of the JPEG image.
-   */
-  quality?: number
 
   /**
    * An object whose properties to be copied to node's style before rendering.
@@ -94,12 +83,26 @@ export interface Options {
   }
 }
 
+export interface JpegOptions {
+
+  /**
+   * A number between `0` and `1` indicating image quality (e.g. 0.92 => 92%)
+   * of the JPEG image.
+   */
+  quality?: number
+}
+
+export interface BlobOptions extends JpegOptions {
+  /**
+   * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
+   */
+  type?: string
+}
+
 export interface ResolvedOptions extends Options {
   width: number
   height: number
   scale: number
-  type: string
-  quality: number
   maximumCanvasSize: number
   loaded: boolean
 }
@@ -110,14 +113,16 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
   const options = { ...userOptions } as ResolvedOptions
 
   if (isHTMLElementNode(node) && !options.loaded) {
-    await waitLoaded(node)
+    if (isImageElement(node)) {
+      await loadMedia(node)
+    } else {
+      await waitLoaded(node)
+    }
     options.loaded = true
   }
 
   options.width = options.width ?? 0
   options.height = options.height ?? 0
-  options.type = options.type ?? 'image/png'
-  options.quality = options.quality ?? 1
   options.maximumCanvasSize = options.maximumCanvasSize ?? 16384
 
   if (!options.scale) {
@@ -130,10 +135,12 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
 
   if ((!options.width || !options.height) && isElementNode(node)) {
     const box = node.getBoundingClientRect()
+
     options.width = options.width
       || box.width
       || Number(node.getAttribute('width'))
       || 0
+
     options.height = options.height
       || box.height
       || Number(node.getAttribute('height'))

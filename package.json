@@ -4,8 +4,8 @@
   "packageManager": "pnpm@7.0.0",
   "description": "Generate image using HTML5 canvas and SVG",
   "main": "dist/egami.js",
-  "module": "dist/egami.es.js",
-  "types": "dist/types/index.d.ts",
+  "module": "dist/egami.mjs",
+  "types": "types/index.d.ts",
   "browser": "dist/egami.js",
   "repository": {
     "type": "git",
@@ -34,8 +34,8 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/egami.cjs.js",
-      "import": "./dist/egami.es.js"
+      "require": "./dist/egami.cjs",
+      "import": "./dist/egami.mjs"
     }
   },
   "scripts": {
@@ -60,7 +60,7 @@
     "jest-image-snapshot": "^5.1.0",
     "puppeteer": "^15.1.1",
     "typescript": "^4.7.3",
-    "vite": "^2.9.13",
-    "vitest": "^0.12.10"
+    "vite": "^3.0.0",
+    "vitest": "^0.21.1"
   }
 }
