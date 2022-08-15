@@ -30,7 +30,8 @@
   "author": "wxm",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "exports": {
     ".": {
