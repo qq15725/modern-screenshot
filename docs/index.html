@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>egami → image</title>
-  <script src="https://unpkg.com/egami/dist/egami.js"></script>
+  <title>modern-screenshot</title>
+  <script src="https://unpkg.com/modern-screenshot/dist/index.js"></script>
   <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body>
@@ -20,7 +20,7 @@
 
   <script>
     const { createApp } = window.Vue
-    const { dom2png } = window.egami
+    const { dom2png } = window['modern-screenshot']
 
     createApp({
       data() {

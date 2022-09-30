@@ -8,7 +8,7 @@ import { isElementNode, isSVGElementNode } from '../utils'
 import type { Options, ResolvedOptions } from '../options'
 
 const fixStyles = `<style>
-  .egami__background-clip--text {
+  .modern-screenshot__background-clip--text {
     -webkit-background-clip: text;
     background-clip: text;
   }

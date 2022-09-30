@@ -1,14 +1,14 @@
-<h1 align="center">egami → image</h1>
+<h1 align="center">modern-screenshot</h1>
 
 <p align="center">
-  <a href="https://github.com/qq15725/egami/blob/master/LICENSE" class="mr-3">
-    <img src="https://img.shields.io/npm/l/egami.svg" alt="License">
+  <a href="https://github.com/qq15725/modern-screenshot/blob/master/LICENSE" class="mr-3">
+    <img src="https://img.shields.io/npm/l/modern-screenshot.svg" alt="License">
   </a>
-  <a href="https://www.npmjs.com/package/egami">
-    <img src="https://img.shields.io/npm/v/egami.svg" alt="Version">
+  <a href="https://www.npmjs.com/package/modern-screenshot">
+    <img src="https://img.shields.io/npm/v/modern-screenshot.svg" alt="Version">
   </a>
-  <a href="https://cdn.jsdelivr.net/npm/egami/dist/egami.js">
-    <img src="https://img.shields.io/bundlephobia/minzip/egami" alt="Minzip">
+  <a href="https://cdn.jsdelivr.net/npm/modern-screenshot/dist/index.js">
+    <img src="https://img.shields.io/bundlephobia/minzip/modern-screenshot" alt="Minzip">
   </a>
 </p>
 
@@ -23,13 +23,13 @@
 ### pnpm
 
 ```sh
-pnpm add egami
+pnpm add modern-screenshot
 ```
 
 ### npm
 
 ```sh
-npm i egami
+npm i modern-screenshot
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ npm i egami
 ### Basic
 
 ```ts
-import { dom2png } from 'egami'
+import { dom2png } from 'modern-screenshot'
 
 dom2png(document.querySelector('#app')).then(png => {
   const img = new Image()
@@ -53,18 +53,18 @@ dom2png(document.querySelector('#app')).then(png => {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>egami → image</title>
-  <script src="https://cdn.jsdelivr.net/npm/egami/dist/egami.js"></script>
+  <title>modern-screenshot</title>
+  <script src="https://cdn.jsdelivr.net/npm/modern-screenshot/dist/index.js"></script>
   <script>
     window.onload = async () => {
       document.body.appendChild(
-        await window.egami.dom2image(document.querySelector('body > *')),
+        await window['modern-screenshot'].dom2image(document.querySelector('body > *')),
       )
     }
   </script>
 </head>
 <body>
-  <div>egami → image</div>
+  <div>modern-screenshot</div>
 </body>
 </html>
 ```

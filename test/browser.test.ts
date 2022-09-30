@@ -10,7 +10,7 @@ import type { Browser, ElementHandle, Page } from 'puppeteer'
 import type { PreviewServer } from 'vite'
 
 const port = 3000
-const indexURL = `http://localhost:${ port }/dist/egami.js`
+const indexURL = `http://localhost:${ port }/dist/index.js`
 const assetsBaseURL = `http://localhost:${ port }/test/assets`
 
 const corsPort = 3001
@@ -32,7 +32,7 @@ function parseHTML(str: string) {
     .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
 
   const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
-    ?? 'window.egami.dom2png(document.querySelector(\'body > *\'))'
+    ?? 'window["modern-screenshot"].dom2png(document.querySelector(\'body > *\'))'
 
   const skipExpect = !!str.match(/<skip-expect.*\/>/s)?.[0]
 
@@ -77,7 +77,7 @@ describe('dom to image in browser', async () => {
 <body></body>
 </html>`)
     body = (await page.$('body'))!
-    style = (await page.$('#style'))!
+    style = (await page.$('#style'))! as any
   })
 
   afterAll(async () => {

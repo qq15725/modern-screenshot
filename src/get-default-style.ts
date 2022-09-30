@@ -1,6 +1,6 @@
 import { IN_BROWSER } from './utils'
 
-const SANDBOX_ID = 'egami__sandbox'
+const SANDBOX_ID = 'modern-screenshot__sandbox'
 let sandbox: HTMLIFrameElement | undefined
 const defaultStyles = new Map<string, Record<string, any>>()
 

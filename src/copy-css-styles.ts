@@ -35,7 +35,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
     }
 
     if (name === 'background-clip' && value === 'text') {
-      clone.classList.add('egami__background-clip--text')
+      clone.classList.add('modern-screenshot__background-clip--text')
     } else {
       cloneStyle.setProperty(name, value, priority)
     }

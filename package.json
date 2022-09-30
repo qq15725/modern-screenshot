@@ -1,44 +1,51 @@
 {
-  "name": "egami",
+  "name": "modern-screenshot",
+  "type": "module",
   "version": "2.0.1",
-  "packageManager": "pnpm@7.0.0",
+  "packageManager": "pnpm@7.9.0",
   "description": "Generate image using HTML5 canvas and SVG",
-  "main": "dist/egami.js",
-  "module": "dist/egami.mjs",
-  "types": "types/index.d.ts",
-  "browser": "dist/egami.js",
+  "author": "wxm",
+  "license": "MIT",
+  "homepage": "https://github.com/qq15725/modern-screenshot",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qq15725/egami.git"
+    "url": "git+https://github.com/qq15725/modern-screenshot.git"
   },
   "bugs": {
-    "url": "https://github.com/qq15725/egami/issues"
-  },
-  "homepage": "https://github.com/qq15725/egami",
-  "engines": {
-    "node": ">=14"
+    "url": "https://github.com/qq15725/modern-screenshot/issues"
   },
   "keywords": [
-    "egami",
+    "modern-screenshot",
     "image",
     "dom",
     "svg",
     "canvas",
     "screenshot"
   ],
-  "license": "MIT",
-  "author": "wxm",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "types/index.d.ts",
+  "browser": "dist/index.js",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./types/*",
+        "./types/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist",
     "types"
   ],
-  "exports": {
-    ".": {
-      "require": "./dist/egami.cjs",
-      "import": "./dist/egami.mjs"
-    }
-  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -55,13 +62,13 @@
     "@types/jest-image-snapshot": "^5.1.0",
     "@vitest/ui": "^0.16.0",
     "bumpp": "^7.2.0",
-    "eslint": "^8.17.0",
+    "eslint": "^8.24.0",
     "glob": "^8.0.3",
-    "happy-dom": "^5.3.4",
-    "jest-image-snapshot": "^5.1.0",
-    "puppeteer": "^15.1.1",
-    "typescript": "^4.7.3",
-    "vite": "^3.0.0",
+    "happy-dom": "^5.4.0",
+    "jest-image-snapshot": "^5.2.0",
+    "puppeteer": "^15.5.0",
+    "typescript": "^4.8.4",
+    "vite": "^3.1.4",
     "vitest": "^0.21.1"
   }
 }
