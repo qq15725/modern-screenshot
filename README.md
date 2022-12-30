@@ -70,17 +70,59 @@ domToPng(document.querySelector('#app')).then(base64 => {
 ## All convert
 
 ```ts
-declare function canvasToblob(canvas: HTMLCanvasElement, options?: BlobOptions): Promise<Blob | null>;
-declare function domToBlob<T extends Node>(node: T, options?: Options & BlobOptions): Promise<Blob | null>;
-declare function domToCanvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function domToImage<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>;
-declare function domToJpeg<T extends Node>(node: T, options?: Options & JpegOptions): Promise<string>;
-declare function domToPixel<T extends Node>(node: T, options?: Options): Promise<Uint8ClampedArray>;
-declare function domToPng<T extends Node>(node: T, options?: Options): Promise<string>;
-declare function domToSvg<T extends Node>(node: T, options?: Options): Promise<SVGElement>;
-declare function imageToCanvas<T extends HTMLImageElement>(image: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function svgToCanvas<T extends SVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function svgToImage<T extends SVGElement>(svg: T): HTMLImageElement;
+declare function canvasToblob(
+  canvas: HTMLCanvasElement,
+  options?: BlobOptions,
+): Promise<Blob | null>;
+
+declare function domToBlob<T extends Node>(
+  node: T,
+  options?: Options & BlobOptions,
+): Promise<Blob | null>;
+
+declare function domToCanvas<T extends Node>(
+  node: T,
+  options?: Options,
+): Promise<HTMLCanvasElement>;
+
+declare function domToImage<T extends Node>(
+  node: T,
+  options?: Options,
+): Promise<HTMLImageElement>;
+
+declare function domToJpeg<T extends Node>(
+  node: T,
+  options?: Options & JpegOptions,
+): Promise<string>;
+
+declare function domToPixel<T extends Node>(
+  node: T,
+  options?: Options,
+): Promise<Uint8ClampedArray>;
+
+declare function domToPng<T extends Node>(
+  node: T,
+  options?: Options,
+): Promise<string>;
+
+declare function domToSvg<T extends Node>(
+  node: T,
+  options?: Options,
+): Promise<SVGElement>;
+
+declare function imageToCanvas<T extends HTMLImageElement>(
+  image: T,
+  options?: Options,
+): Promise<HTMLCanvasElement>;
+
+declare function svgToCanvas<T extends SVGElement>(
+  svg: T,
+  options?: Options,
+): Promise<HTMLCanvasElement>;
+
+declare function svgToImage<T extends SVGElement>(
+  svg: T,
+): HTMLImageElement;
 ```
 
 ## Options
