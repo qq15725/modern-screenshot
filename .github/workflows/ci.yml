@@ -14,9 +14,9 @@ jobs:
       - name: ⤵️　Checkout
         uses: actions/checkout@v2
       - name: ⤵️　Setup pnpm
-        uses: pnpm/action-setup@v2.2.2
+        uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: latest
       - name: 🎉 Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
