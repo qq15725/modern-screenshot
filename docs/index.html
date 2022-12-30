@@ -20,7 +20,7 @@
 
   <script>
     const { createApp } = window.Vue
-    const { dom2png } = window['modern-screenshot']
+    const { domToPng } = window['modern-screenshot']
 
     createApp({
       data() {
@@ -43,7 +43,7 @@
       },
       methods: {
         genSrc() {
-          dom2png(document.querySelector('.egami')).then(src => {
+          domToPng(document.querySelector('.egami')).then(src => {
             this.src = src
           })
         },

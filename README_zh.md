@@ -39,10 +39,8 @@ npm i modern-screenshot
 ```ts
 import { domToPng } from 'modern-screenshot'
 
-domToPng(document.querySelector('#app')).then(png => {
-  const img = new Image()
-  img.src = png
-  document.body.appendChild(img)
+domToPng(document.querySelector('#app')).then(base64 => {
+  window.open().document.write(`<img src="${ base64 }" />`)
 })
 ```
 
