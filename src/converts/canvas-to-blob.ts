@@ -1,7 +1,7 @@
 import { IN_BROWSER } from '../utils'
 import type { BlobOptions } from '../options'
 
-export async function canvas2blob(
+export async function canvasToblob(
   canvas: HTMLCanvasElement,
   options?: BlobOptions,
 ): Promise<Blob | null> {

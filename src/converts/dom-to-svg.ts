@@ -32,25 +32,19 @@ function createForeignObjectSvg(clone: Node, options: ResolvedOptions): SVGSVGEl
   return svg
 }
 
-export async function dom2svg<T extends Node>(
+export async function domToSvg<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<SVGElement> {
   if (isElementNode(node) && isSVGElementNode(node)) {
     return node
   }
-
   const resolved = await resolveOptions(node, options)
-
-  const clone = await cloneNode(node, resolved)
-
+  const clone = cloneNode(node, resolved)
   removeDefaultStyleSandbox()
-
   if (resolved.font !== false && isElementNode(clone)) {
     await embedWebFont(clone, resolved)
   }
-
   await embedNode(clone, resolved)
-
   return createForeignObjectSvg(clone, resolved)
 }

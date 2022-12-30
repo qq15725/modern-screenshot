@@ -32,7 +32,7 @@ function parseHTML(str: string) {
     .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
 
   const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
-    ?? 'window["modern-screenshot"].dom2png(document.querySelector(\'body > *\'))'
+    ?? 'window["modern-screenshot"].domToPng(document.querySelector(\'body > *\'))'
 
   const skipExpect = !!str.match(/<skip-expect.*\/>/s)?.[0]
 

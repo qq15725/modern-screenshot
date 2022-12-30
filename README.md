@@ -12,7 +12,7 @@
   </a>
 </p>
 
-<p align="center"><a href="README.md">README</a> | <a href="README_zh.md">中文文档</a></p>
+<p align="center">English | <a href="README_zh.md">简体中文</a></p>
 
 <p align="center">Generate image using HTML5 canvas and SVG</p>
 
@@ -37,9 +37,9 @@ npm i modern-screenshot
 ### Basic
 
 ```ts
-import { dom2png } from 'modern-screenshot'
+import { domToPng } from 'modern-screenshot'
 
-dom2png(document.querySelector('#app')).then(png => {
+domToPng(document.querySelector('#app')).then(png => {
   const img = new Image()
   img.src = png
   document.body.appendChild(img)
@@ -58,7 +58,7 @@ dom2png(document.querySelector('#app')).then(png => {
   <script>
     window.onload = async () => {
       document.body.appendChild(
-        await window['modern-screenshot'].dom2image(document.querySelector('body > *')),
+        await window['modern-screenshot'].domToImage(document.querySelector('body > *')),
       )
     }
   </script>
@@ -72,17 +72,17 @@ dom2png(document.querySelector('#app')).then(png => {
 ## All convert
 
 ```ts
-declare function canvas2blob(canvas: HTMLCanvasElement, options?: BlobOptions): Promise<Blob | null>;
-declare function dom2blob<T extends Node>(node: T, options?: Options & BlobOptions): Promise<Blob | null>;
-declare function dom2canvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function dom2image<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>;
-declare function dom2jpeg<T extends Node>(node: T, options?: Options & JpegOptions): Promise<string>;
-declare function dom2pixel<T extends Node>(node: T, options?: Options): Promise<Uint8ClampedArray>;
-declare function dom2png<T extends Node>(node: T, options?: Options): Promise<string>;
-declare function dom2svg<T extends Node>(node: T, options?: Options): Promise<SVGElement>;
-declare function image2canvas<T extends HTMLImageElement>(image: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function svg2canvas<T extends SVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
-declare function svg2image<T extends SVGElement>(svg: T): HTMLImageElement;
+declare function canvasToblob(canvas: HTMLCanvasElement, options?: BlobOptions): Promise<Blob | null>;
+declare function domToBlob<T extends Node>(node: T, options?: Options & BlobOptions): Promise<Blob | null>;
+declare function domToCanvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function domToImage<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>;
+declare function domToJpeg<T extends Node>(node: T, options?: Options & JpegOptions): Promise<string>;
+declare function domToPixel<T extends Node>(node: T, options?: Options): Promise<Uint8ClampedArray>;
+declare function domToPng<T extends Node>(node: T, options?: Options): Promise<string>;
+declare function domToSvg<T extends Node>(node: T, options?: Options): Promise<SVGElement>;
+declare function imageToCanvas<T extends HTMLImageElement>(image: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function svgToCanvas<T extends SVGElement>(svg: T, options?: Options): Promise<HTMLCanvasElement>;
+declare function svgToImage<T extends SVGElement>(svg: T): HTMLImageElement;
 ```
 
 ## Options

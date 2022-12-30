@@ -3,6 +3,17 @@ import { loadMedia } from '../utils'
 
 import type { Options, ResolvedOptions } from '../options'
 
+export async function imageToCanvas<T extends HTMLImageElement>(
+  image: T,
+  options?: Options,
+): Promise<HTMLCanvasElement> {
+  const resolved = await resolveOptions(image, options)
+  const loaded = await loadMedia(image)
+  const { canvas, context } = createCanvas(image.ownerDocument, resolved)
+  context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
+  return canvas
+}
+
 function createCanvas(document: Document, options: ResolvedOptions) {
   const { width, height, scale, backgroundColor, maximumCanvasSize: max } = options
 
@@ -41,19 +52,4 @@ function createCanvas(document: Document, options: ResolvedOptions) {
   }
 
   return { canvas, context }
-}
-
-export async function image2canvas<T extends HTMLImageElement>(
-  image: T,
-  options?: Options,
-): Promise<HTMLCanvasElement> {
-  const resolved = await resolveOptions(image, options)
-
-  const loaded = await loadMedia(image)
-
-  const { canvas, context } = createCanvas(image.ownerDocument, resolved)
-
-  context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
-
-  return canvas
 }
