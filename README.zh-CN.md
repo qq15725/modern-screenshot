@@ -12,27 +12,19 @@
   </a>
 </p>
 
-<p align="center"><a href="README.md">English</a> | 简体中文</p>
-
 <p align="center">使用 HTML5 canvas 和 SVG 生成图像</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
-## 安装
+<p align="center"><a href="README.md">English</a> | 简体中文</p>
 
-### pnpm
-
-```sh
-pnpm add modern-screenshot
-```
-
-### npm
+## 📦 安装
 
 ```sh
 npm i modern-screenshot
 ```
 
-## 使用
+## 🦄 使用
 
 ### 基本用法
 
@@ -44,27 +36,10 @@ domToPng(document.querySelector('#app')).then(base64 => {
 })
 ```
 
-### CDN 的用法
+### CDN
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>modern-screenshot</title>
-  <script src="https://cdn.jsdelivr.net/npm/modern-screenshot/dist/index.js"></script>
-  <script>
-    window.onload = async () => {
-      document.body.appendChild(
-        await window['modern-screenshot'].domToImage(document.querySelector('body > *')),
-      )
-    }
-  </script>
-</head>
-<body>
-<div>modern-screenshot</div>
-</body>
-</html>
+<script src="https://unpkg.com/modern-screenshot"></script>
 ```
 
 ## 所有转换

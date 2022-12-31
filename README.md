@@ -12,27 +12,19 @@
   </a>
 </p>
 
-<p align="center">English | <a href="README_zh.md">简体中文</a></p>
-
 <p align="center">Generate image using HTML5 canvas and SVG</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
-## Installation
+<p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
 
-### pnpm
-
-```sh
-pnpm add modern-screenshot
-```
-
-### npm
+## 📦 Install
 
 ```sh
 npm i modern-screenshot
 ```
 
-## Usage
+## 🦄 Usage
 
 ### Basic
 
@@ -44,27 +36,10 @@ domToPng(document.querySelector('#app')).then(base64 => {
 })
 ```
 
-### CDN of usage
+### CDN
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>modern-screenshot</title>
-  <script src="https://cdn.jsdelivr.net/npm/modern-screenshot/dist/index.js"></script>
-  <script>
-    window.onload = async () => {
-      document.body.appendChild(
-        await window['modern-screenshot'].domToImage(document.querySelector('body > *')),
-      )
-    }
-  </script>
-</head>
-<body>
-  <div>modern-screenshot</div>
-</body>
-</html>
+<script src="https://unpkg.com/modern-screenshot"></script>
 ```
 
 ## All convert
