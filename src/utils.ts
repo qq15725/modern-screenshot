@@ -64,7 +64,11 @@ export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
     if (isVideoElement(node)) {
       if (node.readyState >= 2 || (!node.src && !node.currentSrc)) return resolve(node)
 
-      node.addEventListener('loadeddata', () => resolve(node), { once: true })
+      node.addEventListener(
+        'loadeddata',
+        () => resolve(node),
+        { once: true },
+      )
     } else {
       if (isSVGImageElementNode(node)) {
         if (!node.href.baseVal) return resolve(node)
@@ -76,17 +80,21 @@ export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
         }
       }
 
-      node.addEventListener(
-        'load',
-        () => resolve(node),
-        { once: true },
-      )
+      if ('decode' in node) {
+        node.decode().catch(() => {}).finally(() => resolve(node))
+      } else {
+        node.addEventListener(
+          'load',
+          () => resolve(node),
+          { once: true },
+        )
 
-      node.addEventListener(
-        'error',
-        () => resolve(node),
-        { once: true },
-      )
+        node.addEventListener(
+          'error',
+          () => resolve(node),
+          { once: true },
+        )
+      }
     }
   })
 }
@@ -118,6 +126,7 @@ const MIMES = {
   gif: 'image/gif',
   tiff: 'image/tiff',
   svg: 'image/svg+xml',
+  webp: 'image/webp',
 } as const
 
 const EXT_RE = /\.([^.\/]+?)$/
