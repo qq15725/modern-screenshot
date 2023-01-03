@@ -1,7 +1,7 @@
 {
   "name": "modern-screenshot",
   "type": "module",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "packageManager": "pnpm@7.9.0",
   "description": "Generate image using HTML5 canvas and SVG",
   "author": "wxm",
