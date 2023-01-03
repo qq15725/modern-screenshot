@@ -40,6 +40,11 @@ domToPng(document.querySelector('#app')).then(base64 => {
 
 ```html
 <script src="https://unpkg.com/modern-screenshot"></script>
+<script>
+  window.modernScreenshot.domToPng(document.querySelector('body')).then(base64 => {
+    window.open().document.write(`<img src="${ base64 }" />`)
+  })
+</script>
 ```
 
 ## All convert

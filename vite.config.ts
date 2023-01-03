@@ -1,6 +1,6 @@
-import { resolve, basename } from 'path'
+import { basename, resolve } from 'path'
 import { defineConfig } from 'vite'
-import { name, browser, module, exports } from './package.json'
+import { browser, exports, module, name } from './package.json'
 
 const resolvePath = (str: string) => resolve(__dirname, str)
 
@@ -15,7 +15,7 @@ export default defineConfig({
         return `${ name }.${ format }`
       },
       entry: resolvePath('./src/index.ts'),
-      name,
+      name: name.replace(/-(\w)/ig, (_, v) => v.toUpperCase()),
     },
   },
   test: {
