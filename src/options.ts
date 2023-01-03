@@ -81,6 +81,8 @@ export interface Options {
      */
     cssText?: string
   }
+
+  log?: any
 }
 
 export interface JpegOptions {

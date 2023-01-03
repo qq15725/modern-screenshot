@@ -12,7 +12,7 @@ const fixStyles = `<style>
     -webkit-background-clip: text;
     background-clip: text;
   }
-</style>`
+</style>`.replace(/(\n| {2})/ig, '')
 
 function createForeignObjectSvg(clone: Node, options: ResolvedOptions): SVGSVGElement {
   const { width, height } = options
@@ -36,15 +36,26 @@ export async function domToSvg<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<SVGElement> {
-  if (isElementNode(node) && isSVGElementNode(node)) {
-    return node
-  }
+  if (isElementNode(node) && isSVGElementNode(node)) return node
+  options?.log?.time('resolve options')
   const resolved = await resolveOptions(node, options)
+  options?.log?.timeEnd('resolve options')
+
+  options?.log?.time('clone node')
   const clone = cloneNode(node, resolved)
+  options?.log?.timeEnd('clone node')
+
   removeDefaultStyleSandbox()
+
   if (resolved.font !== false && isElementNode(clone)) {
+    options?.log?.time('embed web font')
     await embedWebFont(clone, resolved)
+    options?.log?.timeEnd('embed web font')
   }
+
+  options?.log?.time('embed node')
   await embedNode(clone, resolved)
+  options?.log?.timeEnd('embed node')
+
   return createForeignObjectSvg(clone, resolved)
 }

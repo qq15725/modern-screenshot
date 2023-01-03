@@ -6,6 +6,7 @@
   <style>
     * {
       box-sizing: border-box;
+      font-size: 60px;
     }
 
     body, html {
@@ -28,9 +29,14 @@
   </div>
 
   <script type="module" async>
-    import { domToImage } from './src'
+    import { domToSvg } from './src'
 
-    document.body.appendChild(await domToImage(document.querySelector('#root')))
+    document.body.appendChild(
+      await domToSvg(
+        document.querySelector('#root'),
+        { log: window.console },
+      ),
+    )
   </script>
 </body>
 </html>
