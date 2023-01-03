@@ -74,7 +74,7 @@ export function cloneNode<T extends Node>(
   if (ownerWindow
     && isElementNode(node)
     && (isHTMLElementNode(node) || isSVGElementNode(node))) {
-    const clone = createElementClone(node)
+    const clone = createElementClone(node, options)
 
     clone.style.transitionProperty = 'none'
 

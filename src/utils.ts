@@ -14,6 +14,7 @@ export const isStyleElement = (node: Element): node is HTMLStyleElement => node.
 export const isScriptElement = (node: Element): node is HTMLScriptElement => node.tagName === 'SCRIPT'
 export const isSelectElement = (node: Element): node is HTMLSelectElement => node.tagName === 'SELECT'
 export const isSlotElement = (node: Element): node is HTMLSlotElement => node.tagName === 'SLOT'
+export const isIFrameElement = (node: Element): node is HTMLIFrameElement => node.tagName === 'IFRAME'
 
 export function isDataUrl(url: string) {
   return url.startsWith('data:')
@@ -75,7 +76,8 @@ export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
       } else {
         if (!node.src && !node.currentSrc) {
           return resolve(node)
-        } else if (node.complete) {
+        }
+        if (node.complete) {
           setTimeout(() => resolve(node), 500)
         }
       }

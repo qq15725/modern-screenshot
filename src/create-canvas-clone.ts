@@ -1,13 +1,16 @@
+import { createImage } from './utils'
+
 export function createCanvasClone<T extends HTMLCanvasElement>(
   canvas: T,
 ): HTMLCanvasElement | HTMLImageElement {
   if (canvas.ownerDocument) {
-    const img = canvas.ownerDocument.createElement('img')
-    try {
-      img.src = canvas.toDataURL()
-      return img
-    } catch (e) {
-      console.error('Unable to inline canvas contents, canvas is tainted', canvas)
+    const dataURL = canvas.toDataURL()
+    if (dataURL !== 'data:,') {
+      try {
+        return createImage(dataURL, canvas.ownerDocument)
+      } catch {
+        // Failed to clone canvas
+      }
     }
   }
 
@@ -25,8 +28,8 @@ export function createCanvasClone<T extends HTMLCanvasElement>(
       )
     }
     return clone
-  } catch (e) {
-    console.error('Unable to clone canvas as it is tainted', canvas)
+  } catch {
+    // Failed to clone canvas
   }
 
   return clone
