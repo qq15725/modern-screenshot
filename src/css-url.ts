@@ -21,8 +21,8 @@ export async function replaceCssUrlToDataUrl(
         isImage,
       )
       cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      console.warn(error)
     }
   }
 

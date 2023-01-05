@@ -14,8 +14,8 @@ export function createVideoClone<T extends HTMLVideoElement>(
       try {
         const ctx = canvas.getContext('2d')
         if (ctx) ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-      } catch {
-        // Failed to clone video
+      } catch (error) {
+        console.warn('Failed to clone video', error)
       }
       return createCanvasClone(canvas)
     }

@@ -86,11 +86,11 @@ async function getCssRules(
                         : sheet.cssRules.length!,
                     )
                   } catch (error) {
-                    console.error('Error inserting rule from remote css', { rule, error })
+                    console.warn('Error inserting rule from remote css', { rule, error })
                   }
                 }
-              } catch (e: any) {
-                console.error('Error loading remote css', e.toString())
+              } catch (error) {
+                console.warn('Error loading remote css', error)
               }
             }),
         )
@@ -102,8 +102,8 @@ async function getCssRules(
     if ('cssRules' in sheet) {
       try {
         ret.push(...sheet.cssRules)
-      } catch (e: any) {
-        console.error(`Error while reading CSS rules from ${ sheet.href }`, e.toString())
+      } catch (error) {
+        console.warn(`Error while reading CSS rules from ${ sheet.href }`, error)
       }
     }
   })

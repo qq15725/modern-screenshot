@@ -8,8 +8,8 @@ export function createCanvasClone<T extends HTMLCanvasElement>(
     if (dataURL !== 'data:,') {
       try {
         return createImage(dataURL, canvas.ownerDocument)
-      } catch {
-        // Failed to clone canvas
+      } catch (error) {
+        console.warn('Failed to clone canvas', error)
       }
     }
   }
@@ -28,8 +28,8 @@ export function createCanvasClone<T extends HTMLCanvasElement>(
       )
     }
     return clone
-  } catch {
-    // Failed to clone canvas
+  } catch (error) {
+    console.warn('Failed to clone canvas', error)
   }
 
   return clone

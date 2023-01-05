@@ -10,7 +10,11 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   const resolved = await resolveOptions(image, options)
   const loaded = await loadMedia(image)
   const { canvas, context } = createCanvas(image.ownerDocument, resolved)
-  context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
+  try {
+    context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
+  } catch (error) {
+    console.warn(error)
+  }
   return canvas
 }
 

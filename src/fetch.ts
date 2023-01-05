@@ -41,8 +41,8 @@ export function fetchBase64(url: string, options: ResolvedOptions, isImage?: boo
             reader.onerror = reject
             reader.readAsDataURL(blob)
           })
-        } catch (err) {
-          console.error(err)
+        } catch (error) {
+          console.warn(error)
 
           let placeholder = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
