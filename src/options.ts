@@ -107,12 +107,16 @@ export interface ResolvedOptions extends Options {
   scale: number
   maximumCanvasSize: number
   loaded: boolean
+  resolved: true
 }
 
 export async function resolveOptions(node: Node, userOptions?: Options): Promise<ResolvedOptions> {
+  if ((userOptions as any)?.resolved) return userOptions as ResolvedOptions
+  userOptions?.log?.time('resolve options')
+
   const ownerWindow = node.ownerDocument?.defaultView
 
-  const options = { ...userOptions } as ResolvedOptions
+  const options = { ...userOptions, resolved: true } as ResolvedOptions
 
   if (isHTMLElementNode(node) && !options.loaded) {
     if (isImageElement(node)) {
@@ -149,6 +153,7 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
       || 0
   }
 
+  userOptions?.log?.timeEnd('resolve options')
   return options
 }
 

@@ -54,14 +54,28 @@ export function createImage(url: string, ownerDocument: Document, useCORS = fals
 
 type Media = HTMLVideoElement | HTMLImageElement | SVGImageElement
 
-export function loadMedia<T extends Media>(media: T): Promise<T>
-export function loadMedia(media: string, ownerDocument: Document): Promise<HTMLImageElement>
-export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
-  const node: Media = typeof media === 'string'
-    ? createImage(media, ownerDocument)
-    : media
+interface LoadMediaOptions {
+  ownerDocument?: Document
+  timeout?: number
+}
 
+export function loadMedia<T extends Media>(media: T, options?: LoadMediaOptions): Promise<T>
+export function loadMedia(media: string, options?: LoadMediaOptions): Promise<HTMLImageElement>
+export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> {
   return new Promise(resolve => {
+    const {
+      ownerDocument = window.document,
+      timeout = 500,
+    } = options ?? {}
+
+    const node: Media = typeof media === 'string'
+      ? createImage(media, ownerDocument)
+      : media
+
+    if (timeout) {
+      setTimeout(() => resolve(node), timeout)
+    }
+
     if (isVideoElement(node)) {
       if (node.readyState >= 2 || (!node.src && !node.currentSrc)) return resolve(node)
 
@@ -76,9 +90,6 @@ export function loadMedia(media: any, ownerDocument?: any): Promise<any> {
       } else {
         if (!node.src && !node.currentSrc) {
           return resolve(node)
-        }
-        if (node.complete) {
-          setTimeout(() => resolve(node), 500)
         }
       }
 
@@ -140,7 +151,7 @@ export function getMimeType(url: string): string {
 
 export async function waitLoaded(el: HTMLElement) {
   await Promise.all([
-    ...Array.from(el.querySelectorAll('img')).map(loadMedia),
-    ...Array.from(el.querySelectorAll('video')).map(loadMedia),
+    ...Array.from(el.querySelectorAll('img')).map(el => loadMedia(el)),
+    ...Array.from(el.querySelectorAll('video')).map(el => loadMedia(el)),
   ])
 }

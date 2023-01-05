@@ -37,9 +37,7 @@ export async function domToSvg<T extends Node>(
   options?: Options,
 ): Promise<SVGElement> {
   if (isElementNode(node) && isSVGElementNode(node)) return node
-  options?.log?.time('resolve options')
   const resolved = await resolveOptions(node, options)
-  options?.log?.timeEnd('resolve options')
 
   options?.log?.time('clone node')
   const clone = cloneNode(node, resolved)
