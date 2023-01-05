@@ -5,6 +5,9 @@ import { browser, exports, module, name } from './package.json'
 const resolvePath = (str: string) => resolve(__dirname, str)
 
 export default defineConfig({
+  server: {
+    port: 3000,
+  },
   build: {
     lib: {
       formats: ['es', 'cjs', 'umd'],

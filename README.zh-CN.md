@@ -47,6 +47,22 @@ domToPng(document.querySelector('#app')).then(base64 => {
 </script>
 ```
 
+### 浏览器控制台
+
+> ⚠️ 由于 CORS 原因, styleSheets 字体无法嵌入
+
+```js
+const script = document.createElement('script')
+script.src = "https://unpkg.com/modern-screenshot"
+document.getElementsByTagName('head')[0].appendChild(script)
+
+script.onload = () => {
+  window.modernScreenshot.domToPng(document.querySelector('body'), { log: console }).then(base64 => {
+    window.open().document.write(`<img src="${ base64 }" />`)
+  })
+}
+```
+
 ## 所有转换
 
 ```ts

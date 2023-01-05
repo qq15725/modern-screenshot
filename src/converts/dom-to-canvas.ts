@@ -10,7 +10,7 @@ export async function domToCanvas<T extends Node>(
   options?: Options,
 ): Promise<HTMLCanvasElement> {
   const resolved = await resolveOptions(node, options)
-  const el = await domToSvg(node, resolved)
-  const image = await svgToImage(el)
+  const svg = await domToSvg(node, resolved)
+  const image = await svgToImage(svg)
   return await imageToCanvas(image, resolved)
 }

@@ -4,9 +4,12 @@
   <meta charset="utf-8">
   <title>Playground</title>
   <style>
+    @import url(./test/assets/font/font.css);
+
     * {
       box-sizing: border-box;
       font-size: 60px;
+      font-family: 'CustomFont';
     }
 
     body, html {
@@ -29,10 +32,10 @@
   </div>
 
   <script type="module" async>
-    import { domToSvg } from './src'
+    import { domToImage } from './src'
 
     document.body.appendChild(
-      await domToSvg(
+      await domToImage(
         document.querySelector('#root'),
         { log: window.console },
       ),

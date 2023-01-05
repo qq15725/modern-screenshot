@@ -47,6 +47,22 @@ domToPng(document.querySelector('#app')).then(base64 => {
 </script>
 ```
 
+### Browser console
+
+> ⚠️ styleSheets fonts cannot be embedded due to CORS
+
+```js
+const script = document.createElement('script')
+script.src = "https://unpkg.com/modern-screenshot"
+document.getElementsByTagName('head')[0].appendChild(script)
+
+script.onload = () => {
+  window.modernScreenshot.domToPng(document.querySelector('body'), { log: console }).then(base64 => {
+    window.open().document.write(`<img src="${ base64 }" />`)
+  })
+}
+```
+
 ## All convert
 
 ```ts

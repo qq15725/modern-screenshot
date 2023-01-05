@@ -10,7 +10,14 @@ export async function embedWebFont<T extends Element>(
   const ownerDocument = clone.ownerDocument
 
   let cssText = (options.font as any)?.cssText
-    ?? await parseWebFontCss(ownerDocument.styleSheets, options)
+
+  if (!cssText) {
+    try {
+      cssText = await parseWebFontCss(ownerDocument.styleSheets, options)
+    } catch (err) {
+      console.warn(err)
+    }
+  }
 
   if (!cssText) return
 
