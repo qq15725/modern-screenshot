@@ -179,7 +179,7 @@ export interface Options {
   /**
    * Load media timeout
    *
-   * default: 500
+   * default: 3000
    */
   loadMediaTimeout?: number
 
@@ -195,7 +195,7 @@ export interface Options {
     /**
      * fetch timeout
      *
-     * default: 500
+     * default: 3000
      */
     timeout?: number
 
