@@ -2,6 +2,7 @@ import { cloneNode } from '../clone-node'
 import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
 import { removeDefaultStyleSandbox } from '../get-default-style'
+import { consoleTime, consoleTimeEnd } from '../log'
 import { resolveOptions } from '../options'
 import { isElementNode, isSVGElementNode } from '../utils'
 
@@ -39,21 +40,25 @@ export async function domToSvg<T extends Node>(
   if (isElementNode(node) && isSVGElementNode(node)) return node
   const resolved = await resolveOptions(node, options)
 
-  options?.log?.time('clone node')
+  options?.debug && consoleTime('clone node')
   const clone = cloneNode(node, resolved)
-  options?.log?.timeEnd('clone node')
+  options?.debug && consoleTimeEnd('clone node')
 
   removeDefaultStyleSandbox()
 
   if (resolved.font !== false && isElementNode(clone)) {
-    options?.log?.time('embed web font')
+    options?.debug && consoleTime('embed web font')
     await embedWebFont(clone, resolved)
-    options?.log?.timeEnd('embed web font')
+    options?.debug && consoleTimeEnd('embed web font')
   }
 
-  options?.log?.time('embed node')
-  await embedNode(clone, resolved)
-  options?.log?.timeEnd('embed node')
+  const tasks = embedNode(clone, resolved)
+  const count = tasks.length
+  let current = 0
+
+  options?.debug && consoleTime('embed node')
+  await Promise.all(tasks.map(task => task.finally(() => options?.progress?.(++current, count))))
+  options?.debug && consoleTimeEnd('embed node')
 
   return createForeignObjectSvg(clone, resolved)
 }

@@ -9,7 +9,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   options?: Options,
 ): Promise<HTMLCanvasElement> {
   const resolved = await resolveOptions(image, options)
-  const loaded = await loadMedia(image, { timeout: resolved.loadMediaTimeout })
+  const loaded = await loadMedia(image, { timeout: resolved.timeout })
   const { canvas, context } = createCanvas(image.ownerDocument, resolved)
   try {
     context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)

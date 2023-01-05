@@ -9,19 +9,14 @@ import {
 
 import type { ResolvedOptions } from './options'
 
-export async function embedNode<T extends Node>(clone: T, options: ResolvedOptions) {
-  if (isElementNode(clone)) {
-    if (isImageElement(clone) || isSVGImageElementNode(clone)) {
-      await embedImageElement(clone, options)
-    }
-  }
+export function embedNode<T extends Node>(clone: T, options: ResolvedOptions): Promise<void>[] {
+  return [
+    isElementNode(clone)
+    && (isImageElement(clone) || isSVGImageElementNode(clone))
+    && embedImageElement(clone, options),
 
-  if (isHTMLElementNode(clone)) {
-    await embedCssStyleImage(clone.style, options)
-  }
+    isHTMLElementNode(clone) && embedCssStyleImage(clone.style, options),
 
-  await Promise.all(
-    Array.from(clone.childNodes)
-      .map((child) => embedNode(child, options)),
-  )
+    ...Array.from(clone.childNodes).map(child => embedNode(child, options)),
+  ].filter(Boolean).flat() as any
 }

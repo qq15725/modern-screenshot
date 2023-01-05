@@ -1,3 +1,4 @@
+import { consoleTime, consoleTimeEnd } from './log'
 import { IS_NODE, isElementNode, isHTMLElementNode, isImageElement, loadMedia, waitLoaded } from './utils'
 
 export interface Options {
@@ -44,11 +45,21 @@ export interface Options {
   maximumCanvasSize?: number
 
   /**
-   * Load media timeout
+   * Load media timeout and fetch remote asset timeout
    *
    * default: 3000
    */
-  loadMediaTimeout?: number
+  timeout?: number
+
+  /**
+   * Embed assets progress
+   */
+  progress?: (current: number, total: number) => void
+
+  /**
+   * Debug mode
+   */
+  debug?: boolean
 
   /**
    * Fetch resources
@@ -58,13 +69,6 @@ export interface Options {
      * the second parameter of window.fetch RequestInit
      */
     requestInit?: RequestInit
-
-    /**
-     * fetch timeout
-     *
-     * default: 3000
-     */
-    timeout?: number
 
     /**
      * Set to `true` to append the current time as a query string to URL
@@ -95,8 +99,6 @@ export interface Options {
      */
     cssText?: string
   }
-
-  log?: any
 }
 
 export interface JpegOptions {
@@ -120,21 +122,21 @@ export interface ResolvedOptions extends Options {
   height: number
   scale: number
   maximumCanvasSize: number
-  loadMediaTimeout: number
+  timeout: number
   loaded: boolean
   resolved: true
 }
 
 export async function resolveOptions(node: Node, userOptions?: Options): Promise<ResolvedOptions> {
   if ((userOptions as any)?.resolved) return userOptions as ResolvedOptions
-  userOptions?.log?.time('resolve options')
+  userOptions?.debug && consoleTime('resolve options')
 
   const ownerWindow = node.ownerDocument?.defaultView
 
   const options = {
     width: 0,
     height: 0,
-    loadMediaTimeout: 3000,
+    timeout: 3000,
     maximumCanvasSize: 16384,
     ...userOptions,
     resolved: true,
@@ -142,9 +144,9 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
 
   if (isHTMLElementNode(node) && !options.loaded) {
     if (isImageElement(node)) {
-      await loadMedia(node, { timeout: options.loadMediaTimeout })
+      await loadMedia(node, { timeout: options.timeout })
     } else {
-      await waitLoaded(node, options.loadMediaTimeout)
+      await waitLoaded(node, options.timeout)
     }
     options.loaded = true
   }
@@ -171,7 +173,7 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
       || 0
   }
 
-  userOptions?.log?.timeEnd('resolve options')
+  userOptions?.debug && consoleTimeEnd('resolve options')
   return options
 }
 

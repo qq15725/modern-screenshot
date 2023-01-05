@@ -58,7 +58,12 @@ document.getElementsByTagName('head')[0].appendChild(script)
 
 script.onload = () => {
   modernScreenshot
-    .domToImage(document.querySelector('body'), { log: console })
+    .domToImage(document.querySelector('body'), {
+      debug: true,
+      progress: (current, total) => {
+        console.log(`${ current }/${ total }`)
+      }
+    })
     .then(img => {
       const width = 600
       const height = img.height * (width / img.width)
@@ -177,11 +182,21 @@ export interface Options {
   maximumCanvasSize?: number
 
   /**
-   * Load media timeout
+   * Load media timeout and fetch remote asset timeout
    *
    * default: 3000
    */
-  loadMediaTimeout?: number
+  timeout?: number
+
+  /**
+   * Embed assets progress
+   */
+  progress?: (current: number, total: number) => void
+
+  /**
+   * Debug mode
+   */
+  debug?: boolean
 
   /**
    * Fetch resources
@@ -191,13 +206,6 @@ export interface Options {
      * the second parameter of window.fetch RequestInit
      */
     requestInit?: RequestInit
-
-    /**
-     * fetch timeout
-     *
-     * default: 3000
-     */
-    timeout?: number
 
     /**
      * Set to `true` to append the current time as a query string to URL
@@ -228,8 +236,6 @@ export interface Options {
      */
     cssText?: string
   }
-
-  log?: any
 }
 
 export interface JpegOptions {
