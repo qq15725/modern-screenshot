@@ -11,7 +11,7 @@ export interface Base64Response {
 const cache = new Map<string, Promise<Base64Response | string>>()
 
 export function fetch(url: string, options: ResolvedOptions) {
-  const { bypassingCache, requestInit, timeout = 500 } = options.fetch ?? {}
+  const { bypassingCache, requestInit, timeout = 3000 } = options.fetch ?? {}
 
   // cache bypass so we dont have CORS issues with cached images
   // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache

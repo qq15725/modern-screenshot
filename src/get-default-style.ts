@@ -17,6 +17,7 @@ export function getDefaultStyle(tagName: string) {
       sandbox.style.visibility = 'hidden'
       sandbox.style.position = 'fixed'
       document.body.appendChild(sandbox)
+      sandbox.contentWindow!.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
     }
   }
   const ownerWindow = sandbox.contentWindow!

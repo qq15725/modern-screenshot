@@ -46,7 +46,7 @@ export interface Options {
   /**
    * Load media timeout
    *
-   * default: 500
+   * default: 3000
    */
   loadMediaTimeout?: number
 
@@ -62,7 +62,7 @@ export interface Options {
     /**
      * fetch timeout
      *
-     * default: 500
+     * default: 3000
      */
     timeout?: number
 
@@ -134,7 +134,7 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
   const options = {
     width: 0,
     height: 0,
-    loadMediaTimeout: 500,
+    loadMediaTimeout: 3000,
     maximumCanvasSize: 16384,
     ...userOptions,
     resolved: true,
