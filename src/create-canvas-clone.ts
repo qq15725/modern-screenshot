@@ -1,3 +1,4 @@
+import { consoleWarn } from './log'
 import { createImage } from './utils'
 
 export function createCanvasClone<T extends HTMLCanvasElement>(
@@ -9,7 +10,7 @@ export function createCanvasClone<T extends HTMLCanvasElement>(
       try {
         return createImage(dataURL, canvas.ownerDocument)
       } catch (error) {
-        console.warn('Failed to clone canvas', error)
+        consoleWarn('Failed to clone canvas - ', error)
       }
     }
   }
@@ -29,7 +30,7 @@ export function createCanvasClone<T extends HTMLCanvasElement>(
     }
     return clone
   } catch (error) {
-    console.warn('Failed to clone canvas', error)
+    consoleWarn('Failed to clone canvas - ', error)
   }
 
   return clone

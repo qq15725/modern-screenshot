@@ -1,3 +1,4 @@
+import { consoleWarn } from '../log'
 import { resolveOptions } from '../options'
 import { loadMedia } from '../utils'
 
@@ -8,12 +9,12 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   options?: Options,
 ): Promise<HTMLCanvasElement> {
   const resolved = await resolveOptions(image, options)
-  const loaded = await loadMedia(image)
+  const loaded = await loadMedia(image, { timeout: resolved.loadMediaTimeout })
   const { canvas, context } = createCanvas(image.ownerDocument, resolved)
   try {
     context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
   } catch (error) {
-    console.warn(error)
+    consoleWarn('Failed to image to canvas - ', error)
   }
   return canvas
 }

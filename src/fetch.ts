@@ -1,3 +1,4 @@
+import { consoleWarn } from './log'
 import { getMimeType } from './utils'
 
 import type { ResolvedOptions } from './options'
@@ -10,15 +11,18 @@ export interface Base64Response {
 const cache = new Map<string, Promise<Base64Response | string>>()
 
 export function fetch(url: string, options: ResolvedOptions) {
-  const { fetch } = options
+  const { bypassingCache, requestInit, timeout = 500 } = options.fetch ?? {}
 
   // cache bypass so we dont have CORS issues with cached images
   // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
-  if (fetch?.bypassingCache) {
+  if (bypassingCache) {
     url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
   }
 
-  return window.fetch(url, fetch?.requestInit)
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeout)
+  return window.fetch(url, { ...requestInit, signal: controller.signal })
+    .finally(() => clearTimeout(timer))
 }
 
 export function fetchBase64(url: string, options: ResolvedOptions, isImage?: boolean): Promise<Base64Response> {
@@ -42,7 +46,7 @@ export function fetchBase64(url: string, options: ResolvedOptions, isImage?: boo
             reader.readAsDataURL(blob)
           })
         } catch (error) {
-          console.warn('Error fetch base64', error)
+          consoleWarn('Failed to fetch base64 - ', error)
 
           let placeholder = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 

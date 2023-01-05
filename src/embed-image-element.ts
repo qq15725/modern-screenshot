@@ -16,5 +16,5 @@ export async function embedImageElement<T extends HTMLImageElement | SVGImageEle
     return
   }
 
-  await loadMedia(clone)
+  await loadMedia(clone, { timeout: options.loadMediaTimeout })
 }

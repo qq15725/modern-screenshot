@@ -1,4 +1,5 @@
 import { fetchDataUrl } from './fetch'
+import { consoleWarn } from './log'
 import { isDataUrl, resolveUrl } from './utils'
 
 import type { ResolvedOptions } from './options'
@@ -22,7 +23,7 @@ export async function replaceCssUrlToDataUrl(
       )
       cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)
     } catch (error) {
-      console.warn(error)
+      consoleWarn('Failed to fetch css data url - ', error)
     }
   }
 

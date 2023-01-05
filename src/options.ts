@@ -44,6 +44,13 @@ export interface Options {
   maximumCanvasSize?: number
 
   /**
+   * Load media timeout
+   *
+   * default: 500
+   */
+  loadMediaTimeout?: number
+
+  /**
    * Fetch resources
    */
   fetch?: {
@@ -51,6 +58,13 @@ export interface Options {
      * the second parameter of window.fetch RequestInit
      */
     requestInit?: RequestInit
+
+    /**
+     * fetch timeout
+     *
+     * default: 500
+     */
+    timeout?: number
 
     /**
      * Set to `true` to append the current time as a query string to URL
@@ -106,6 +120,7 @@ export interface ResolvedOptions extends Options {
   height: number
   scale: number
   maximumCanvasSize: number
+  loadMediaTimeout: number
   loaded: boolean
   resolved: true
 }
@@ -116,20 +131,23 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
 
   const ownerWindow = node.ownerDocument?.defaultView
 
-  const options = { ...userOptions, resolved: true } as ResolvedOptions
+  const options = {
+    width: 0,
+    height: 0,
+    loadMediaTimeout: 500,
+    maximumCanvasSize: 16384,
+    ...userOptions,
+    resolved: true,
+  } as ResolvedOptions
 
   if (isHTMLElementNode(node) && !options.loaded) {
     if (isImageElement(node)) {
-      await loadMedia(node)
+      await loadMedia(node, { timeout: options.loadMediaTimeout })
     } else {
-      await waitLoaded(node)
+      await waitLoaded(node, options.loadMediaTimeout)
     }
     options.loaded = true
   }
-
-  options.width = options.width ?? 0
-  options.height = options.height ?? 0
-  options.maximumCanvasSize = options.maximumCanvasSize ?? 16384
 
   if (!options.scale) {
     options.scale = Number(

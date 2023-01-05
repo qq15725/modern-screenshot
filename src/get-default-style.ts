@@ -17,15 +17,14 @@ export function getDefaultStyle(tagName: string) {
       sandbox.style.visibility = 'hidden'
       sandbox.style.position = 'fixed'
       document.body.appendChild(sandbox)
-      sandbox.contentWindow!.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
     }
   }
-  const win = sandbox.contentWindow!
+  const ownerWindow = sandbox.contentWindow!
   const el = document.createElement(tagName)
-  win.document.body.appendChild(el)
+  ownerWindow.document.body.appendChild(el)
   // Ensure that there is some content, so properties like margin are applied
   el.textContent = ' '
-  const style = win.getComputedStyle(el)
+  const style = ownerWindow.getComputedStyle(el)
   const styles: Record<string, any> = {}
   for (let i = style.length - 1; i >= 0; i--) {
     const name = style.item(i)
@@ -35,7 +34,7 @@ export function getDefaultStyle(tagName: string) {
       styles[name] = style.getPropertyValue(name)
     }
   }
-  win.document.body.removeChild(el)
+  ownerWindow.document.body.removeChild(el)
   defaultStyles.set(tagName, styles)
   return styles
 }

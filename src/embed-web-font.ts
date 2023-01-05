@@ -1,5 +1,6 @@
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 import { fetch, fetchText } from './fetch'
+import { consoleWarn } from './log'
 
 import type { ResolvedOptions } from './options'
 
@@ -14,8 +15,8 @@ export async function embedWebFont<T extends Element>(
   if (!cssText) {
     try {
       cssText = await parseWebFontCss(ownerDocument.styleSheets, options)
-    } catch (err) {
-      console.warn(err)
+    } catch (error) {
+      consoleWarn('Failed to parse web font css - ', error)
     }
   }
 
@@ -86,11 +87,11 @@ async function getCssRules(
                         : sheet.cssRules.length!,
                     )
                   } catch (error) {
-                    console.warn('Error inserting rule from remote css', { rule, error })
+                    consoleWarn('Error inserting rule from remote css - ', { rule, error })
                   }
                 }
               } catch (error) {
-                console.warn('Error loading remote css', error)
+                consoleWarn('Error loading remote css - ', error)
               }
             }),
         )
@@ -103,7 +104,7 @@ async function getCssRules(
       try {
         ret.push(...sheet.cssRules)
       } catch (error) {
-        console.warn(`Error while reading CSS rules from ${ sheet.href }`, error)
+        consoleWarn(`Error while reading CSS rules from ${ sheet.href } - `, error)
       }
     }
   })

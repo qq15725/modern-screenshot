@@ -1,4 +1,5 @@
 import { cloneNode } from './clone-node'
+import { consoleWarn } from './log'
 import type { ResolvedOptions } from './options'
 
 export function createIframeClone<T extends HTMLIFrameElement>(
@@ -10,7 +11,7 @@ export function createIframeClone<T extends HTMLIFrameElement>(
       return cloneNode(iframe.contentDocument.body, options, iframe.contentWindow) as HTMLBodyElement
     }
   } catch (error) {
-    console.warn('Failed to clone iframe', error)
+    consoleWarn('Failed to clone iframe - ', error)
   }
 
   return iframe.cloneNode(false) as HTMLIFrameElement

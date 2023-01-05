@@ -177,6 +177,13 @@ export interface Options {
   maximumCanvasSize?: number
 
   /**
+   * Load media timeout
+   *
+   * default: 500
+   */
+  loadMediaTimeout?: number
+
+  /**
    * Fetch resources
    */
   fetch?: {
@@ -184,6 +191,13 @@ export interface Options {
      * the second parameter of window.fetch RequestInit
      */
     requestInit?: RequestInit
+
+    /**
+     * fetch timeout
+     *
+     * default: 500
+     */
+    timeout?: number
 
     /**
      * Set to `true` to append the current time as a query string to URL
@@ -214,6 +228,8 @@ export interface Options {
      */
     cssText?: string
   }
+
+  log?: any
 }
 
 export interface JpegOptions {

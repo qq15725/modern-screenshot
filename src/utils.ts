@@ -65,7 +65,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
   return new Promise(resolve => {
     const {
       ownerDocument = window.document,
-      timeout = 500,
+      timeout,
     } = options ?? {}
 
     const node: Media = typeof media === 'string'
@@ -147,9 +147,9 @@ export function getMimeType(url: string): string {
   return MIMES[ext as keyof typeof MIMES] ?? ext
 }
 
-export async function waitLoaded(el: HTMLElement) {
+export async function waitLoaded(el: HTMLElement, timeout?: number) {
   await Promise.all([
-    ...Array.from(el.querySelectorAll('img')).map(el => loadMedia(el)),
-    ...Array.from(el.querySelectorAll('video')).map(el => loadMedia(el)),
+    ...Array.from(el.querySelectorAll('img')).map(el => loadMedia(el, { timeout })),
+    ...Array.from(el.querySelectorAll('video')).map(el => loadMedia(el, { timeout })),
   ])
 }
