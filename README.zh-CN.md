@@ -49,7 +49,7 @@ domToPng(document.querySelector('#app')).then(base64 => {
 
 ### 浏览器控制台
 
-> ⚠️ 由于 CORS 原因, styleSheets 字体无法嵌入
+> ⚠️ 由于 CORS 部分嵌入将失败
 
 ```js
 const script = document.createElement('script')

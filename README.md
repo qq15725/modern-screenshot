@@ -49,7 +49,7 @@ domToPng(document.querySelector('#app')).then(base64 => {
 
 ### Browser console
 
-> ⚠️ styleSheets fonts cannot be embedded due to CORS
+> ⚠️ Partial embedding will fail due to CORS
 
 ```js
 const script = document.createElement('script')
