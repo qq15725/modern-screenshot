@@ -32,7 +32,7 @@ npm i modern-screenshot
 import { domToPng } from 'modern-screenshot'
 
 domToPng(document.querySelector('#app')).then(base64 => {
-  window.open().document.write(`<img src="${ base64 }" />`)
+  open().document.write(`<img src="${ base64 }" />`)
 })
 ```
 
@@ -41,8 +41,8 @@ domToPng(document.querySelector('#app')).then(base64 => {
 ```html
 <script src="https://unpkg.com/modern-screenshot"></script>
 <script>
-  window.modernScreenshot.domToPng(document.querySelector('body')).then(base64 => {
-    window.open().document.write(`<img src="${ base64 }" />`)
+  modernScreenshot.domToPng(document.querySelector('body')).then(base64 => {
+    open().document.write(`<img src="${ base64 }" />`)
   })
 </script>
 ```
@@ -57,9 +57,18 @@ script.src = "https://unpkg.com/modern-screenshot"
 document.getElementsByTagName('head')[0].appendChild(script)
 
 script.onload = () => {
-  window.modernScreenshot.domToPng(document.querySelector('body'), { log: console }).then(base64 => {
-    window.open().document.write(`<img src="${ base64 }" />`)
-  })
+  modernScreenshot
+    .domToImage(document.querySelector('body'), { log: console })
+    .then(img => {
+      const width = 600
+      const height = img.height * (width / img.width)
+      console.log('%c ', [
+        `padding: 0 ${ width / 2 }px;`,
+        `line-height: ${ height }px;`,
+        `background-image: url('${ img.src }');`,
+        `background-size: 100% 100%;`,
+      ].join(''))
+    })
 }
 ```
 
