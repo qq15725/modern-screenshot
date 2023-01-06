@@ -1,7 +1,11 @@
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
   #root {
     width: 100px;
-    text-align: center;
+    overflow: hidden;
   }
 </style>
 
@@ -14,11 +18,18 @@
 
   const shadowHost = () => {
     const host = document.createElement('div')
+    host.style.backgroundColor = 'red'
+    host.style.width = '80px'
+    host.style.height = '80px'
     const nestedhost = document.createElement('div')
-    nestedhost.style.color = 'red'
-    const span = document.createElement('span')
-    span.innerText = 'shadow-dom'
-    nestedhost.attachShadow({ mode: 'open' }).appendChild(span)
+    nestedhost.style.backgroundColor = 'blue'
+    nestedhost.style.width = '50px'
+    nestedhost.style.height = '50px'
+    const div = document.createElement('div')
+    div.style.backgroundColor = 'black'
+    div.style.width = '20px'
+    div.style.height = '20px'
+    nestedhost.attachShadow({ mode: 'open' }).appendChild(div)
     host.attachShadow({ mode: 'open' }).appendChild(nestedhost)
     return host
   }
