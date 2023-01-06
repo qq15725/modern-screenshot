@@ -254,3 +254,7 @@ export interface BlobOptions extends JpegOptions {
   type?: string
 }
 ```
+
+## Known problems
+
+[ ] unable to clone closed shadowDom, `input::placeholder { color: red; }` invalid

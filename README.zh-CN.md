@@ -254,3 +254,8 @@ export interface BlobOptions extends JpegOptions {
   type?: string
 }
 ```
+
+## 已知的问题
+
+[ ] 无法克隆关闭的 shadowDom，`input::placeholder { color: red; }` 无效
+
