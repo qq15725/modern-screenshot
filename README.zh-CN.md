@@ -257,5 +257,6 @@ export interface BlobOptions extends JpegOptions {
 
 ## 已知的问题
 
-[ ] 无法克隆关闭的 shadowDom，`input::placeholder { color: red; }` 无效
+- [ ] 无法克隆关闭的 [shadowDom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) ，`input::placeholder { color: red; }` 无效
+- [ ] 无法克隆 [css 计数器](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Counter_Styles/Using_CSS_counters) ，`content: counter(step);` 无效
 

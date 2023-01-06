@@ -257,4 +257,5 @@ export interface BlobOptions extends JpegOptions {
 
 ## Known problems
 
-[ ] unable to clone closed shadowDom, `input::placeholder { color: red; }` invalid
+- [ ] unable to clone closed [shadowDom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), `input::placeholder { color: red; }` invalid
+- [ ] unable to clone [css counters](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Counter_Styles/Using_CSS_counters), `content: counter(step);` invalid
