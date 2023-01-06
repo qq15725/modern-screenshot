@@ -264,3 +264,7 @@ export interface BlobOptions extends JpegOptions {
 - [ ] unable to clone [css counters](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Counter_Styles/Using_CSS_counters)
 
   `content: counter(step);`
+
+- [ ] unable to clone [-webkit-scrollbar](https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar)
+
+  `body::-webkit-scrollbar-thumb { background-color: red; }`

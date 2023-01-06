@@ -265,3 +265,7 @@ export interface BlobOptions extends JpegOptions {
 
   `content: counter(step);`
 
+- [ ] 无法克隆 [-webkit-scrollbar](https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar)
+
+  `body::-webkit-scrollbar-thumb { background-color: red; }`
+
