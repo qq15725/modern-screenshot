@@ -1,0 +1,29 @@
+<style>
+  #root {
+    width: 100px;
+    text-align: center;
+  }
+</style>
+
+<template>
+  <div id="root"></div>
+</template>
+
+<script type="module">
+  const root = document.querySelector('#root')
+
+  const shadowHost = () => {
+    const host = document.createElement('div')
+    const nestedhost = document.createElement('div')
+    nestedhost.style.color = 'red'
+    const span = document.createElement('span')
+    span.innerText = 'shadow-dom'
+    nestedhost.attachShadow({ mode: 'open' }).appendChild(span)
+    host.attachShadow({ mode: 'open' }).appendChild(nestedhost)
+    return host
+  }
+
+  root.appendChild(shadowHost())
+
+  export default window.modernScreenshot.domToPng(root)
+</script>

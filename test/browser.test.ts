@@ -31,8 +31,8 @@ function parseHTML(str: string) {
     .replace(/__BASE_URL__/g, assetsBaseURL)
     .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
 
-  const scriptCode = str.match(/<script.*?>.*?export default (.*)<\/script>/s)?.[1]
-    ?? 'window.modernScreenshot.domToPng(document.querySelector(\'body > *\'))'
+  const scriptCode = str.match(/<script.*?>(.*)<\/script>/s)?.[1]?.replace('export default ', 'return ')
+    ?? 'return window.modernScreenshot.domToPng(document.querySelector(\'body > *\'))'
 
   const skipExpect = !!str.match(/<skip-expect.*\/>/s)?.[0]
 
@@ -109,7 +109,7 @@ describe('dom to image in browser', async () => {
       await style.evaluate((el, val) => el.innerHTML = val, styleCode)
       await body.evaluate((el, val) => el.innerHTML = val, templateCode)
       // eslint-disable-next-line no-new-func
-      const png = await page.evaluate((val) => new Function(`return ${ val }`)(), scriptCode)
+      const png = await page.evaluate(val => new Function(val)(), scriptCode)
       const base64 = png.replace('data:image/png;base64,', '')
       const buffer = Buffer.from(base64, 'base64')
       const options = {
