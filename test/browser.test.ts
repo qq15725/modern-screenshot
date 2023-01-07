@@ -18,14 +18,14 @@ const corsAssetsBaseURL = `http://localhost:${ corsPort }/test/assets`
 
 function parseHTML(str: string) {
   const styleCode = `
-  * {
-    box-sizing: border-box;
-  }
   ${
     str.match(/<style>(.*)<\/style>/s)?.[1]
       .replace(/__BASE_URL__/g, assetsBaseURL)
       .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
     ?? ''
+  }
+  * {
+    box-sizing: border-box;
   }
 `
 

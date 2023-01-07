@@ -2,25 +2,25 @@
   @import url(__BASE_URL__/font/font.css);
 
   #root {
-    background-color: white;
     font-family: 'CustomFont';
     font-size: 20px;
+    width: 200px;
   }
 
   .with-before::before {
-    content: 'JUSTBEFORE';
+    content: 'BEFORE';
   }
 
   .with-after::after {
-    content: 'JUSTAFTER';
+    content: 'AFTER';
   }
 
   .with-both::before {
-    content: 'BOTHBEFORE';
+    content: 'BEFORE-';
   }
 
   .with-both::after {
-    content: 'BOTHAFTER';
+    content: 'AFTER';
   }
 </style>
 
