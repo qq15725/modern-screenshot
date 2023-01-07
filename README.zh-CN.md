@@ -123,7 +123,7 @@ declare function domToSvg<T extends Node>(
 declare function domToWebp<T extends Node>(
   node: T,
   options?: Options,
-): Promise<SVGElement>;
+): Promise<string>;
 
 declare function imageToCanvas<T extends HTMLImageElement>(
   image: T,
