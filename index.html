@@ -4,38 +4,18 @@
   <meta charset="utf-8">
   <title>Playground</title>
   <style>
-    @import url(./test/assets/font/font.css);
-
     * {
       box-sizing: border-box;
-      font-size: 60px;
-      font-family: 'CustomFont';
     }
 
     body, html {
       margin: 0;
     }
-
-    body > div > #root {
-      display: inline;
-      font-weight: 700;
-      font-size: 60px;
-      -webkit-text-fill-color: transparent;
-      -webkit-background-clip: text;
-      background-image: linear-gradient(90deg, rgb(0, 0, 0) 10%, rgb(9, 124, 51) 50%, rgb(247, 9, 20) 90%);
-    }
   </style>
 </head>
 <body>
   <div>
-    <div id="root">
-      <span>TEXT 1</span>
-      <span>TEXT 2</span>
-      <span>TEXT 3</span>
-      <span>TEXT 4</span>
-      <span>TEXT 5</span>
-      <span>TEXT 6 <span>TEXT 6.1</span></span>
-    </div>
+    <div id="root" style="background-color: white; width: 100px; height: 100px; display: inline-block; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700;">SVG</div>
   </div>
 
   <script type="module" async>
@@ -44,7 +24,7 @@
     document.body.appendChild(
       await domToImage(
         document.querySelector('#root'),
-        { debug: true },
+        { debug: true, type: 'image/jpeg' },
       ),
     )
   </script>

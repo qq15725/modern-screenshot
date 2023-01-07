@@ -1,16 +1,17 @@
 import { createImage } from '../utils'
 import { resolveOptions } from '../options'
-import { domToPng } from './dom-to-png'
+import { domToCanvas } from './dom-to-canvas'
 
-import type { Options } from '../options'
+import type { ImageOptions, Options } from '../options'
 
 export async function domToImage<T extends Node>(
   node: T,
-  options?: Options,
+  options?: Options & ImageOptions,
 ): Promise<HTMLImageElement> {
   const resolved = await resolveOptions(node, options)
-  const png = await domToPng(node, resolved)
-  const image = createImage(png, node.ownerDocument!)
+  const canvas = await domToCanvas(node, resolved)
+  const url = canvas.toDataURL(options?.type, options?.quality)
+  const image = createImage(url, node.ownerDocument!)
   const { width, height, scale } = resolved
   image.width = Math.floor(width * scale)
   image.height = Math.floor(height * scale)

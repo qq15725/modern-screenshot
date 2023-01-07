@@ -17,16 +17,21 @@ const corsPort = 3001
 const corsAssetsBaseURL = `http://localhost:${ corsPort }/test/assets`
 
 function parseHTML(str: string) {
-  const styleCode = (
+  const styleCode = `
+  * {
+    box-sizing: border-box;
+  }
+  ${
     str.match(/<style>(.*)<\/style>/s)?.[1]
-    ?? '* { box-sizing: border-box; }'
-  )
-    .replace(/__BASE_URL__/g, assetsBaseURL)
-    .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
+      .replace(/__BASE_URL__/g, assetsBaseURL)
+      .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
+    ?? ''
+  }
+`
 
   const templateCode = (
     str.match(/<template.*?>(.*)<\/template>/s)?.[1]
-    ?? '<div>template</div>'
+    ?? '<div id="root"></div>'
   )
     .replace(/__BASE_URL__/g, assetsBaseURL)
     .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)

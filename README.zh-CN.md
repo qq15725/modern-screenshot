@@ -82,12 +82,12 @@ script.onload = () => {
 ```ts
 declare function canvasToblob(
   canvas: HTMLCanvasElement,
-  options?: BlobOptions,
+  options?: ImageOptions,
 ): Promise<Blob | null>;
 
 declare function domToBlob<T extends Node>(
   node: T,
-  options?: Options & BlobOptions,
+  options?: Options & ImageOptions,
 ): Promise<Blob | null>;
 
 declare function domToCanvas<T extends Node>(
@@ -97,7 +97,7 @@ declare function domToCanvas<T extends Node>(
 
 declare function domToImage<T extends Node>(
   node: T,
-  options?: Options,
+  options?: Options & ImageOptions,
 ): Promise<HTMLImageElement>;
 
 declare function domToJpeg<T extends Node>(
@@ -116,6 +116,11 @@ declare function domToPng<T extends Node>(
 ): Promise<string>;
 
 declare function domToSvg<T extends Node>(
+  node: T,
+  options?: Options,
+): Promise<SVGElement>;
+
+declare function domToWebp<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<SVGElement>;
@@ -247,7 +252,7 @@ export interface JpegOptions {
   quality?: number
 }
 
-export interface BlobOptions extends JpegOptions {
+export interface ImageOptions extends JpegOptions {
   /**
    * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
    */

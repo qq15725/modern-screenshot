@@ -5,6 +5,7 @@ import type { ResolvedOptions } from './options'
 const PROPERTIES = [
   'background',
   'background-image',
+  '-webkit-mask-image',
 ] as const
 
 export async function embedCssStyleImage(
@@ -18,7 +19,7 @@ export async function embedCssStyleImage(
       const newValue = await replaceCssUrlToDataUrl(value, null, options, true)
       if (!newValue || value === newValue) return
       style.setProperty(
-        'background',
+        property,
         newValue,
         style.getPropertyPriority(property),
       )

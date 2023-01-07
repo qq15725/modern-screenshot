@@ -1,9 +1,9 @@
 import { IN_BROWSER } from '../utils'
-import type { BlobOptions } from '../options'
+import type { ImageOptions } from '../options'
 
 export async function canvasToblob(
   canvas: HTMLCanvasElement,
-  options?: BlobOptions,
+  options?: ImageOptions,
 ): Promise<Blob | null> {
   const { type = 'image/png', quality = 1 } = options || {}
 

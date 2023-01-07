@@ -110,7 +110,7 @@ export interface JpegOptions {
   quality?: number
 }
 
-export interface BlobOptions extends JpegOptions {
+export interface ImageOptions extends JpegOptions {
   /**
    * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
    */
