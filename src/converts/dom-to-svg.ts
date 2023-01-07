@@ -9,9 +9,9 @@ import { isElementNode, isSVGElementNode } from '../utils'
 import type { Options, ResolvedOptions } from '../options'
 
 const fixStyles = `<style>
-  .modern-screenshot__background-clip--text {
-    -webkit-background-clip: text;
+  .______background-clip--text {
     background-clip: text;
+    -webkit-background-clip: text;
   }
 </style>`.replace(/(\n| {2})/ig, '')
 

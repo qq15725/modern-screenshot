@@ -34,63 +34,36 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
       continue
     }
 
+    // fix background-clip: text
     if (name === 'background-clip' && value === 'text') {
-      clone.classList.add('modern-screenshot__background-clip--text')
-    } else {
-      cloneStyle.setProperty(name, value, priority)
+      clone.classList.add('______background-clip--text')
+      continue
+    }
+
+    cloneStyle.setProperty(name, value, priority)
+
+    // fix border width
+    if (name.startsWith('border') && name.endsWith('style')) {
+      const widthName = name.replace('style', 'width')
+      if (!cloneStyle.getPropertyValue(widthName)) {
+        cloneStyle.setProperty(widthName, '0')
+      }
     }
   }
 
-  // Css fixes
+  // fix chromium
   // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
   if (ownerWindow.navigator.userAgent.match(/\bChrome\//)) {
-    applyChromiumKerningFix(clone)
-    applyChromiumEllipsisFix(node, clone)
-  }
-}
+    if (cloneStyle.fontKerning === 'auto') {
+      cloneStyle.fontKerning = 'normal'
+    }
 
-/*
- * For Chromium-based browsers, we replace "font-kerning: auto" with
- * "font-kerning: normal".
- *
- * While rendering HTML in said browsers, "auto" enables kerning for all
- * glyphs, behaving like "normal". When rendering SVG, however, Chromium
- * instead uses a faster, mixed approach where kerning is enabled for pairs of
- * letters, but not for a letter and a space.
- *
- * Without this fix, the rendered width of some nodes might be wider than
- * calculated, resulting in broken layouts.
- *
- * For Firefox, this is not required as it treats "font-kerning" consistently
- * both when rendering HTML and when rendering SVG.
- */
-function applyChromiumKerningFix<T extends HTMLElement | SVGElement>(clone: T): void {
-  if (clone.style.fontKerning === 'auto') {
-    clone.style.fontKerning = 'normal'
-  }
-}
-
-/*
- * In Chromium-based browsers, if a node has ellipsis text overflow configured
- * (this is, has both "overflow: hidden" and "text-overflow: ellipsis"), but
- * it doesn't really overflow, we'll disable it.
- *
- * Without this fix, rounding errors in the calculated node widths can cause
- * the ellipsis to be displayed in the generated SVG, even if the full text
- * was displayed in the original HTML.
- *
- * For Firefox this is not required, as it seems its calculations are more
- * accurate.
- */
-function applyChromiumEllipsisFix<T extends HTMLElement | SVGElement>(
-  node: T,
-  clone: T,
-): void {
-  if (
-    clone.style.overflow === 'hidden'
-    && clone.style.textOverflow === 'ellipsis'
-    && node.scrollWidth === node.clientWidth
-  ) {
-    clone.style.textOverflow = 'clip'
+    if (
+      cloneStyle.overflow === 'hidden'
+      && cloneStyle.textOverflow === 'ellipsis'
+      && node.scrollWidth === node.clientWidth
+    ) {
+      cloneStyle.textOverflow = 'clip'
+    }
   }
 }
