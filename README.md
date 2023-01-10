@@ -102,7 +102,7 @@ DOM to HTMLElement
 
 ## Options
 
-[the type definition of the option](src/options.ts)
+[the type definition of the options](src/options.ts)
 
 ## Known problems
 
