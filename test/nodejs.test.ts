@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { Window } from 'happy-dom'
-import { domToSvg } from '../src'
+import { domToForeignObjectSvg } from '../src'
 
 describe('use happy-dom in nodejs', async () => {
   test('dom to svg', async () => {
@@ -16,7 +16,7 @@ describe('use happy-dom in nodejs', async () => {
   </body>
 </html>
 `)
-    const svg = await domToSvg(document.body as unknown as Node)
+    const svg = await domToForeignObjectSvg(document.body as unknown as Node)
     expect(svg.toString()).not.toBeNull()
   })
 })

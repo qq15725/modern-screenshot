@@ -1,4 +1,4 @@
-import { IN_BROWSER } from './utils'
+import { IN_BROWSER, getDocument } from './utils'
 
 const SANDBOX_ID = 'modern-screenshot__sandbox'
 let sandbox: HTMLIFrameElement | undefined
@@ -7,22 +7,24 @@ const defaultStyles = new Map<string, Record<string, any>>()
 export function getDefaultStyle(tagName: string) {
   if (!IN_BROWSER) return {}
   if (defaultStyles.has(tagName)) return defaultStyles.get(tagName)!
+  const sandboxOwnerDocument = getDocument()
   if (!sandbox) {
-    sandbox = document.querySelector(`#${ SANDBOX_ID }`) as HTMLIFrameElement
+    sandbox = sandboxOwnerDocument.querySelector(`#${ SANDBOX_ID }`) as HTMLIFrameElement
     if (!sandbox) {
-      sandbox = document.createElement('iframe')
+      sandbox = sandboxOwnerDocument.createElement('iframe')
       sandbox.id = SANDBOX_ID
       sandbox.width = '0'
       sandbox.height = '0'
       sandbox.style.visibility = 'hidden'
       sandbox.style.position = 'fixed'
-      document.body.appendChild(sandbox)
+      sandboxOwnerDocument.body.appendChild(sandbox)
       sandbox.contentWindow!.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
     }
   }
   const ownerWindow = sandbox.contentWindow!
-  const el = document.createElement(tagName)
-  ownerWindow.document.body.appendChild(el)
+  const ownerDocument = ownerWindow.document
+  const el = ownerDocument.createElement(tagName)
+  ownerDocument.body.appendChild(el)
   // Ensure that there is some content, so properties like margin are applied
   el.textContent = ' '
   const style = ownerWindow.getComputedStyle(el)
@@ -35,14 +37,14 @@ export function getDefaultStyle(tagName: string) {
       styles[name] = style.getPropertyValue(name)
     }
   }
-  ownerWindow.document.body.removeChild(el)
+  ownerDocument.body.removeChild(el)
   defaultStyles.set(tagName, styles)
   return styles
 }
 
 export function removeDefaultStyleSandbox() {
   if (!sandbox) return
-  document.body.removeChild(sandbox)
+  getDocument().body.removeChild(sandbox)
   defaultStyles.clear()
   sandbox = undefined
 }

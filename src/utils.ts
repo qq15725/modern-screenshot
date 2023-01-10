@@ -32,7 +32,7 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
 
   if (!IN_BROWSER) return url
 
-  const doc = document.implementation.createHTMLDocument()
+  const doc = getDocument().implementation.createHTMLDocument()
   const base = doc.createElement('base')
   const a = doc.createElement('a')
   doc.head.appendChild(base)
@@ -42,8 +42,29 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
   return a.href
 }
 
-export function createImage(url: string, ownerDocument: Document, useCORS = false): HTMLImageElement {
-  const img = ownerDocument.createElement('img')
+export function getDocument(target?: Element | Document | null): Document {
+  return (
+    (
+      target && isElementNode(target as any)
+        ? target?.ownerDocument
+        : target
+    ) ?? window.document
+  ) as any
+}
+
+export function createSvg(width: number, height: number, ownerDocument?: Document | null): SVGSVGElement {
+  const svg = getDocument(ownerDocument).createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('viewBox', `0 0 ${ width } ${ height }`)
+  return svg
+}
+
+export function svgToDataUrl(svg: SVGElement) {
+  const xhtml = new XMLSerializer().serializeToString(svg)
+  return `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
+}
+
+export function createImage(url: string, ownerDocument?: Document | null, useCORS = false): HTMLImageElement {
+  const img = getDocument(ownerDocument).createElement('img')
   if (useCORS) {
     img.crossOrigin = 'anonymous'
   }
@@ -63,10 +84,9 @@ export function loadMedia<T extends Media>(media: T, options?: LoadMediaOptions)
 export function loadMedia(media: string, options?: LoadMediaOptions): Promise<HTMLImageElement>
 export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> {
   return new Promise(resolve => {
-    const {
-      ownerDocument = window.document,
-      timeout,
-    } = options ?? {}
+    const { timeout } = options ?? {}
+
+    const ownerDocument = getDocument(options?.ownerDocument)
 
     const node: Media = typeof media === 'string'
       ? createImage(media, ownerDocument)

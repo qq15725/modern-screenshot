@@ -11,7 +11,7 @@ import {
   isTextNode,
   isVideoElement,
 } from './utils'
-import { applyCssStyleWithOptions } from './options'
+import { applyCssStyleWithOptions } from './resolve-options'
 import { createElementClone } from './create-element-clone'
 
 import type { ResolvedOptions } from './options'

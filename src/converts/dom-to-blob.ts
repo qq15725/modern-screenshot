@@ -1,4 +1,4 @@
-import { resolveOptions } from '../options'
+import { resolveOptions } from '../resolve-options'
 import { domToCanvas } from './dom-to-canvas'
 import { canvasToblob } from './canvas-to-blob'
 

@@ -1,5 +1,5 @@
 import { consoleWarn } from '../log'
-import { resolveOptions } from '../options'
+import { resolveOptions } from '../resolve-options'
 import { loadMedia } from '../utils'
 
 import type { Options, ResolvedOptions } from '../options'
@@ -19,10 +19,10 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   return canvas
 }
 
-function createCanvas(document: Document, options: ResolvedOptions) {
+function createCanvas(ownerDocument: Document, options: ResolvedOptions) {
   const { width, height, scale, backgroundColor, maximumCanvasSize: max } = options
 
-  const canvas = document.createElement('canvas')
+  const canvas = ownerDocument.createElement('canvas')
 
   canvas.width = Math.floor(width * scale)
   canvas.height = Math.floor(height * scale)

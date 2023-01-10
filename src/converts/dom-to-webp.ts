@@ -1,11 +1,9 @@
-import { domToCanvas } from './dom-to-canvas'
-
+import { domToDataUrl } from './dom-to-data-url'
 import type { Options } from '../options'
 
 export async function domToWebp<T extends Node>(
   node: T,
   options?: Options,
 ): Promise<string> {
-  const canvas = await domToCanvas(node, options)
-  return canvas.toDataURL('image/webp')
+  return domToDataUrl(node, { ...options, type: 'image/webp' })
 }
