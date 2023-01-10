@@ -31,8 +31,8 @@ npm i modern-screenshot
 ```ts
 import { domToPng } from 'modern-screenshot'
 
-domToPng(document.querySelector('#app')).then(base64 => {
-  open().document.write(`<img src="${ base64 }" />`)
+domToPng(document.querySelector('#app')).then(dataURL => {
+  open().document.write(`<img src="${ dataURL }" />`)
 })
 ```
 
@@ -41,8 +41,8 @@ domToPng(document.querySelector('#app')).then(base64 => {
 ```html
 <script src="https://unpkg.com/modern-screenshot"></script>
 <script>
-  modernScreenshot.domToPng(document.querySelector('body')).then(base64 => {
-    open().document.write(`<img src="${ base64 }" />`)
+  modernScreenshot.domToPng(document.querySelector('body')).then(dataURL => {
+    open().document.write(`<img src="${ dataURL }" />`)
   })
 </script>
 ```
