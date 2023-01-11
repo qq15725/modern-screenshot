@@ -12,7 +12,7 @@
   </a>
 </p>
 
-<p align="center">使用 HTML5 canvas 和 SVG 生成图像</p>
+<p align="center">使用 HTML5 canvas 和 SVG 从 DOM 节点生成图像</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
@@ -118,3 +118,10 @@ DOM 转 HTMLElement
 
   `body::-webkit-scrollbar-thumb { background-color: red; }`
 
+## 相关的包
+
+| 名字       | 描述                                                                  |
+|----------|----------------------------------------------------------------------|
+| [dom-vcr] | 使用 HTML5 canvas 和 SVG 从 DOM 节点生成视频或 GIF |
+
+[dom-vcr]: https://github.com/qq15725/dom-vcr

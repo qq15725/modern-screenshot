@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.2.0",
   "packageManager": "pnpm@7.9.0",
-  "description": "Generate image using HTML5 canvas and SVG",
+  "description": "Generates an image from a DOM node using HTML5 canvas and SVG",
   "author": "wxm",
   "license": "MIT",
   "homepage": "https://github.com/qq15725/modern-screenshot",
@@ -15,12 +15,15 @@
     "url": "https://github.com/qq15725/modern-screenshot/issues"
   },
   "keywords": [
-    "modern-screenshot",
-    "image",
     "dom",
-    "svg",
+    "image",
+    "raster",
+    "render",
+    "html",
     "canvas",
-    "screenshot"
+    "svg",
+    "screenshot",
+    "modern"
   ],
   "sideEffects": false,
   "exports": {

@@ -12,7 +12,7 @@
   </a>
 </p>
 
-<p align="center">Generate image using HTML5 canvas and SVG</p>
+<p align="center">Generates an image from a DOM node using HTML5 canvas and SVG</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
@@ -117,3 +117,11 @@ DOM to HTMLElement
 - [ ] unable to clone [-webkit-scrollbar](https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar)
 
   `body::-webkit-scrollbar-thumb { background-color: red; }`
+
+## Similar packages
+
+| name      | description                                                          |
+|-----------|----------------------------------------------------------------------|
+| [dom-vcr] | Generates an video or GIF from a DOM node using HTML5 canvas and SVG |
+
+[dom-vcr]: https://github.com/qq15725/dom-vcr
