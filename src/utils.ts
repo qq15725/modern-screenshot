@@ -107,25 +107,21 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
     } else {
       if (isSVGImageElementNode(node)) {
         if (!node.href.baseVal) return resolve(node)
-
-        node.addEventListener(
-          'load',
-          () => resolve(node),
-          { once: true },
-        )
-
-        node.addEventListener(
-          'error',
-          () => resolve(node),
-          { once: true },
-        )
       } else {
-        if (!node.src && !node.currentSrc) {
-          return resolve(node)
-        }
-
-        node.decode().catch(() => {}).finally(() => resolve(node))
+        if (!node.src && !node.currentSrc) return resolve(node)
       }
+
+      node.addEventListener(
+        'load',
+        () => resolve(node),
+        { once: true },
+      )
+
+      node.addEventListener(
+        'error',
+        () => resolve(node),
+        { once: true },
+      )
     }
   })
 }
