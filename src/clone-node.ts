@@ -92,6 +92,10 @@ export function cloneNode<T extends Node>(
       applyCssStyleWithOptions(clone.style, options)
     }
 
+    if (clone.style.fontFamily) {
+      options.fontFamilies.add(clone.style.fontFamily)
+    }
+
     return clone
   }
 

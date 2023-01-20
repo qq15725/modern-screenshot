@@ -8,18 +8,10 @@ import { createSvg, isElementNode, isSVGElementNode } from '../utils'
 
 import type { Options, ResolvedOptions } from '../options'
 
-const fixStyles = `<style>
-  .______background-clip--text {
-    background-clip: text;
-    -webkit-background-clip: text;
-  }
-</style>`.replace(/(\n| {2})/ig, '')
-
 function createForeignObjectSvg(clone: Node, options: ResolvedOptions): SVGSVGElement {
   const { width, height } = options
   const svg = createSvg(width, height, clone.ownerDocument)
   const foreignObject = svg.ownerDocument.createElementNS(svg.namespaceURI, 'foreignObject')
-  svg.innerHTML = fixStyles
   foreignObject.setAttributeNS(null, 'x', '0%')
   foreignObject.setAttributeNS(null, 'y', '0%')
   foreignObject.setAttributeNS(null, 'width', '100%')
@@ -57,5 +49,7 @@ export async function domToForeignObjectSvg<T extends Node>(
   await Promise.all(tasks.map(task => task.finally(() => options?.progress?.(++current, count))))
   options?.debug && consoleTimeEnd('embed node')
 
-  return createForeignObjectSvg(clone, resolved)
+  const svg = createForeignObjectSvg(clone, resolved)
+  svg.insertBefore(resolved.styleEl, svg.children[0])
+  return svg
 }

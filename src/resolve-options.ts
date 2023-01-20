@@ -1,37 +1,37 @@
 import { consoleTime, consoleTimeEnd } from './log'
-import { IS_NODE, isElementNode, isHTMLElementNode, isImageElement, loadMedia, waitLoaded } from './utils'
+import { getDocument, isElementNode, isHTMLElementNode, isImageElement, loadMedia, waitLoaded } from './utils'
 import type { Options, ResolvedOptions } from './options'
+
+const cssText = `
+.______background-clip--text {
+  background-clip: text;
+  -webkit-background-clip: text;
+}`
 
 export async function resolveOptions(node: Node, userOptions?: Options): Promise<ResolvedOptions> {
   if ((userOptions as any)?.resolved) return userOptions as ResolvedOptions
   userOptions?.debug && consoleTime('resolve options')
 
-  const ownerWindow = node.ownerDocument?.defaultView
-
   const options = {
     width: 0,
     height: 0,
-    timeout: 3000,
+    scale: 1,
     maximumCanvasSize: 16384,
+    timeout: 3000,
     ...userOptions,
+    fontFamilies: new Set(),
+    styleEl: getDocument(node).createElement('style'),
     resolved: true,
   } as ResolvedOptions
 
-  if (isHTMLElementNode(node) && !options.loaded) {
+  options.styleEl.appendChild(options.styleEl.ownerDocument.createTextNode(cssText))
+
+  if (isHTMLElementNode(node)) {
     if (isImageElement(node)) {
       await loadMedia(node, { timeout: options.timeout })
     } else {
       await waitLoaded(node, options.timeout)
     }
-    options.loaded = true
-  }
-
-  if (!options.scale) {
-    options.scale = Number(
-      (IS_NODE ? process.env.devicePixelRatio : 0)
-      || ownerWindow?.devicePixelRatio
-      || 1,
-    )
   }
 
   if ((!options.width || !options.height) && isElementNode(node)) {

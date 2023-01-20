@@ -24,13 +24,7 @@ export async function embedWebFont<T extends Element>(
 
   cssText = filterPreferredFormat(cssText, options)
 
-  const style = ownerDocument.createElement('style')
-  style.appendChild(ownerDocument.createTextNode(cssText))
-  if (clone.firstChild) {
-    clone.insertBefore(style, clone.firstChild)
-  } else {
-    clone.appendChild(style)
-  }
+  options.styleEl.appendChild(ownerDocument.createTextNode(`\r\n${ cssText }\r\n`))
 }
 
 export async function parseWebFontCss(
@@ -43,6 +37,10 @@ export async function parseWebFontCss(
     cssRules
       .filter(rule => (
         rule.constructor.name === 'CSSFontFaceRule'
+          && (
+            !(rule as CSSFontFaceRule).style.fontFamily
+            || options.fontFamilies.has((rule as CSSFontFaceRule).style.fontFamily)
+          )
           && hasCssUrl((rule as CSSFontFaceRule).style.getPropertyValue('src'))
       ))
       .map(async rule => {

@@ -1,4 +1,3 @@
-export const IS_NODE = typeof process !== 'undefined'
 export const IN_BROWSER = typeof window !== 'undefined'
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'
@@ -42,7 +41,7 @@ export function resolveUrl(url: string, baseUrl: string | null): string {
   return a.href
 }
 
-export function getDocument(target?: Element | Document | null): Document {
+export function getDocument<T extends Node>(target?: T | null): Document {
   return (
     (
       target && isElementNode(target as any)
@@ -113,7 +112,13 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
 
       node.addEventListener(
         'load',
-        () => resolve(node),
+        () => {
+          if (isSVGImageElementNode(node)) {
+            resolve(node)
+          } else {
+            node.decode().then(() => resolve(node))
+          }
+        },
         { once: true },
       )
 
