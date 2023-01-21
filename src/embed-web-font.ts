@@ -8,53 +8,45 @@ export async function embedWebFont<T extends Element>(
   clone: T,
   options: ResolvedOptions,
 ) {
-  const ownerDocument = clone.ownerDocument
+  const { ownerDocument } = clone
+  const { styleSheets } = ownerDocument
+  const { font, context } = options
+  const { tasks, styleEl } = context
 
-  let cssText = (options.font as any)?.cssText
-
-  if (!cssText) {
+  if (font && font.cssText) {
+    const cssText = filterPreferredFormat(font.cssText, options)
+    styleEl.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
+  } else {
     try {
-      cssText = await parseWebFontCss(ownerDocument.styleSheets, options)
+      const cssRules = await getCssRules(Array.from(styleSheets), options)
+
+      cssRules
+        .filter(rule => (
+          rule.constructor.name === 'CSSFontFaceRule'
+          && (
+            !(rule as CSSFontFaceRule).style.fontFamily
+            || options.context.fontFamilies.has((rule as CSSFontFaceRule).style.fontFamily)
+          )
+          && hasCssUrl((rule as CSSFontFaceRule).style.getPropertyValue('src'))
+        ))
+        .forEach(rule => {
+          tasks.push(
+            replaceCssUrlToDataUrl(
+              rule.cssText,
+              rule.parentStyleSheet
+                ? rule.parentStyleSheet.href
+                : null,
+              options,
+            ).then(cssText => {
+              cssText = filterPreferredFormat(cssText, options)
+              styleEl.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+            }),
+          )
+        })
     } catch (error) {
       consoleWarn('Failed to parse web font css - ', error)
     }
   }
-
-  if (!cssText) return
-
-  cssText = filterPreferredFormat(cssText, options)
-
-  options.styleEl.appendChild(ownerDocument.createTextNode(`\r\n${ cssText }\r\n`))
-}
-
-export async function parseWebFontCss(
-  styleSheets: StyleSheetList,
-  options: ResolvedOptions,
-): Promise<string> {
-  const cssRules = await getCssRules(Array.from(styleSheets), options)
-
-  const cssTexts = await Promise.all(
-    cssRules
-      .filter(rule => (
-        rule.constructor.name === 'CSSFontFaceRule'
-          && (
-            !(rule as CSSFontFaceRule).style.fontFamily
-            || options.fontFamilies.has((rule as CSSFontFaceRule).style.fontFamily)
-          )
-          && hasCssUrl((rule as CSSFontFaceRule).style.getPropertyValue('src'))
-      ))
-      .map(async rule => {
-        return replaceCssUrlToDataUrl(
-          rule.cssText,
-          rule.parentStyleSheet
-            ? rule.parentStyleSheet.href
-            : null,
-          options,
-        )
-      }),
-  )
-
-  return cssTexts.join('\n')
 }
 
 async function getCssRules(

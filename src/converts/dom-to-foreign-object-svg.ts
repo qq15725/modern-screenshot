@@ -41,15 +41,20 @@ export async function domToForeignObjectSvg<T extends Node>(
     options?.debug && consoleTimeEnd('embed web font')
   }
 
-  const tasks = embedNode(clone, resolved)
+  embedNode(clone, resolved)
+
+  const { tasks, styleEl } = resolved.context
   const count = tasks.length
   let current = 0
-
   options?.debug && consoleTime('embed node')
-  await Promise.all(tasks.map(task => task.finally(() => options?.progress?.(++current, count))))
+  await Promise.all(
+    tasks.map(task => {
+      return task.finally(() => options?.progress?.(++current, count))
+    }),
+  )
   options?.debug && consoleTimeEnd('embed node')
 
   const svg = createForeignObjectSvg(clone, resolved)
-  svg.insertBefore(resolved.styleEl, svg.children[0])
+  svg.insertBefore(styleEl, svg.children[0])
   return svg
 }

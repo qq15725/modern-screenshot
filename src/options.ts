@@ -120,7 +120,9 @@ export interface ResolvedOptions extends Options {
   scale: number
   maximumCanvasSize: number
   timeout: number
-  fontFamilies: Set<string>
-  styleEl: HTMLStyleElement
-  resolved: true
+  context: {
+    styleEl: HTMLStyleElement
+    fontFamilies: Set<string>
+    tasks: Promise<void>[]
+  }
 }

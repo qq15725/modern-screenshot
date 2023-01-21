@@ -93,7 +93,7 @@ export function cloneNode<T extends Node>(
     }
 
     if (clone.style.fontFamily) {
-      options.fontFamilies.add(clone.style.fontFamily)
+      options.context.fontFamilies.add(clone.style.fontFamily)
     }
 
     return clone

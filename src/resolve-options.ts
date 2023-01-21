@@ -6,11 +6,15 @@ const cssText = `
 .______background-clip--text {
   background-clip: text;
   -webkit-background-clip: text;
-}`
+}
+`
 
 export async function resolveOptions(node: Node, userOptions?: Options): Promise<ResolvedOptions> {
-  if ((userOptions as any)?.resolved) return userOptions as ResolvedOptions
+  if ((userOptions as any)?.context) return userOptions as ResolvedOptions
   userOptions?.debug && consoleTime('resolve options')
+
+  const styleEl = getDocument(node).createElement('style')
+  styleEl.appendChild(styleEl.ownerDocument.createTextNode(cssText))
 
   const options = {
     width: 0,
@@ -19,12 +23,12 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
     maximumCanvasSize: 16384,
     timeout: 3000,
     ...userOptions,
-    fontFamilies: new Set(),
-    styleEl: getDocument(node).createElement('style'),
-    resolved: true,
+    context: {
+      fontFamilies: new Set(),
+      styleEl,
+      tasks: [],
+    },
   } as ResolvedOptions
-
-  options.styleEl.appendChild(options.styleEl.ownerDocument.createTextNode(cssText))
 
   if (isHTMLElementNode(node)) {
     if (isImageElement(node)) {
