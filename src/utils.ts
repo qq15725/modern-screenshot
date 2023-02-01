@@ -163,10 +163,10 @@ const MIMES = {
   webp: 'image/webp',
 } as const
 
-const EXT_RE = /\.([^.\/]+?)$/
+const EXT_RE = /\.([^.\/?]+?)(\?.*)?$/
 
 export function getMimeType(url: string): string | undefined {
-  return MIMES[new URL(url).pathname.match(EXT_RE)?.[1]?.toLowerCase() as keyof typeof MIMES]
+  return MIMES[url.match(EXT_RE)?.[1]?.toLowerCase() as keyof typeof MIMES]
 }
 
 export async function waitLoaded(el: HTMLElement, timeout?: number) {
