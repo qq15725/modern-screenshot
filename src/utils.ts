@@ -1,3 +1,5 @@
+import { consoleWarn } from './log'
+
 export const IN_BROWSER = typeof window !== 'undefined'
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'
@@ -116,7 +118,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
           if (isSVGImageElementNode(node)) {
             resolve(node)
           } else {
-            node.decode().then(() => resolve(node))
+            node.decode().catch(consoleWarn).finally(() => resolve(node))
           }
         },
         { once: true },
@@ -163,9 +165,8 @@ const MIMES = {
 
 const EXT_RE = /\.([^.\/]+?)$/
 
-export function getMimeType(url: string): string {
-  const ext = url.match(EXT_RE)?.[1]?.toLowerCase()
-  return MIMES[ext as keyof typeof MIMES] ?? ext
+export function getMimeType(url: string): string | undefined {
+  return MIMES[new URL(url).pathname.match(EXT_RE)?.[1]?.toLowerCase() as keyof typeof MIMES]
 }
 
 export async function waitLoaded(el: HTMLElement, timeout?: number) {
