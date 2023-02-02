@@ -11,19 +11,24 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   const resolved = await resolveOptions(image, options)
   const loaded = await loadMedia(image, { timeout: resolved.timeout })
   const { canvas, context } = createCanvas(image.ownerDocument, resolved)
+  const drawImage = () => {
+    try {
+      context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
+    } catch (error) {
+      consoleWarn('Failed to image to canvas - ', error)
+    }
+  }
+  drawImage()
   // fix: image not decode when drawImage svg+xml in safari/webkit
-  const counts = isOnlyAppleWebKit ? (resolved.context.images.size || 1) : 1
-  for (let i = 0; i < counts; i++) {
-    await new Promise<void>(resolve => {
-      setTimeout(() => {
-        try {
-          context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
-        } catch (error) {
-          consoleWarn('Failed to image to canvas - ', error)
-        }
-        resolve()
-      }, i)
-    })
+  if (isOnlyAppleWebKit) {
+    for (let i = 0; i < resolved.context.images.size; i++) {
+      await new Promise<void>(resolve => {
+        setTimeout(() => {
+          drawImage()
+          resolve()
+        }, i + resolved.drawImageInterval)
+      })
+    }
   }
   return canvas
 }

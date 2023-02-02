@@ -22,6 +22,7 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
     scale: 1,
     maximumCanvasSize: 16384,
     timeout: 3000,
+    drawImageInterval: 100,
     ...userOptions,
     context: {
       fontFamilies: new Set(),

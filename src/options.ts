@@ -96,6 +96,14 @@ export interface Options {
      */
     cssText?: string
   }
+
+  /**
+   * Canvas `drawImage` interval
+   * is used to fix errors in decoding images in safari/webkit
+   *
+   * default: 100
+   */
+  drawImageInterval?: number
 }
 
 export interface JpegOptions {
@@ -120,6 +128,7 @@ export interface ResolvedOptions extends Options {
   scale: number
   maximumCanvasSize: number
   timeout: number
+  drawImageInterval: number
   context: {
     styleEl: HTMLStyleElement
     fontFamilies: Set<string>
