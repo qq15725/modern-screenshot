@@ -7,11 +7,15 @@ export async function embedImageElement<T extends HTMLImageElement | SVGImageEle
   clone: T,
   options: ResolvedOptions,
 ) {
-  if (isImageElement(clone) && !isDataUrl(clone.src)) {
+  if (isImageElement(clone) && !isDataUrl(clone.currentSrc || clone.src)) {
+    const originSrc = clone.currentSrc || clone.src
     clone.srcset = ''
-    clone.src = await fetchDataUrl(clone.currentSrc || clone.src, options, true)
+    clone.dataset.originalSrc = originSrc
+    clone.src = await fetchDataUrl(originSrc, options, true)
   } else if (isSVGElementNode(clone) && !isDataUrl(clone.href.baseVal)) {
-    clone.href.baseVal = await fetchDataUrl(clone.href.baseVal, options, true)
+    const originSrc = clone.href.baseVal
+    clone.dataset.originalSrc = originSrc
+    clone.href.baseVal = await fetchDataUrl(originSrc, options, true)
   } else {
     return
   }

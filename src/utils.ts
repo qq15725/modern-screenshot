@@ -1,4 +1,4 @@
-import { consoleWarn } from './log'
+import { consoleError, consoleWarn } from './log'
 
 export const IN_BROWSER = typeof window !== 'undefined'
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
@@ -16,6 +16,9 @@ export const isScriptElement = (node: Element): node is HTMLScriptElement => nod
 export const isSelectElement = (node: Element): node is HTMLSelectElement => node.tagName === 'SELECT'
 export const isSlotElement = (node: Element): node is HTMLSlotElement => node.tagName === 'SLOT'
 export const isIFrameElement = (node: Element): node is HTMLIFrameElement => node.tagName === 'IFRAME'
+
+export const ua = IN_BROWSER ? window.navigator?.userAgent : undefined
+export const isOnlyAppleWebKit = ua?.includes('AppleWebKit') && !ua?.includes('Chrome')
 
 export function isDataUrl(url: string) {
   return url.startsWith('data:')
@@ -70,6 +73,7 @@ export function createImage(url: string, ownerDocument?: Document | null, useCOR
     img.crossOrigin = 'anonymous'
   }
   img.decoding = 'sync'
+  img.loading = 'eager'
   img.src = url
   return img
 }
@@ -93,40 +97,52 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       ? createImage(media, ownerDocument)
       : media
 
+    const onResolve = () => resolve(node)
+
     if (timeout) {
-      setTimeout(() => resolve(node), timeout)
+      setTimeout(onResolve, timeout)
     }
 
     if (isVideoElement(node)) {
-      if (node.readyState >= 2 || (!node.src && !node.currentSrc)) return resolve(node)
-
-      node.addEventListener(
-        'loadeddata',
-        () => resolve(node),
-        { once: true },
-      )
+      if (node.readyState >= 2 || (!node.currentSrc && !node.src)) return onResolve()
+      node.addEventListener('loadeddata', onResolve, { once: true })
     } else {
-      if (isSVGImageElementNode(node)) {
-        if (!node.href.baseVal) return resolve(node)
-      } else {
-        if (!node.src && !node.currentSrc) return resolve(node)
+      const onDecode = () => {
+        if (isImageElement(node) && 'decode' in node) {
+          node.decode()
+            .catch((err: DOMException) => {
+              consoleWarn(
+                'Failed to decode image, trying to render anyway',
+                `src: ${ node.dataset.originalSrc || node.currentSrc || node.src }`,
+                err,
+              )
+            })
+            .finally(() => {
+              onResolve()
+            })
+        } else {
+          onResolve()
+        }
       }
 
-      node.addEventListener(
-        'load',
-        () => {
-          if (isSVGImageElementNode(node)) {
-            resolve(node)
-          } else {
-            node.decode().catch(consoleWarn).finally(() => resolve(node))
-          }
-        },
-        { once: true },
-      )
+      if (isSVGImageElementNode(node)) {
+        if (!node.href.baseVal) return onResolve()
+      } else {
+        if (!node.currentSrc && !node.src) return onResolve()
+        if (node.complete) return onDecode()
+      }
 
+      node.addEventListener('load', onDecode, { once: true })
       node.addEventListener(
         'error',
-        () => resolve(node),
+        (err: any) => {
+          consoleError(
+            'Image load failed',
+            `src: ${ node.dataset.originalSrc || (isSVGImageElementNode(node) ? node.href.baseVal : (node.currentSrc || node.src)) }`,
+            err,
+          )
+          onResolve()
+        },
         { once: true },
       )
     }

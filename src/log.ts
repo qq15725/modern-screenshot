@@ -1,5 +1,9 @@
 const prefix = '[modern-screenshot]'
 
+export function consoleError(...args: any[]) {
+  return console.error(prefix, ...args)
+}
+
 export function consoleWarn(...args: any[]) {
   return console.warn(prefix, ...args)
 }

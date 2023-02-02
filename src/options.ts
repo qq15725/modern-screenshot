@@ -123,6 +123,7 @@ export interface ResolvedOptions extends Options {
   context: {
     styleEl: HTMLStyleElement
     fontFamilies: Set<string>
+    images: Set<string>
     tasks: Promise<void>[]
   }
 }

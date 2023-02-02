@@ -13,8 +13,8 @@ export async function domToSvg<T extends Node>(
   const svg = createSvg(width, height, node.ownerDocument)
   const svgImage = svg.ownerDocument.createElementNS(svg.namespaceURI, 'image')
   svgImage.setAttributeNS(null, 'href', dataUrl)
-  svgImage.setAttributeNS(null, 'height', String(width))
-  svgImage.setAttributeNS(null, 'width', String(height))
+  svgImage.setAttributeNS(null, 'height', '100%')
+  svgImage.setAttributeNS(null, 'width', '100%')
   svg.appendChild(svgImage)
   return svgToDataUrl(svg)
 }

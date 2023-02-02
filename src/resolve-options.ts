@@ -25,6 +25,7 @@ export async function resolveOptions(node: Node, userOptions?: Options): Promise
     ...userOptions,
     context: {
       fontFamilies: new Set(),
+      images: new Set(),
       styleEl,
       tasks: [],
     },
