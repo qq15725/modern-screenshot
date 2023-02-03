@@ -20,7 +20,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
     try {
       context2d?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
     } catch (error) {
-      consoleWarn('Failed to image to canvas - ', error)
+      consoleWarn('Failed to drawImage', error)
     }
   }
   drawImage()

@@ -47,7 +47,7 @@ export async function embedWebFont<T extends Element>(
           )
         })
     } catch (error) {
-      consoleWarn('Failed to parse web font css - ', error)
+      consoleWarn('Failed to parse web font css', error)
     }
   }
 }
@@ -80,11 +80,11 @@ async function getCssRules(
                         : sheet.cssRules.length!,
                     )
                   } catch (error) {
-                    consoleWarn('Error inserting rule from remote css - ', { rule, error })
+                    consoleWarn('Error inserting rule from remote css', { rule, error })
                   }
                 }
               } catch (error) {
-                consoleWarn('Error loading remote css - ', error)
+                consoleWarn('Error loading remote css', error)
               }
             }),
         )
@@ -97,7 +97,7 @@ async function getCssRules(
       try {
         ret.push(...sheet.cssRules)
       } catch (error) {
-        consoleWarn(`Error while reading CSS rules from ${ sheet.href } - `, error)
+        consoleWarn(`Error while reading CSS rules from ${ sheet.href }`, error)
       }
     }
   })

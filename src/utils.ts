@@ -115,11 +115,11 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       const onDecode = () => {
         if (isImageElement(node) && 'decode' in node) {
           node.decode()
-            .catch((err: DOMException) => {
+            .catch(error => {
               consoleWarn(
                 'Failed to decode image, trying to render anyway',
-                `src: ${ node.dataset.originalSrc || node.currentSrc || node.src }`,
-                err,
+                node.dataset.originalSrc || node.currentSrc || node.src,
+                error,
               )
             })
             .finally(() => {
@@ -140,11 +140,11 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       node.addEventListener('load', onDecode, { once: true })
       node.addEventListener(
         'error',
-        (err: any) => {
+        error => {
           consoleError(
             'Image load failed',
-            `src: ${ node.dataset.originalSrc || (isSVGImageElementNode(node) ? node.href.baseVal : (node.currentSrc || node.src)) }`,
-            err,
+            node.dataset.originalSrc || (isSVGImageElementNode(node) ? node.href.baseVal : (node.currentSrc || node.src)),
+            error,
           )
           onResolve()
         },

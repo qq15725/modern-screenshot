@@ -21,7 +21,7 @@ export async function replaceCssUrlToDataUrl(
       )
       cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)
     } catch (error) {
-      consoleWarn('Failed to fetch css data url', error)
+      consoleWarn('Failed to fetch css data url', url, error)
     }
   }
 

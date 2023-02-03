@@ -8,11 +8,11 @@ specifiers:
   bumpp: ^8.2.1
   eslint: ^8.33.0
   glob: ^8.1.0
-  happy-dom: ^8.2.2
+  happy-dom: ^8.2.3
   jest-image-snapshot: ^6.1.0
   puppeteer: ^19.6.3
   typescript: ^4.9.5
-  vite: ^4.0.4
+  vite: ^4.1.1
   vitest: ^0.28.3
 
 devDependencies:
@@ -23,12 +23,12 @@ devDependencies:
   bumpp: registry.npmmirror.com/bumpp/8.2.1
   eslint: registry.npmmirror.com/eslint/8.33.0
   glob: registry.npmmirror.com/glob/8.1.0
-  happy-dom: registry.npmmirror.com/happy-dom/8.2.2
+  happy-dom: registry.npmmirror.com/happy-dom/8.2.3
   jest-image-snapshot: registry.npmmirror.com/jest-image-snapshot/6.1.0
   puppeteer: registry.npmmirror.com/puppeteer/19.6.3
   typescript: registry.npmmirror.com/typescript/4.9.5
-  vite: registry.npmmirror.com/vite/4.0.4
-  vitest: registry.npmmirror.com/vitest/0.28.3_7a6c7gpnjx73z6osq5wydhvu7e
+  vite: registry.npmmirror.com/vite/4.1.1
+  vitest: registry.npmmirror.com/vitest/0.28.3_wakl3kmf3utgxccwgiv4uqvrou
 
 packages:
 
@@ -2468,10 +2468,10 @@ packages:
     version: 1.0.4
     dev: true
 
-  registry.npmmirror.com/happy-dom/8.2.2:
-    resolution: {integrity: sha512-Glf3mOxTmh0ZdrvoPpbr0kc2Mg6OWCyLf8j36Jyj1EAR3Vs0LLEaZ9HSOWFR9ZwCsBW6YgybT9slJlR9dTxEGA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/happy-dom/-/happy-dom-8.2.2.tgz}
+  registry.npmmirror.com/happy-dom/8.2.3:
+    resolution: {integrity: sha512-CG10Cf6mbB8yxeWBt1BIoao8fqdaJk8BQYyQhf1QDByW6OTWF+CBAp/5H8owvIO74i1a7DJSFgAXWpAziGkEWg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/happy-dom/-/happy-dom-8.2.3.tgz}
     name: happy-dom
-    version: 8.2.2
+    version: 8.2.3
     dependencies:
       css.escape: registry.npmmirror.com/css.escape/1.5.1
       he: registry.npmmirror.com/he/1.2.0
@@ -4078,10 +4078,10 @@ packages:
     version: 0.0.2
     dev: true
 
-  registry.npmmirror.com/std-env/3.3.1:
-    resolution: {integrity: sha512-3H20QlwQsSm2OvAxWIYhs+j01MzzqwMwGiiO1NQaJYZgJZFPuAbf95/DiKRBSTYIJ2FeGUc+B/6mPGcWP9dO3Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/std-env/-/std-env-3.3.1.tgz}
+  registry.npmmirror.com/std-env/3.3.2:
+    resolution: {integrity: sha512-uUZI65yrV2Qva5gqE0+A7uVAvO40iPo6jGhs7s8keRfHCmtg+uB2X6EiLGCI9IgL1J17xGhvoOqSz79lzICPTA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/std-env/-/std-env-3.3.2.tgz}
     name: std-env
-    version: 3.3.1
+    version: 3.3.2
     dev: true
 
   registry.npmmirror.com/string-argv/0.3.1:
@@ -4454,7 +4454,7 @@ packages:
       picocolors: registry.npmmirror.com/picocolors/1.0.0
       source-map: registry.npmmirror.com/source-map/0.6.1
       source-map-support: registry.npmmirror.com/source-map-support/0.5.21
-      vite: registry.npmmirror.com/vite/4.0.4_@types+node@18.11.18
+      vite: registry.npmmirror.com/vite/4.1.1_@types+node@18.11.18
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4465,10 +4465,10 @@ packages:
       - terser
     dev: true
 
-  registry.npmmirror.com/vite/4.0.4:
-    resolution: {integrity: sha512-xevPU7M8FU0i/80DMR+YhgrzR5KS2ORy1B4xcX/cXLsvnUWvfHuqMmVU6N0YiJ4JWGRJJsLCgjEzKjG9/GKoSw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-4.0.4.tgz}
+  registry.npmmirror.com/vite/4.1.1:
+    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-4.1.1.tgz}
     name: vite
-    version: 4.0.4
+    version: 4.1.1
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -4500,11 +4500,11 @@ packages:
       fsevents: registry.npmmirror.com/fsevents/2.3.2
     dev: true
 
-  registry.npmmirror.com/vite/4.0.4_@types+node@18.11.18:
-    resolution: {integrity: sha512-xevPU7M8FU0i/80DMR+YhgrzR5KS2ORy1B4xcX/cXLsvnUWvfHuqMmVU6N0YiJ4JWGRJJsLCgjEzKjG9/GKoSw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-4.0.4.tgz}
-    id: registry.npmmirror.com/vite/4.0.4
+  registry.npmmirror.com/vite/4.1.1_@types+node@18.11.18:
+    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-4.1.1.tgz}
+    id: registry.npmmirror.com/vite/4.1.1
     name: vite
-    version: 4.0.4
+    version: 4.1.1
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -4537,7 +4537,7 @@ packages:
       fsevents: registry.npmmirror.com/fsevents/2.3.2
     dev: true
 
-  registry.npmmirror.com/vitest/0.28.3_7a6c7gpnjx73z6osq5wydhvu7e:
+  registry.npmmirror.com/vitest/0.28.3_wakl3kmf3utgxccwgiv4uqvrou:
     resolution: {integrity: sha512-N41VPNf3VGJlWQizGvl1P5MGyv3ZZA2Zvh+2V8L6tYBAAuqqDK4zExunT1Cdb6dGfZ4gr+IMrnG8d4Z6j9ctPw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vitest/-/vitest-0.28.3.tgz}
     id: registry.npmmirror.com/vitest/0.28.3
     name: vitest
@@ -4575,17 +4575,17 @@ packages:
       cac: registry.npmmirror.com/cac/6.7.14
       chai: registry.npmmirror.com/chai/4.3.7
       debug: registry.npmmirror.com/debug/4.3.4
-      happy-dom: registry.npmmirror.com/happy-dom/8.2.2
+      happy-dom: registry.npmmirror.com/happy-dom/8.2.3
       local-pkg: registry.npmmirror.com/local-pkg/0.4.3
       pathe: registry.npmmirror.com/pathe/1.1.0
       picocolors: registry.npmmirror.com/picocolors/1.0.0
       source-map: registry.npmmirror.com/source-map/0.6.1
-      std-env: registry.npmmirror.com/std-env/3.3.1
+      std-env: registry.npmmirror.com/std-env/3.3.2
       strip-literal: registry.npmmirror.com/strip-literal/1.0.0
       tinybench: registry.npmmirror.com/tinybench/2.3.1
       tinypool: registry.npmmirror.com/tinypool/0.3.1
       tinyspy: registry.npmmirror.com/tinyspy/1.0.2
-      vite: registry.npmmirror.com/vite/4.0.4_@types+node@18.11.18
+      vite: registry.npmmirror.com/vite/4.1.1_@types+node@18.11.18
       vite-node: registry.npmmirror.com/vite-node/0.28.3_@types+node@18.11.18
       why-is-node-running: registry.npmmirror.com/why-is-node-running/2.2.2
     transitivePeerDependencies:

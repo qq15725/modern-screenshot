@@ -49,6 +49,13 @@ export async function createContext(node: Node, options?: Options | Context): Pr
   return context
 }
 
+export function freeContext(context: Context) {
+  context.svgRootStyleElement = getDocument(context.svgRootStyleElement).createElement('style')
+  context.fontFamilies.clear()
+  context.requests.clear()
+  context.tasks = []
+}
+
 function createSvgRootStyleElement(node: Node) {
   const style = getDocument(node).createElement('style')
   const cssText = style.ownerDocument.createTextNode(`
@@ -84,7 +91,7 @@ function resolveBoundingBox(node: Node, options?: Options) {
 async function waitForAllMediaToLoad(node: Node, context: Context) {
   const { debug, timeout } = context
 
-  debug && consoleTime('waitForAllMediaToLoad')
+  debug && consoleTime('wait for all media to load')
 
   if (isHTMLElementNode(node)) {
     if (isImageElement(node)) {
@@ -94,5 +101,5 @@ async function waitForAllMediaToLoad(node: Node, context: Context) {
     }
   }
 
-  debug && consoleTimeEnd('waitForAllMediaToLoad')
+  debug && consoleTimeEnd('wait for all media to load')
 }

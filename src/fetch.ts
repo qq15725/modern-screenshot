@@ -35,35 +35,51 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
   } = context
 
   if (!requests.has(url)) {
+    const getPlaceholder = () => {
+      let content = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+      if (placeholderImage) {
+        const parts = placeholderImage.split(/,/)
+        if (parts && parts[1]) content = parts[1]
+      }
+      return {
+        contentType: 'image/png',
+        content,
+      }
+    }
+
     requests.set(url, {
       type: isImage ? 'image' : 'text',
-      response: fetch(url, context).then(rep => {
-        return rep.blob().then(blob => {
-          return new Promise((resolve, reject) => {
-            const reader = new FileReader()
-            reader.onloadend = () => resolve({
-              contentType: rep.headers.get('Content-Type') || '',
-              content: (reader.result as string).split(/,/)[1],
+      response: fetch(url, context)
+        .then(rep => {
+          return rep.blob().then(blob => {
+            return new Promise((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onloadend = () => {
+                const content = (reader.result as string).split(/,/)[1]
+                if (content) {
+                  resolve({
+                    contentType: rep.headers.get('Content-Type') || '',
+                    content,
+                  })
+                } else {
+                  reject(new Error(`Empty response content by ${ url }`))
+                }
+              }
+              reader.onerror = reject
+              reader.readAsDataURL(blob)
             })
-            reader.onerror = reject
-            reader.readAsDataURL(blob)
           })
         })
-      }, error => {
-        consoleWarn('Failed to fetch base64', error)
+        .catch(error => {
+          requests.delete(url)
 
-        let placeholder = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+          if (isImage) {
+            consoleWarn('Failed to fetch image base64, trying to use placeholder image', url)
+            return getPlaceholder()
+          }
 
-        if (isImage && placeholderImage) {
-          const parts = placeholderImage.split(/,/)
-          if (parts && parts[1]) placeholder = parts[1]
-        }
-
-        return {
-          contentType: 'image/png',
-          content: placeholder,
-        }
-      }),
+          throw error
+        }) as any,
     })
   }
 

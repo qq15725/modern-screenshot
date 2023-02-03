@@ -60,7 +60,6 @@ describe('dom to image in browser', async () => {
   let style: ElementHandle<HTMLStyleElement>
 
   beforeAll(async () => {
-    process.env.devicePixelRatio = '1'
     server = await preview({
       build: { outDir: join(__dirname, '..') },
       preview: { port },
@@ -86,7 +85,6 @@ describe('dom to image in browser', async () => {
   })
 
   afterAll(async () => {
-    delete process.env.devicePixelRatio
     await browser.close()
     await new Promise<void>((resolve, reject) => {
       server.httpServer.close(error => error ? reject(error) : resolve())

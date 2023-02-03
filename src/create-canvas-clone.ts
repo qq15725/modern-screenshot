@@ -29,7 +29,7 @@ export function createCanvasClone<T extends HTMLCanvasElement>(
     }
     return clone
   } catch (error) {
-    consoleWarn('Failed to clone canvas - ', error)
+    consoleWarn('Failed to clone canvas', error)
   }
 
   return clone

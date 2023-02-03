@@ -1,5 +1,5 @@
 import { cloneNode } from '../clone-node'
-import { createContext } from '../create-context'
+import { createContext, freeContext } from '../create-context'
 import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
 import { removeDefaultStyleSandbox } from '../get-default-style'
@@ -55,6 +55,9 @@ export async function domToForeignObjectSvg<T extends Node>(
 
   const svg = createForeignObjectSvg(clone, context)
   svg.insertBefore(svgRootStyleElement, svg.children[0])
+
+  freeContext(context)
+
   return svg
 }
 
