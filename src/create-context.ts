@@ -26,6 +26,7 @@ export async function createContext(node: Node, options?: Options | Context): Pr
     svgRootStyleElement: createSvgRootStyleElement(node),
     fontFamilies: new Set(),
     requests: new Map(),
+    requestImagesCount: 0,
     tasks: [],
 
     // Options
@@ -57,6 +58,9 @@ export async function createContext(node: Node, options?: Options | Context): Pr
 export function freeContext(context: Context) {
   context.svgRootStyleElement = getDocument(context.svgRootStyleElement).createElement('style')
   context.fontFamilies.clear()
+  context.requestImagesCount = Array.from(context.requests.values())
+    .filter(v => v.type === 'image')
+    .length
   context.requests.clear()
   context.tasks = []
 }

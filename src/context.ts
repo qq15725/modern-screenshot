@@ -23,6 +23,11 @@ export interface InternalContext {
   }>
 
   /**
+   * All request images count
+   */
+  requestImagesCount: number
+
+  /**
    * Wait for all tasks embedded in
    */
   tasks: Promise<void>[]

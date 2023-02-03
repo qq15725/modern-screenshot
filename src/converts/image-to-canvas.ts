@@ -9,7 +9,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
 ): Promise<HTMLCanvasElement> {
   const context = await createContext(image, options)
   const {
-    requests,
+    requestImagesCount,
     timeout,
     drawImageInterval,
   } = context
@@ -26,10 +26,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   drawImage()
   // fix: image not decode when drawImage svg+xml in safari/webkit
   if (IS_SAFARI) {
-    const allRequestImagesCount = Array.from(requests.values())
-      .filter(v => v.type === 'image')
-      .length
-    for (let i = 0; i < allRequestImagesCount; i++) {
+    for (let i = 0; i < requestImagesCount; i++) {
       await new Promise<void>(resolve => {
         setTimeout(() => {
           drawImage()
