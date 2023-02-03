@@ -29,6 +29,8 @@ export async function createContext(node: Node, options?: Options | Context): Pr
     tasks: [],
 
     // Options
+    width: 0,
+    height: 0,
     scale: 1,
     backgroundColor: null,
     style: null,
@@ -41,10 +43,13 @@ export async function createContext(node: Node, options?: Options | Context): Pr
     font: {},
     drawImageInterval: 100,
     ...options,
-    ...resolveBoundingBox(node, options),
   }
 
   await waitForAllMediaToLoad(node, context)
+
+  const { width, height } = resolveBoundingBox(node, context)
+  context.width = width
+  context.height = height
 
   return context
 }
@@ -68,8 +73,8 @@ function createSvgRootStyleElement(node: Node) {
   return style
 }
 
-function resolveBoundingBox(node: Node, options?: Options) {
-  let { width = 0, height = 0 } = options || {}
+function resolveBoundingBox(node: Node, context: Context) {
+  let { width, height } = context
 
   if (isElementNode(node) && (!width || !height)) {
     const box = node.getBoundingClientRect()
