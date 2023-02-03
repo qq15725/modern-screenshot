@@ -1,6 +1,5 @@
 import { createCanvasClone } from './create-canvas-clone'
-import { consoleWarn } from './log'
-import { createImage } from './utils'
+import { consoleWarn, createImage } from './utils'
 
 export function createVideoClone<T extends HTMLVideoElement>(
   video: T,
@@ -16,7 +15,7 @@ export function createVideoClone<T extends HTMLVideoElement>(
         const ctx = canvas.getContext('2d')
         if (ctx) ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
       } catch (error) {
-        consoleWarn('Failed to clone video - ', error)
+        consoleWarn('Failed to clone video', error)
       }
       return createCanvasClone(canvas)
     }

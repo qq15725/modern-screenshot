@@ -6,24 +6,23 @@ import {
   isImageElement,
   isSVGImageElementNode,
 } from './utils'
+import type { Context } from './context'
 
-import type { ResolvedOptions } from './options'
-
-export function embedNode<T extends Node>(clone: T, options: ResolvedOptions) {
-  const { tasks } = options.context
+export function embedNode<T extends Node>(clone: T, context: Context) {
+  const { tasks } = context
 
   if (
     isElementNode(clone)
     && (isImageElement(clone) || isSVGImageElementNode(clone))
   ) {
-    tasks.push(embedImageElement(clone, options))
+    tasks.push(embedImageElement(clone, context))
   }
 
   if (isHTMLElementNode(clone)) {
-    tasks.push(embedCssStyleImage(clone.style, options))
+    tasks.push(embedCssStyleImage(clone.style, context))
   }
 
   clone.childNodes.forEach(child => {
-    embedNode(child, options)
+    embedNode(child, context)
   })
 }

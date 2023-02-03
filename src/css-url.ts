@@ -1,13 +1,11 @@
 import { fetchDataUrl } from './fetch'
-import { consoleWarn } from './log'
-import { isDataUrl, resolveUrl } from './utils'
-
-import type { ResolvedOptions } from './options'
+import { consoleWarn, isDataUrl, resolveUrl } from './utils'
+import type { Context } from './context'
 
 export async function replaceCssUrlToDataUrl(
   cssText: string,
   baseUrl: string | null,
-  options: ResolvedOptions,
+  context: Context,
   isImage?: boolean,
 ): Promise<string> {
   if (!hasCssUrl(cssText)) return cssText
@@ -18,12 +16,12 @@ export async function replaceCssUrlToDataUrl(
         baseUrl
           ? resolveUrl(url, baseUrl)
           : url,
-        options,
+        context,
         isImage,
       )
       cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)
     } catch (error) {
-      consoleWarn('Failed to fetch css data url - ', error)
+      consoleWarn('Failed to fetch css data url', error)
     }
   }
 

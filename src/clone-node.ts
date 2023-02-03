@@ -11,28 +11,26 @@ import {
   isTextNode,
   isVideoElement,
 } from './utils'
-import { applyCssStyleWithOptions } from './resolve-options'
 import { createElementClone } from './create-element-clone'
-
-import type { ResolvedOptions } from './options'
+import type { Context } from './context'
 
 function appendChildNode<T extends Node>(
   clone: T,
   child: ChildNode,
-  options: ResolvedOptions,
+  context: Context,
   ownerWindow: Window | null | undefined,
 ): void {
   if (isElementNode(child) && (isStyleElement(child) || isScriptElement(child))) return
 
-  if (options.filter && !options.filter(child)) return
+  if (context.filter && !context.filter(child)) return
 
-  clone.appendChild(cloneNode(child, options, ownerWindow))
+  clone.appendChild(cloneNode(child, context, ownerWindow))
 }
 
 function cloneChildNodes<T extends Node>(
   node: T,
   clone: T,
-  options: ResolvedOptions,
+  context: Context,
   ownerWindow: Window | null | undefined,
 ): void {
   const firstChild = (
@@ -48,17 +46,29 @@ function cloneChildNodes<T extends Node>(
       && typeof child.assignedNodes === 'function'
     ) {
       child.assignedNodes().forEach(assignedNode => {
-        appendChildNode(clone, assignedNode as ChildNode, options, ownerWindow)
+        appendChildNode(clone, assignedNode as ChildNode, context, ownerWindow)
       })
     } else {
-      appendChildNode(clone, child, options, ownerWindow)
+      appendChildNode(clone, child, context, ownerWindow)
+    }
+  }
+}
+
+function applyCssStyleWithOptions(style: CSSStyleDeclaration, context: Context) {
+  const { backgroundColor, width, height, style: styles } = context
+  if (backgroundColor) style.backgroundColor = backgroundColor
+  if (width) style.width = `${ width }px`
+  if (height) style.height = `${ height }px`
+  if (styles) {
+    for (const name in styles) {
+      style[name] = styles[name]!
     }
   }
 }
 
 export function cloneNode<T extends Node>(
   node: T,
-  options: ResolvedOptions,
+  context: Context,
   ownerWindow?: Window | null,
 ) {
   const isRootNode = ownerWindow === undefined
@@ -74,7 +84,7 @@ export function cloneNode<T extends Node>(
   if (ownerWindow
     && isElementNode(node)
     && (isHTMLElementNode(node) || isSVGElementNode(node))) {
-    const clone = createElementClone(node, options)
+    const clone = createElementClone(node, context)
 
     clone.style.transitionProperty = 'none'
 
@@ -85,15 +95,15 @@ export function cloneNode<T extends Node>(
     copyInputValue(node, clone)
 
     if (!isVideoElement(node)) {
-      cloneChildNodes(node, clone, options, ownerWindow)
+      cloneChildNodes(node, clone, context, ownerWindow)
     }
 
     if (isRootNode) {
-      applyCssStyleWithOptions(clone.style, options)
+      applyCssStyleWithOptions(clone.style, context)
     }
 
     if (clone.style.fontFamily) {
-      options.context.fontFamilies.add(clone.style.fontFamily)
+      context.fontFamilies.add(clone.style.fontFamily)
     }
 
     return clone
@@ -101,7 +111,7 @@ export function cloneNode<T extends Node>(
 
   const clone = node.cloneNode(false)
 
-  cloneChildNodes(node, clone, options, ownerWindow)
+  cloneChildNodes(node, clone, context, ownerWindow)
 
   return clone
 }

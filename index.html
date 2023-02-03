@@ -15,7 +15,11 @@
 </head>
 <body>
   <div>
-    <div id="root" style="background-color: white; width: 100px; height: 100px; display: inline-block; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700;">SVG</div>
+    <div id="root">
+      <img src="/test/assets/image.png">
+      <img src="/test/assets/image.jpeg">
+      <img src="/test/assets/image.webp">
+    </div>
   </div>
 
   <script type="module" async>
@@ -24,7 +28,7 @@
     document.body.appendChild(
       await domToImage(
         document.querySelector('#root'),
-        { debug: true, type: 'image/svg+xml' },
+        { debug: true },
       ),
     )
   </script>

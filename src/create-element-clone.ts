@@ -3,18 +3,18 @@ import { isCanvasElement, isIFrameElement, isImageElement, isVideoElement } from
 import { createCanvasClone } from './create-canvas-clone'
 import { createVideoClone } from './create-video-clone'
 import { createImageClone } from './create-image-clone'
-import type { ResolvedOptions } from './options'
+import type { Context } from './context'
 
 export function createElementClone<T extends HTMLElement | SVGElement>(
   node: T,
-  options: ResolvedOptions,
+  context: Context,
 ): HTMLElement | SVGElement {
   if (isCanvasElement(node)) {
     return createCanvasClone(node)
   }
 
   if (isIFrameElement(node)) {
-    return createIframeClone(node, options)
+    return createIframeClone(node, context)
   }
 
   if (isImageElement(node)) {

@@ -1,31 +1,34 @@
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 import { fetch, fetchText } from './fetch'
-import { consoleWarn } from './log'
-
-import type { ResolvedOptions } from './options'
+import { consoleWarn } from './utils'
+import type { Context } from './context'
 
 export async function embedWebFont<T extends Element>(
   clone: T,
-  options: ResolvedOptions,
+  context: Context,
 ) {
+  const {
+    svgRootStyleElement,
+    fontFamilies,
+    tasks,
+    font,
+  } = context
   const { ownerDocument } = clone
   const { styleSheets } = ownerDocument
-  const { font, context } = options
-  const { tasks, styleEl } = context
 
   if (font && font.cssText) {
-    const cssText = filterPreferredFormat(font.cssText, options)
-    styleEl.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
+    const cssText = filterPreferredFormat(font.cssText, context)
+    svgRootStyleElement.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
   } else {
     try {
-      const cssRules = await getCssRules(Array.from(styleSheets), options)
+      const cssRules = await getCssRules(Array.from(styleSheets), context)
 
       cssRules
         .filter(rule => (
           rule.constructor.name === 'CSSFontFaceRule'
           && (
             !(rule as CSSFontFaceRule).style.fontFamily
-            || options.context.fontFamilies.has((rule as CSSFontFaceRule).style.fontFamily)
+            || fontFamilies.has((rule as CSSFontFaceRule).style.fontFamily)
           )
           && hasCssUrl((rule as CSSFontFaceRule).style.getPropertyValue('src'))
         ))
@@ -36,10 +39,10 @@ export async function embedWebFont<T extends Element>(
               rule.parentStyleSheet
                 ? rule.parentStyleSheet.href
                 : null,
-              options,
+              context,
             ).then(cssText => {
-              cssText = filterPreferredFormat(cssText, options)
-              styleEl.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+              cssText = filterPreferredFormat(cssText, context)
+              svgRootStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
             }),
           )
         })
@@ -51,7 +54,7 @@ export async function embedWebFont<T extends Element>(
 
 async function getCssRules(
   styleSheets: CSSStyleSheet[],
-  options: ResolvedOptions,
+  context: Context,
 ): Promise<CSSRule[]> {
   const ret: CSSRule[] = []
 
@@ -66,8 +69,8 @@ async function getCssRules(
               let importIndex = index + 1
               const url = (rule as CSSImportRule).href
               try {
-                const cssText = await fetchText(url, options)
-                const embedCssText = await embedFonts(cssText, url, options)
+                const cssText = await fetchText(url, context)
+                const embedCssText = await embedFonts(cssText, url, context)
                 for (const rule of parseCss(embedCssText)) {
                   try {
                     sheet.insertRule(
@@ -105,12 +108,12 @@ async function getCssRules(
 const URL_MATCH_RE = /url\([^)]+\)/g
 const URL_REPLACE_RE = /url\(["']?([^"')]+)["']?\)/g
 
-async function embedFonts(cssText: string, baseUrl: string, options: ResolvedOptions): Promise<string> {
+async function embedFonts(cssText: string, baseUrl: string, context: Context): Promise<string> {
   await Promise.all(
     cssText.match(URL_MATCH_RE)?.map(async location => {
       let url = location.replace(URL_REPLACE_RE, '$1')
       if (!url.startsWith('https://')) url = new URL(url, baseUrl).href
-      const rep = await fetch(url, options)
+      const rep = await fetch(url, context)
       const blob = await rep.blob()
       return new Promise<[string, string | ArrayBuffer | null]>(
         (resolve, reject) => {
@@ -171,10 +174,12 @@ const FONT_SRC_RE = /src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g
 
 function filterPreferredFormat(
   str: string,
-  options: ResolvedOptions,
+  context: Context,
 ): string {
-  const preferredFormat = options.font
-    ? options.font?.preferredFormat
+  const { font } = context
+
+  const preferredFormat = font
+    ? font?.preferredFormat
     : undefined
 
   return preferredFormat

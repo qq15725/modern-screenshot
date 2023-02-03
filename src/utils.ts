@@ -1,6 +1,9 @@
-import { consoleError, consoleWarn } from './log'
-
+export const PREFIX = '[modern-screenshot]'
 export const IN_BROWSER = typeof window !== 'undefined'
+export const USER_AGENT = IN_BROWSER ? window.navigator?.userAgent : undefined
+export const IS_SAFARI = USER_AGENT?.includes('AppleWebKit') && !USER_AGENT?.includes('Chrome')
+
+// Element
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'
 export const isSVGImageElementNode = (node: Element): node is SVGImageElement => isSVGElementNode(node) && node.tagName === 'IMAGE'
@@ -17,13 +20,15 @@ export const isSelectElement = (node: Element): node is HTMLSelectElement => nod
 export const isSlotElement = (node: Element): node is HTMLSlotElement => node.tagName === 'SLOT'
 export const isIFrameElement = (node: Element): node is HTMLIFrameElement => node.tagName === 'IFRAME'
 
-export const ua = IN_BROWSER ? window.navigator?.userAgent : undefined
-export const isOnlyAppleWebKit = ua?.includes('AppleWebKit') && !ua?.includes('Chrome')
+// Console
+export const consoleError = (...args: any[]) => console.error(PREFIX, ...args)
+export const consoleWarn = (...args: any[]) => console.warn(PREFIX, ...args)
+// eslint-disable-next-line no-console
+export const consoleTime = (label: string) => console.time(`${ PREFIX } ${ label }`)
+// eslint-disable-next-line no-console
+export const consoleTimeEnd = (label: string) => console.timeEnd(`${ PREFIX } ${ label }`)
 
-export function isDataUrl(url: string) {
-  return url.startsWith('data:')
-}
-
+export const isDataUrl = (url: string) => url.startsWith('data:')
 export function resolveUrl(url: string, baseUrl: string | null): string {
   // url is absolute already
   if (url.match(/^[a-z]+:\/\//i)) return url
@@ -180,7 +185,6 @@ const MIMES = {
 } as const
 
 const EXT_RE = /\.([^.\/?]+?)(\?.*)?$/
-
 export function getMimeType(url: string): string | undefined {
   return MIMES[url.match(EXT_RE)?.[1]?.toLowerCase() as keyof typeof MIMES]
 }

@@ -1,4 +1,4 @@
-import { resolveOptions } from '../resolve-options'
+import { createContext } from '../create-context'
 import { domToCanvas } from './dom-to-canvas'
 import { canvasToblob } from './canvas-to-blob'
 
@@ -8,7 +8,7 @@ export async function domToBlob<T extends Node>(
   node: T,
   options?: Options & ImageOptions,
 ): Promise<Blob | null> {
-  const resolved = (await resolveOptions(node, options)) as Options & ImageOptions
-  const canvas = await domToCanvas(node, resolved)
-  return await canvasToblob(canvas, resolved)
+  const context = await createContext(node, options)
+  const canvas = await domToCanvas(node, context as any)
+  return await canvasToblob(canvas, context as any)
 }

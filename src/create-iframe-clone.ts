@@ -1,17 +1,17 @@
 import { cloneNode } from './clone-node'
-import { consoleWarn } from './log'
-import type { ResolvedOptions } from './options'
+import { consoleWarn } from './utils'
+import type { Context } from './context'
 
 export function createIframeClone<T extends HTMLIFrameElement>(
   iframe: T,
-  options: ResolvedOptions,
+  context: Context,
 ): HTMLIFrameElement | HTMLBodyElement {
   try {
     if (iframe?.contentDocument?.body) {
-      return cloneNode(iframe.contentDocument.body, options, iframe.contentWindow) as HTMLBodyElement
+      return cloneNode(iframe.contentDocument.body, context, iframe.contentWindow) as HTMLBodyElement
     }
   } catch (error) {
-    consoleWarn('Failed to clone iframe - ', error)
+    consoleWarn('Failed to clone iframe', error)
   }
 
   return iframe.cloneNode(false) as HTMLIFrameElement

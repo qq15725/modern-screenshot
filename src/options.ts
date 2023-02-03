@@ -18,19 +18,19 @@ export interface Options {
   /**
    * A string value for the background color, any valid CSS color value.
    */
-  backgroundColor?: string
+  backgroundColor?: string | null
 
   /**
    * An object whose properties to be copied to node's style before rendering.
    */
-  style?: Partial<CSSStyleDeclaration>
+  style?: Partial<CSSStyleDeclaration> | null
 
   /**
    * A function taking DOM node as argument. Should return `true` if passed
    * node should be included in the output. Excluding node means excluding
    * it's children as well.
    */
-  filter?: (el: Node) => boolean
+  filter?: ((el: Node) => boolean) | null
 
   /**
    * Maximum canvas size (pixels).
@@ -51,7 +51,7 @@ export interface Options {
   /**
    * Embed assets progress
    */
-  progress?: (current: number, total: number) => void
+  progress?: ((current: number, total: number) => void) | null
 
   /**
    * Debug mode
@@ -120,19 +120,4 @@ export interface ImageOptions extends JpegOptions {
    * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
    */
   type?: string
-}
-
-export interface ResolvedOptions extends Options {
-  width: number
-  height: number
-  scale: number
-  maximumCanvasSize: number
-  timeout: number
-  drawImageInterval: number
-  context: {
-    styleEl: HTMLStyleElement
-    fontFamilies: Set<string>
-    images: Set<string>
-    tasks: Promise<void>[]
-  }
 }

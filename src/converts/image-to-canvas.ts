@@ -1,40 +1,48 @@
-import { consoleWarn } from '../log'
-import { resolveOptions } from '../resolve-options'
-import { isOnlyAppleWebKit, loadMedia } from '../utils'
-
-import type { Options, ResolvedOptions } from '../options'
+import { createContext } from '../create-context'
+import { IS_SAFARI, consoleWarn, loadMedia } from '../utils'
+import type { Context } from '../context'
+import type { Options } from '../options'
 
 export async function imageToCanvas<T extends HTMLImageElement>(
   image: T,
   options?: Options,
 ): Promise<HTMLCanvasElement> {
-  const resolved = await resolveOptions(image, options)
-  const loaded = await loadMedia(image, { timeout: resolved.timeout })
-  const { canvas, context } = createCanvas(image.ownerDocument, resolved)
+  const context = await createContext(image, options)
+  const {
+    requests,
+    timeout,
+    drawImageInterval,
+  } = context
+
+  const loaded = await loadMedia(image, { timeout })
+  const { canvas, context2d } = createCanvas(image.ownerDocument, context)
   const drawImage = () => {
     try {
-      context?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
+      context2d?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
     } catch (error) {
       consoleWarn('Failed to image to canvas - ', error)
     }
   }
   drawImage()
   // fix: image not decode when drawImage svg+xml in safari/webkit
-  if (isOnlyAppleWebKit) {
-    for (let i = 0; i < resolved.context.images.size; i++) {
+  if (IS_SAFARI) {
+    const allRequestImagesCount = Array.from(requests.values())
+      .filter(v => v.type === 'image')
+      .length
+    for (let i = 0; i < allRequestImagesCount; i++) {
       await new Promise<void>(resolve => {
         setTimeout(() => {
           drawImage()
           resolve()
-        }, i + resolved.drawImageInterval)
+        }, i + drawImageInterval)
       })
     }
   }
   return canvas
 }
 
-function createCanvas(ownerDocument: Document, options: ResolvedOptions) {
-  const { width, height, scale, backgroundColor, maximumCanvasSize: max } = options
+function createCanvas(ownerDocument: Document, context: Context) {
+  const { width, height, scale, backgroundColor, maximumCanvasSize: max } = context
 
   const canvas = ownerDocument.createElement('canvas')
 
@@ -63,12 +71,12 @@ function createCanvas(ownerDocument: Document, options: ResolvedOptions) {
     }
   }
 
-  const context = canvas.getContext('2d')
+  const context2d = canvas.getContext('2d')
 
-  if (context && backgroundColor) {
-    context.fillStyle = backgroundColor
-    context.fillRect(0, 0, canvas.width, canvas.height)
+  if (context2d && backgroundColor) {
+    context2d.fillStyle = backgroundColor
+    context2d.fillRect(0, 0, canvas.width, canvas.height)
   }
 
-  return { canvas, context }
+  return { canvas, context2d }
 }
