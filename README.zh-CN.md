@@ -102,9 +102,9 @@ DOM 转 HTMLElement
 
 ## 选项
 
-[选项的类型定义](src/options.ts)
+请查看 [options.ts](src/options.ts)
 
-## 已知的问题
+## 待办事项
 
 - [ ] 无法克隆关闭的 [shadowDom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM)
 
@@ -118,10 +118,10 @@ DOM 转 HTMLElement
 
   `body::-webkit-scrollbar-thumb { background-color: red; }`
 
-## 相关的包
+## 其他有趣的包
 
-| 名字       | 描述                                                                  |
-|----------|----------------------------------------------------------------------|
-| [dom-vcr] | 使用 HTML5 canvas 和 SVG 从 DOM 节点生成视频或 GIF |
+| 名字       | 描述                     |
+|----------|------------------------|
+| [dom-vcr] | 从 DOM 节点生成 `MP4` 或 `GIF` |
 
 [dom-vcr]: https://github.com/qq15725/dom-vcr

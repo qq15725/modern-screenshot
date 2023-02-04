@@ -102,9 +102,9 @@ DOM to HTMLElement
 
 ## Options
 
-[the type definition of the options](src/options.ts)
+See the [options.ts](src/options.ts)
 
-## Known problems
+## TODO
 
 - [ ] unable to clone closed [shadowDom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM)
 
@@ -118,10 +118,10 @@ DOM to HTMLElement
 
   `body::-webkit-scrollbar-thumb { background-color: red; }`
 
-## Similar packages
+## Other interesting packages
 
-| name      | description                                                          |
-|-----------|----------------------------------------------------------------------|
-| [dom-vcr] | Generates an video or GIF from a DOM node using HTML5 canvas and SVG |
+| name      | description                                 |
+|-----------|---------------------------------------------|
+| [dom-vcr] | Generates an `MP4` or `GIF` from a DOM node |
 
 [dom-vcr]: https://github.com/qq15725/dom-vcr
