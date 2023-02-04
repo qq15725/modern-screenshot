@@ -15,7 +15,7 @@ import type { Options } from '../options'
 
 export async function domToForeignObjectSvg<T extends Node>(
   node: T,
-  options: Options,
+  options?: Options,
 ): Promise<SVGElement> {
   if (isElementNode(node) && isSVGElementNode(node)) return node
 
