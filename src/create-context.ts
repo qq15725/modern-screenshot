@@ -3,10 +3,7 @@ import {
   consoleTimeEnd,
   getDocument,
   isElementNode,
-  isHTMLElementNode,
-  isImageElement,
-  loadMedia,
-  waitLoaded,
+  waitUntilLoad,
 } from './utils'
 import type { Context } from './context'
 import type { Options } from './options'
@@ -46,7 +43,9 @@ export async function createContext(node: Node, options?: Options | Context): Pr
     ...options,
   }
 
-  await waitForAllMediaToLoad(node, context)
+  debug && consoleTime('wait until load')
+  await waitUntilLoad(node, context.timeout)
+  debug && consoleTimeEnd('wait until load')
 
   const { width, height } = resolveBoundingBox(node, context)
   context.width = width
@@ -95,20 +94,4 @@ function resolveBoundingBox(node: Node, context: Context) {
   }
 
   return { width, height }
-}
-
-async function waitForAllMediaToLoad(node: Node, context: Context) {
-  const { debug, timeout } = context
-
-  debug && consoleTime('wait for all media to load')
-
-  if (isHTMLElementNode(node)) {
-    if (isImageElement(node)) {
-      await loadMedia(node, { timeout })
-    } else {
-      await waitLoaded(node, timeout)
-    }
-  }
-
-  debug && consoleTimeEnd('wait for all media to load')
 }

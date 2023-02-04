@@ -1,5 +1,5 @@
 import { createContext } from '../create-context'
-import { IS_SAFARI, consoleWarn, loadMedia } from '../utils'
+import { IS_SAFARI, consoleTime, consoleTimeEnd, consoleWarn, loadMedia } from '../utils'
 import type { Context } from '../context'
 import type { Options } from '../options'
 
@@ -12,8 +12,10 @@ export async function imageToCanvas<T extends HTMLImageElement>(
     requestImagesCount,
     timeout,
     drawImageInterval,
+    debug,
   } = context
 
+  debug && consoleTime('image to canvas')
   const loaded = await loadMedia(image, { timeout })
   const { canvas, context2d } = createCanvas(image.ownerDocument, context)
   const drawImage = () => {
@@ -35,6 +37,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
       })
     }
   }
+  debug && consoleTimeEnd('image to canvas')
   return canvas
 }
 

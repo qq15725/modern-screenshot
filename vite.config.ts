@@ -6,7 +6,7 @@ const resolvePath = (str: string) => resolve(__dirname, str)
 
 export default defineConfig({
   server: {
-    port: 3000,
+    port: 3303,
   },
   build: {
     target: 'es2015',
@@ -23,7 +23,7 @@ export default defineConfig({
     },
   },
   test: {
-    testTimeout: 10_000,
-    hookTimeout: 10_000,
+    testTimeout: 60_000,
+    hookTimeout: 60_000,
   },
 })

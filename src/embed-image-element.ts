@@ -16,10 +16,7 @@ export async function embedImageElement<T extends HTMLImageElement | SVGImageEle
     clone.dataset.originalSrc = originSrc
     clone.href.baseVal = await fetchDataUrl(originSrc, context, true)
   } else {
-    return
+    const { timeout } = context
+    await loadMedia(clone, { timeout })
   }
-
-  const { timeout } = context
-
-  await loadMedia(clone, { timeout })
 }

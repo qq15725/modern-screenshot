@@ -94,64 +94,108 @@ export function loadMedia<T extends Media>(media: T, options?: LoadMediaOptions)
 export function loadMedia(media: string, options?: LoadMediaOptions): Promise<HTMLImageElement>
 export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> {
   return new Promise(resolve => {
-    const { timeout } = options ?? {}
-
-    const ownerDocument = getDocument(options?.ownerDocument)
-
+    const { timeout, ownerDocument } = options ?? {}
     const node: Media = typeof media === 'string'
-      ? createImage(media, ownerDocument)
+      ? createImage(media, getDocument(ownerDocument))
       : media
+    let timer: any = null
+    let removeEventListeners: null | (() => void) = null
 
-    const onResolve = () => resolve(node)
+    function onResolve() {
+      resolve(node)
+      timer && clearTimeout(timer)
+      removeEventListeners?.()
+    }
 
     if (timeout) {
-      setTimeout(onResolve, timeout)
+      timer = setTimeout(onResolve, timeout)
     }
 
     if (isVideoElement(node)) {
-      if (node.readyState >= 2 || (!node.currentSrc && !node.src)) return onResolve()
-      node.addEventListener('loadeddata', onResolve, { once: true })
+      const poster = node.poster
+      if (poster) {
+        return loadMedia(poster, options).then(resolve)
+      }
+      const currentSrc = (node.currentSrc || node.src)
+      if (node.readyState >= 2 || !currentSrc) {
+        return onResolve()
+      }
+      const onLoadeddata = onResolve
+      const onError = (error: any) => {
+        consoleError(
+          'Video load failed',
+          currentSrc,
+          error,
+        )
+        onResolve()
+      }
+      removeEventListeners = () => {
+        node.removeEventListener('loadeddata', onLoadeddata)
+        node.removeEventListener('error', onError)
+      }
+      node.addEventListener('loadeddata', onLoadeddata, { once: true })
+      node.addEventListener('error', onError, { once: true })
     } else {
-      const onDecode = () => {
+      const currentSrc = isSVGImageElementNode(node)
+        ? node.href.baseVal
+        : (node.currentSrc || node.src)
+
+      if (!currentSrc) {
+        return onResolve()
+      }
+
+      const onLoad = async () => {
         if (isImageElement(node) && 'decode' in node) {
-          node.decode()
-            .catch(error => {
-              consoleWarn(
-                'Failed to decode image, trying to render anyway',
-                node.dataset.originalSrc || node.currentSrc || node.src,
-                error,
-              )
-            })
-            .finally(() => {
-              onResolve()
-            })
-        } else {
-          onResolve()
+          try {
+            await node.decode()
+          } catch (error) {
+            consoleWarn(
+              'Failed to decode image, trying to render anyway',
+              node.dataset.originalSrc || currentSrc,
+              error,
+            )
+          }
         }
+        onResolve()
       }
 
-      if (isSVGImageElementNode(node)) {
-        if (!node.href.baseVal) return onResolve()
-      } else {
-        if (!node.currentSrc && !node.src) return onResolve()
-        if (node.complete) return onDecode()
+      const onError = (error: any) => {
+        consoleError(
+          'Image load failed',
+          node.dataset.originalSrc || currentSrc,
+          error,
+        )
+        onResolve()
       }
 
-      node.addEventListener('load', onDecode, { once: true })
-      node.addEventListener(
-        'error',
-        error => {
-          consoleError(
-            'Image load failed',
-            node.dataset.originalSrc || (isSVGImageElementNode(node) ? node.href.baseVal : (node.currentSrc || node.src)),
-            error,
-          )
-          onResolve()
-        },
-        { once: true },
-      )
+      if (isImageElement(node) && node.complete) {
+        return onLoad()
+      }
+
+      removeEventListeners = () => {
+        node.removeEventListener('load', onLoad)
+        node.removeEventListener('error', onError)
+      }
+
+      node.addEventListener('load', onLoad, { once: true })
+      node.addEventListener('error', onError, { once: true })
     }
   })
+}
+
+export async function waitUntilLoad(node: Node, timeout: number) {
+  if (isHTMLElementNode(node)) {
+    if (isImageElement(node) || isVideoElement(node)) {
+      await loadMedia(node, { timeout })
+    } else {
+      await Promise.all(
+        ['img', 'video'].flatMap(selectors => {
+          return Array.from(node.querySelectorAll(selectors))
+            .map(el => loadMedia(el as any, { timeout }))
+        }),
+      )
+    }
+  }
 }
 
 export const uuid = (function uuid() {
@@ -187,11 +231,4 @@ const MIMES = {
 const EXT_RE = /\.([^.\/?]+?)(\?.*)?$/
 export function getMimeType(url: string): string | undefined {
   return MIMES[url.match(EXT_RE)?.[1]?.toLowerCase() as keyof typeof MIMES]
-}
-
-export async function waitLoaded(el: HTMLElement, timeout?: number) {
-  await Promise.all([
-    ...Array.from(el.querySelectorAll('img')).map(el => loadMedia(el, { timeout })),
-    ...Array.from(el.querySelectorAll('video')).map(el => loadMedia(el, { timeout })),
-  ])
 }

@@ -88,7 +88,7 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
 
 export async function fetchDataUrl(url: string, context: Context, isImage?: boolean) {
   const { content, contentType } = await fetchBase64(url, context, isImage)
-  const mimeType = getMimeType(url) ?? contentType
+  const mimeType = getMimeType(url) || contentType
   return `data:${ mimeType };base64,${ content }`
 }
 
