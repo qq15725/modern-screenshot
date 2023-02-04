@@ -6,6 +6,7 @@ import { removeDefaultStyleSandbox } from '../get-default-style'
 import {
   consoleTime,
   consoleTimeEnd,
+  consoleWarn,
   createSvg,
   isElementNode,
   isSVGElementNode,
@@ -46,11 +47,20 @@ export async function domToForeignObjectSvg<T extends Node>(
   const count = tasks.length
   let current = 0
   debug && consoleTime('embed node')
-  await Promise.all(
-    progress
-      ? tasks.map(task => task.finally(() => progress(++current, count)))
-      : tasks,
-  )
+  const runTask = async () => {
+    while (true) {
+      const task = tasks.pop()
+      if (!task) break
+      try {
+        await task
+      } catch (error) {
+        consoleWarn('Failed to run task', error)
+      }
+      progress?.(++current, count)
+    }
+  }
+  progress?.(current, count)
+  await Promise.all([...Array(4)].map(runTask))
   debug && consoleTimeEnd('embed node')
 
   const svg = createForeignObjectSvg(clone, context)

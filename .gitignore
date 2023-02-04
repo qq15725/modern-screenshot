@@ -13,3 +13,6 @@ types/
 yarn-error.log
 npm-debug.log
 lerna-debug.log
+
+# Test fixtures diff output
+test/fixtures/__diff_output__/

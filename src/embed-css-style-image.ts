@@ -9,21 +9,24 @@ const PROPERTIES = [
   'list-style-image',
 ] as const
 
-export async function embedCssStyleImage(
+export function embedCssStyleImage(
   style: CSSStyleDeclaration,
   context: Context,
-) {
-  await Promise.all(
-    PROPERTIES.map(async property => {
+): Promise<void>[] {
+  return PROPERTIES
+    .map(property => {
       const value = style.getPropertyValue(property)
-      if (!value) return
-      const newValue = await replaceCssUrlToDataUrl(value, null, context, true)
-      if (!newValue || value === newValue) return
-      style.setProperty(
-        property,
-        newValue,
-        style.getPropertyPriority(property),
-      )
-    }),
-  )
+      if (!value) {
+        return null
+      }
+      return replaceCssUrlToDataUrl(value, null, context, true).then(newValue => {
+        if (!newValue || value === newValue) return
+        style.setProperty(
+          property,
+          newValue,
+          style.getPropertyPriority(property),
+        )
+      })
+    })
+    .filter(Boolean) as Promise<void>[]
 }

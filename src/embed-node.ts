@@ -15,11 +15,11 @@ export function embedNode<T extends Node>(clone: T, context: Context) {
     isElementNode(clone)
     && (isImageElement(clone) || isSVGImageElementNode(clone))
   ) {
-    tasks.push(embedImageElement(clone, context))
+    tasks.push(...embedImageElement(clone, context))
   }
 
   if (isHTMLElementNode(clone)) {
-    tasks.push(embedCssStyleImage(clone.style, context))
+    tasks.push(...embedCssStyleImage(clone.style, context))
   }
 
   clone.childNodes.forEach(child => {

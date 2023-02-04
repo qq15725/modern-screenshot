@@ -21,7 +21,6 @@ export const isSlotElement = (node: Element): node is HTMLSlotElement => node.ta
 export const isIFrameElement = (node: Element): node is HTMLIFrameElement => node.tagName === 'IFRAME'
 
 // Console
-export const consoleError = (...args: any[]) => console.error(PREFIX, ...args)
 export const consoleWarn = (...args: any[]) => console.warn(PREFIX, ...args)
 // eslint-disable-next-line no-console
 export const consoleTime = (label: string) => console.time(`${ PREFIX } ${ label }`)
@@ -122,7 +121,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       }
       const onLoadeddata = onResolve
       const onError = (error: any) => {
-        consoleError(
+        consoleWarn(
           'Video load failed',
           currentSrc,
           error,
@@ -160,7 +159,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       }
 
       const onError = (error: any) => {
-        consoleError(
+        consoleWarn(
           'Image load failed',
           node.dataset.originalSrc || currentSrc,
           error,
