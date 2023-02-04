@@ -10,8 +10,9 @@ export interface Options {
   height?: number
 
   /**
-   * The pixel ratio of captured image. Defalut is the actual pixel ratio of
-   * the device. Set 1 to use as initial-scale 1 for the image
+   * The pixel ratio of captured image.
+   *
+   * default: 1
    */
   scale?: number
 
@@ -36,34 +37,32 @@ export interface Options {
    * Maximum canvas size (pixels).
    *
    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
-   *
-   * default: 16384
    */
   maximumCanvasSize?: number
 
   /**
-   * Load media timeout and fetch remote asset timeout
+   * Load media timeout and fetch remote asset timeout (millisecond).
    *
-   * default: 3000
+   * default: 30000
    */
   timeout?: number
 
   /**
-   * Embed assets progress
+   * Embed assets progress.
    */
   progress?: ((current: number, total: number) => void) | null
 
   /**
-   * Debug mode
+   * Enable debug mode to view the execution time log.
    */
   debug?: boolean
 
   /**
-   * Fetch resources
+   * The options of fetch resources.
    */
   fetch?: {
     /**
-     * the second parameter of window.fetch RequestInit
+     * The second parameter of `window.fetch` RequestInit
      */
     requestInit?: RequestInit
 
@@ -82,7 +81,7 @@ export interface Options {
   }
 
   /**
-   * Fonts download and embed.
+   * The options of fonts download and embed.
    */
   font?: false | {
     /**
