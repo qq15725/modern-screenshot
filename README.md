@@ -1,14 +1,20 @@
 <h1 align="center">modern-screenshot</h1>
 
 <p align="center">
-  <a href="https://github.com/qq15725/modern-screenshot/blob/master/LICENSE" class="mr-3">
-    <img src="https://img.shields.io/npm/l/modern-screenshot.svg" alt="License">
+  <a href="https://unpkg.com/modern-screenshot">
+    <img src="https://img.shields.io/bundlephobia/minzip/modern-screenshot" alt="Minzip">
   </a>
   <a href="https://www.npmjs.com/package/modern-screenshot">
     <img src="https://img.shields.io/npm/v/modern-screenshot.svg" alt="Version">
   </a>
-  <a href="https://cdn.jsdelivr.net/npm/modern-screenshot/dist/index.js">
-    <img src="https://img.shields.io/bundlephobia/minzip/modern-screenshot" alt="Minzip">
+  <a href="https://www.npmjs.com/package/modern-screenshot">
+    <img src="https://img.shields.io/npm/dw/modern-screenshot" alt="Downloads">
+  </a>
+  <a href="https://github.com/qq15725/modern-screenshot/issues">
+    <img src="https://img.shields.io/github/issues/qq15725/modern-screenshot" alt="Issues">
+  </a>
+  <a href="https://github.com/qq15725/modern-screenshot/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/modern-screenshot.svg" alt="License">
   </a>
 </p>
 
