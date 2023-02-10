@@ -62,7 +62,9 @@ export function getDocument<T extends Node>(target?: T | null): Document {
 
 export function createSvg(width: number, height: number, ownerDocument?: Document | null): SVGSVGElement {
   const svg = getDocument(ownerDocument).createElementNS('http://www.w3.org/2000/svg', 'svg')
-  svg.setAttribute('viewBox', `0 0 ${ width } ${ height }`)
+  svg.setAttributeNS(null, 'width', width.toString())
+  svg.setAttributeNS(null, 'height', height.toString())
+  svg.setAttributeNS(null, 'viewBox', `0 0 ${ width } ${ height }`)
   return svg
 }
 
