@@ -1,4 +1,3 @@
-import { copyClass } from './copy-class'
 import { copyPseudoContent } from './copy-pseudo-content'
 import { copyInputValue } from './copy-input-value'
 import { copyCssStyles } from './copy-css-styles'
@@ -89,7 +88,7 @@ export function cloneNode<T extends Node>(
     const clone = createElementClone(node, context)
     const cloneStyle = clone.style
 
-    copyCssStyles(node, style, cloneStyle, isRoot, context)
+    copyCssStyles(node, style, clone, isRoot, context)
 
     if (isRoot) {
       applyCssStyleWithOptions(cloneStyle, context)
@@ -98,8 +97,6 @@ export function cloneNode<T extends Node>(
     if (cloneStyle.fontFamily) {
       fontFamilies.add(cloneStyle.fontFamily)
     }
-
-    copyClass(node, clone)
 
     copyPseudoContent(node, clone, ownerWindow)
 

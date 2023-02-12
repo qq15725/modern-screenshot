@@ -23,7 +23,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     sandbox.style.visibility = 'hidden'
     sandbox.style.position = 'fixed'
     ownerDocument.body.appendChild(sandbox)
-    sandbox.contentWindow!.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
+    sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
   }
 
   const context: Context<T> = {

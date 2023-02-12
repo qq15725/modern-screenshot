@@ -12,11 +12,19 @@ const ignored = [
 export function copyCssStyles<T extends HTMLElement | SVGElement>(
   node: T,
   style: CSSStyleDeclaration,
-  cloneStyle: CSSStyleDeclaration,
+  clone: T,
   isRoot: boolean,
   context: Context,
 ) {
+  const cloneClasses = clone.classList
+  const cloneStyle = clone.style
   const defaultStyle = getDefaultStyle(node.tagName, context)
+
+  // clean class list
+  while (cloneClasses.length > 0) {
+    const name = cloneClasses.item(0)
+    name && cloneClasses.remove(name)
+  }
 
   cloneStyle.transitionProperty = 'none'
 
@@ -40,8 +48,17 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
       continue
     }
 
+    // fix background-clip: text
+    if (name === 'background-clip' && value === 'text') {
+      clone.classList.add('______background-clip--text')
+    }
+
     // Skip default style
-    if (defaultStyle[name] === value && !priority) {
+    if (
+      defaultStyle[name] === value
+      && !node.getAttribute(name)
+      && !priority
+    ) {
       continue
     }
 
