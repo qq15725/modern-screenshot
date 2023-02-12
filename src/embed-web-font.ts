@@ -8,17 +8,20 @@ export async function embedWebFont<T extends Element>(
   context: Context,
 ) {
   const {
-    svgRootStyleElement,
+    svgStyleElement,
     fontFamilies,
     tasks,
     font,
   } = context
+
+  if (!svgStyleElement) return
+
   const { ownerDocument } = clone
   const { styleSheets } = ownerDocument
 
   if (font && font.cssText) {
     const cssText = filterPreferredFormat(font.cssText, context)
-    svgRootStyleElement.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
+    svgStyleElement.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
   } else {
     try {
       const cssRules = await getCssRules(Array.from(styleSheets), context)
@@ -42,7 +45,7 @@ export async function embedWebFont<T extends Element>(
               context,
             ).then(cssText => {
               cssText = filterPreferredFormat(cssText, context)
-              svgRootStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+              svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
             }),
           )
         })

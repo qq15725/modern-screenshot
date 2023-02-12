@@ -1,40 +1,40 @@
 import { cloneNode } from '../clone-node'
-import { createContext, freeContext } from '../create-context'
+import { createContext, destroyContext } from '../create-context'
 import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
-import { removeDefaultStyleSandbox } from '../get-default-style'
 import {
   consoleTime,
   consoleTimeEnd,
   consoleWarn,
   createSvg,
+  isContext,
   isElementNode,
   isSVGElementNode,
 } from '../utils'
 import type { Context } from '../context'
 import type { Options } from '../options'
 
-export async function domToForeignObjectSvg<T extends Node>(
-  node: T,
-  options?: Options,
-): Promise<SVGElement> {
-  if (isElementNode(node) && isSVGElementNode(node)) return node
+export async function domToForeignObjectSvg<T extends Node>(node: T, options?: Options): Promise<SVGElement>
+export async function domToForeignObjectSvg<T extends Node>(context: Context<T>): Promise<SVGElement>
+export async function domToForeignObjectSvg(node: any, options?: any) {
+  const context = isContext(node)
+    ? node
+    : await createContext(node, { ...options, autodestruct: true })
 
-  const context = await createContext(node, options)
+  if (isElementNode(context.node) && isSVGElementNode(context.node)) return context.node
 
   const {
     debug,
     tasks,
-    svgRootStyleElement,
+    svgStyleElement,
     font,
     progress,
+    autodestruct,
   } = context
 
   debug && consoleTime('clone node')
-  const clone = cloneNode(node, context)
+  const clone = cloneNode(context.node, context, true)
   debug && consoleTimeEnd('clone node')
-
-  removeDefaultStyleSandbox()
 
   if (font !== false && isElementNode(clone)) {
     debug && consoleTime('embed web font')
@@ -42,11 +42,10 @@ export async function domToForeignObjectSvg<T extends Node>(
     debug && consoleTimeEnd('embed web font')
   }
 
+  debug && consoleTime('embed node')
   embedNode(clone, context)
-
   const count = tasks.length
   let current = 0
-  debug && consoleTime('embed node')
   const runTask = async () => {
     while (true) {
       const task = tasks.pop()
@@ -64,9 +63,9 @@ export async function domToForeignObjectSvg<T extends Node>(
   debug && consoleTimeEnd('embed node')
 
   const svg = createForeignObjectSvg(clone, context)
-  svg.insertBefore(svgRootStyleElement, svg.children[0])
+  svgStyleElement && svg.insertBefore(svgStyleElement, svg.children[0])
 
-  freeContext(context)
+  autodestruct && destroyContext(context)
 
   return svg
 }

@@ -47,6 +47,10 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
       }
     }
 
+    if (isImage) {
+      context.requestImagesCount++
+    }
+
     requests.set(url, {
       type: isImage ? 'image' : 'text',
       response: fetch(url, context)

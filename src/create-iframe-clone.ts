@@ -8,7 +8,7 @@ export function createIframeClone<T extends HTMLIFrameElement>(
 ): HTMLIFrameElement | HTMLBodyElement {
   try {
     if (iframe?.contentDocument?.body) {
-      return cloneNode(iframe.contentDocument.body, context, iframe.contentWindow) as HTMLBodyElement
+      return cloneNode(iframe.contentDocument.body, context) as HTMLBodyElement
     }
   } catch (error) {
     consoleWarn('Failed to clone iframe', error)

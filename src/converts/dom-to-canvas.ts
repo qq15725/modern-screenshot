@@ -1,17 +1,19 @@
 import { createContext } from '../create-context'
-import { createImage, svgToDataUrl } from '../utils'
+import { createImage, isContext, svgToDataUrl } from '../utils'
 import { domToForeignObjectSvg } from './dom-to-foreign-object-svg'
 import { imageToCanvas } from './image-to-canvas'
+import type { Context } from '../context'
 
 import type { Options } from '../options'
 
-export async function domToCanvas<T extends Node>(
-  node: T,
-  options?: Options,
-): Promise<HTMLCanvasElement> {
-  const context = await createContext(node, options)
-  const svg = await domToForeignObjectSvg(node, context as any)
+export async function domToCanvas<T extends Node>(node: T, options?: Options): Promise<HTMLCanvasElement>
+export async function domToCanvas<T extends Node>(context: Context<T>): Promise<HTMLCanvasElement>
+export async function domToCanvas(node: any, options?: any) {
+  const context = isContext(node)
+    ? node
+    : await createContext(node, { ...options, autodestruct: true })
+  const svg = await domToForeignObjectSvg(context)
   const dataUrl = svgToDataUrl(svg)
   const image = createImage(dataUrl, svg.ownerDocument)
-  return await imageToCanvas(image, context as any)
+  return await imageToCanvas(image, context)
 }

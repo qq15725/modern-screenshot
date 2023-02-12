@@ -1,23 +1,38 @@
 import { getDefaultStyle } from './get-default-style'
+import { IN_CHROME } from './utils'
+import type { Context } from './context'
+
+const ignored = [
+  'transitionProperty',
+  'all', // svg: all
+  'd', // svg: d
+  'content', // Safari shows pseudoelements if content is set
+]
 
 export function copyCssStyles<T extends HTMLElement | SVGElement>(
   node: T,
-  clone: T,
-  ownerWindow: Window,
-  isRootNode: boolean,
+  style: CSSStyleDeclaration,
+  cloneStyle: CSSStyleDeclaration,
+  isRoot: boolean,
+  context: Context,
 ) {
-  const style = ownerWindow.getComputedStyle(node)
-  const cloneStyle = clone.style
-  const defaultStyle = getDefaultStyle(node.tagName)
+  const defaultStyle = getDefaultStyle(node.tagName, context)
+
+  cloneStyle.transitionProperty = 'none'
 
   for (let i = style.length - 1; i >= 0; i--) {
     const name = style.item(i)
-    const value = style.getPropertyValue(name)
-    const priority = style.getPropertyPriority?.(name) ?? ''
 
-    // clean "margin" of root node
+    if (ignored.includes(name)) {
+      continue
+    }
+
+    const value = style.getPropertyValue(name)
+    const priority = style.getPropertyPriority(name)
+
+    // Clean "margin" of root node
     if (
-      isRootNode
+      isRoot
       && name.startsWith('margin')
       && value
     ) {
@@ -25,18 +40,8 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
       continue
     }
 
-    // skip non user style
-    if (
-      defaultStyle[name] === value
-      && !node.getAttribute(name)
-      && !priority
-    ) {
-      continue
-    }
-
-    // fix background-clip: text
-    if (name === 'background-clip' && value === 'text') {
-      clone.classList.add('______background-clip--text')
+    // Skip default style
+    if (defaultStyle[name] === value && !priority) {
       continue
     }
 
@@ -53,7 +58,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
 
   // fix chromium
   // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
-  if (ownerWindow.navigator.userAgent.match(/\bChrome\//)) {
+  if (IN_CHROME) {
     if (cloneStyle.fontKerning === 'auto') {
       cloneStyle.fontKerning = 'normal'
     }

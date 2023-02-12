@@ -1,7 +1,12 @@
+import type { Context } from './context'
+
 export const PREFIX = '[modern-screenshot]'
 export const IN_BROWSER = typeof window !== 'undefined'
-export const USER_AGENT = IN_BROWSER ? window.navigator?.userAgent : undefined
-export const IS_SAFARI = USER_AGENT?.includes('AppleWebKit') && !USER_AGENT?.includes('Chrome')
+export const USER_AGENT = IN_BROWSER ? window.navigator?.userAgent : ''
+export const IN_CHROME = USER_AGENT.includes('Chrome')
+export const IN_SAFARI = USER_AGENT.includes('AppleWebKit') && !IN_CHROME
+
+export const isContext = <T extends Node>(value: any): value is Context<T> => value && '__CONTEXT__' in value
 
 // Element
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE

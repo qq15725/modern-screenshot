@@ -1,16 +1,18 @@
 import { createContext } from '../create-context'
-import { createSvg, svgToDataUrl } from '../utils'
+import { createSvg, isContext, svgToDataUrl } from '../utils'
 import { domToDataUrl } from './dom-to-data-url'
+import type { Context } from '../context'
 import type { Options } from '../options'
 
-export async function domToSvg<T extends Node>(
-  node: T,
-  options?: Options,
-): Promise<string> {
-  const context = await createContext(node, options)
-  const dataUrl = await domToDataUrl(node, context as any)
-  const { width, height } = context
-  const svg = createSvg(width, height, node.ownerDocument)
+export async function domToSvg<T extends Node>(node: T, options?: Options): Promise<string>
+export async function domToSvg<T extends Node>(context: Context<T>): Promise<string>
+export async function domToSvg(node: any, options?: any) {
+  const context = isContext(node)
+    ? node
+    : await createContext(node, { ...options, autodestruct: true })
+  const { width, height, ownerDocument } = context
+  const dataUrl = await domToDataUrl(context)
+  const svg = createSvg(width, height, ownerDocument)
   const svgImage = svg.ownerDocument.createElementNS(svg.namespaceURI, 'image')
   svgImage.setAttributeNS(null, 'href', dataUrl)
   svgImage.setAttributeNS(null, 'height', '100%')

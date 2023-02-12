@@ -1,34 +1,52 @@
 import {
+  IN_BROWSER,
   consoleTime,
   consoleTimeEnd,
-  getDocument,
   isElementNode,
   waitUntilLoad,
 } from './utils'
 import type { Context } from './context'
 import type { Options } from './options'
 
-export async function createContext(node: Node, options?: Options | Context): Promise<Context> {
-  if (
-    options
-    && 'svgRootStyleElement' in options
-    && 'fontFamilies' in options
-    && 'requests' in options
-    && 'tasks' in options
-  ) return options
-
+export async function createContext<T extends Node>(node: T, options?: Options & { autodestruct?: boolean }): Promise<Context<T>> {
   const debug = Boolean(options?.debug)
 
-  const context: Context = {
-    svgRootStyleElement: createSvgRootStyleElement(node),
+  const ownerDocument = node.ownerDocument ?? (IN_BROWSER ? window.document : undefined)
+  const ownerWindow = node.ownerDocument?.defaultView ?? (IN_BROWSER ? window : undefined)
+
+  let sandbox: HTMLIFrameElement | undefined
+  if (ownerDocument) {
+    sandbox = ownerDocument.createElement('iframe')
+    sandbox.id = 'modern-screenshot__sandbox'
+    sandbox.width = '0'
+    sandbox.height = '0'
+    sandbox.style.visibility = 'hidden'
+    sandbox.style.position = 'fixed'
+    ownerDocument.body.appendChild(sandbox)
+    sandbox.contentWindow!.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
+  }
+
+  const context: Context<T> = {
+    __CONTEXT__: true,
+
+    // InternalContext
+    node,
+    ownerDocument,
+    ownerWindow,
+    svgStyleElement: createStyleElement(ownerDocument),
+    defaultComputedStyles: new Map<string, Record<string, any>>(),
+    sandbox,
     fontFamilies: new Set(),
     requests: new Map(),
     requestImagesCount: 0,
     tasks: [],
+    autodestruct: false,
 
     // Options
     width: 0,
     height: 0,
+    quality: 1,
+    type: 'image/png',
     scale: 1,
     backgroundColor: null,
     style: null,
@@ -54,18 +72,24 @@ export async function createContext(node: Node, options?: Options | Context): Pr
   return context
 }
 
-export function freeContext(context: Context) {
-  context.svgRootStyleElement = getDocument(context.svgRootStyleElement).createElement('style')
+export function destroyContext(context: Context) {
+  context.ownerDocument = undefined
+  context.ownerWindow = undefined
+  context.svgStyleElement = undefined
+  context.defaultComputedStyles.clear()
+  if (context.sandbox) {
+    context.sandbox.remove()
+    context.sandbox = undefined
+  }
   context.fontFamilies.clear()
-  context.requestImagesCount = Array.from(context.requests.values())
-    .filter(v => v.type === 'image')
-    .length
+  context.requestImagesCount = 0
   context.requests.clear()
   context.tasks = []
 }
 
-function createSvgRootStyleElement(node: Node) {
-  const style = getDocument(node).createElement('style')
+function createStyleElement(ownerDocument?: Document) {
+  if (!ownerDocument) return undefined
+  const style = ownerDocument.createElement('style')
   const cssText = style.ownerDocument.createTextNode(`
 .______background-clip--text {
   background-clip: text;

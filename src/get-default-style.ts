@@ -1,27 +1,11 @@
-import { IN_BROWSER, getDocument } from './utils'
+import type { Context } from './context'
 
-const SANDBOX_ID = 'modern-screenshot__sandbox'
-let sandbox: HTMLIFrameElement | undefined
-const defaultStyles = new Map<string, Record<string, any>>()
-
-export function getDefaultStyle(tagName: string) {
-  if (!IN_BROWSER) return {}
-  if (defaultStyles.has(tagName)) return defaultStyles.get(tagName)!
-  const sandboxOwnerDocument = getDocument()
-  if (!sandbox) {
-    sandbox = sandboxOwnerDocument.querySelector(`#${ SANDBOX_ID }`) as HTMLIFrameElement
-    if (!sandbox) {
-      sandbox = sandboxOwnerDocument.createElement('iframe')
-      sandbox.id = SANDBOX_ID
-      sandbox.width = '0'
-      sandbox.height = '0'
-      sandbox.style.visibility = 'hidden'
-      sandbox.style.position = 'fixed'
-      sandboxOwnerDocument.body.appendChild(sandbox)
-      sandbox.contentWindow!.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
-    }
-  }
-  const ownerWindow = sandbox.contentWindow!
+export function getDefaultStyle(tagName: string, context: Context) {
+  const { defaultComputedStyles, sandbox } = context
+  if (defaultComputedStyles.has(tagName)) return defaultComputedStyles.get(tagName)!
+  if (!sandbox) return {}
+  const ownerWindow = sandbox.contentWindow
+  if (!ownerWindow) return {}
   const ownerDocument = ownerWindow.document
   const el = ownerDocument.createElement(tagName)
   ownerDocument.body.appendChild(el)
@@ -38,13 +22,6 @@ export function getDefaultStyle(tagName: string) {
     }
   }
   ownerDocument.body.removeChild(el)
-  defaultStyles.set(tagName, styles)
+  defaultComputedStyles.set(tagName, styles)
   return styles
-}
-
-export function removeDefaultStyleSandbox() {
-  if (!sandbox) return
-  getDocument().body.removeChild(sandbox)
-  defaultStyles.clear()
-  sandbox = undefined
 }

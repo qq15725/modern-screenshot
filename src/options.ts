@@ -10,6 +10,16 @@ export interface Options {
   height?: number
 
   /**
+   * A number between `0` and `1` indicating image quality (e.g. 0.92 => 92%) of the JPEG image.
+   */
+  quality?: number
+
+  /**
+   * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
+   */
+  type?: string
+
+  /**
    * The pixel ratio of captured image.
    *
    * default: 1
@@ -103,20 +113,4 @@ export interface Options {
    * default: 100
    */
   drawImageInterval?: number
-}
-
-export interface JpegOptions {
-
-  /**
-   * A number between `0` and `1` indicating image quality (e.g. 0.92 => 92%)
-   * of the JPEG image.
-   */
-  quality?: number
-}
-
-export interface ImageOptions extends JpegOptions {
-  /**
-   * A string indicating the image format. The default type is image/png; that type is also used if the given type isn't supported.
-   */
-  type?: string
 }

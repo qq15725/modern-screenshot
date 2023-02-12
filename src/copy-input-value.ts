@@ -8,10 +8,7 @@ export function copyInputValue<T extends HTMLElement | SVGElement>(
     clone.innerHTML = node.value
   }
 
-  if (
-    (isTextareaElement(node) || isInputElement(node) || isSelectElement(node))
-    && (isTextareaElement(clone) || isInputElement(clone) || isSelectElement(clone))
-  ) {
-    clone.value = node.value
+  if (isTextareaElement(node) || isInputElement(node) || isSelectElement(node)) {
+    (clone as HTMLTextAreaElement).value = node.value
   }
 }

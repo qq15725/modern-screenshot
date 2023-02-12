@@ -1,19 +1,19 @@
 import { replaceCssUrlToDataUrl } from './css-url'
 import type { Context } from './context'
 
-const PROPERTIES = [
+const properties = [
   'background-image',
   'border-image-source',
   '-webkit-border-image',
   '-webkit-mask-image',
   'list-style-image',
-] as const
+]
 
 export function embedCssStyleImage(
   style: CSSStyleDeclaration,
   context: Context,
 ): Promise<void>[] {
-  return PROPERTIES
+  return properties
     .map(property => {
       const value = style.getPropertyValue(property)
       if (!value) {

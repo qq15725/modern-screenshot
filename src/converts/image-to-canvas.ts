@@ -1,13 +1,16 @@
 import { createContext } from '../create-context'
-import { IS_SAFARI, consoleTime, consoleTimeEnd, consoleWarn, loadMedia } from '../utils'
+import { IN_SAFARI, consoleTime, consoleTimeEnd, consoleWarn, isContext, loadMedia } from '../utils'
 import type { Context } from '../context'
 import type { Options } from '../options'
 
 export async function imageToCanvas<T extends HTMLImageElement>(
   image: T,
-  options?: Options,
+  options?: Options | Context,
 ): Promise<HTMLCanvasElement> {
-  const context = await createContext(image, options)
+  const context = isContext(options)
+    ? options
+    : await createContext(image, { ...options, autodestruct: true })
+
   const {
     requestImagesCount,
     timeout,
@@ -27,7 +30,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   }
   drawImage()
   // fix: image not decode when drawImage svg+xml in safari/webkit
-  if (IS_SAFARI) {
+  if (IN_SAFARI) {
     for (let i = 0; i < requestImagesCount; i++) {
       await new Promise<void>(resolve => {
         setTimeout(() => {
