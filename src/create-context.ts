@@ -8,6 +8,8 @@ import {
 import type { Context } from './context'
 import type { Options } from './options'
 
+const sandboxId = '__MODERN_SCREENSHOT_SANDBOX__'
+
 export async function createContext<T extends Node>(node: T, options?: Options & { autodestruct?: boolean }): Promise<Context<T>> {
   const debug = Boolean(options?.debug)
 
@@ -16,14 +18,17 @@ export async function createContext<T extends Node>(node: T, options?: Options &
 
   let sandbox: HTMLIFrameElement | undefined
   if (ownerDocument) {
-    sandbox = ownerDocument.createElement('iframe')
-    sandbox.id = 'modern-screenshot__sandbox'
-    sandbox.width = '0'
-    sandbox.height = '0'
-    sandbox.style.visibility = 'hidden'
-    sandbox.style.position = 'fixed'
-    ownerDocument.body.appendChild(sandbox)
-    sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
+    sandbox = ownerDocument.getElementById(sandboxId) as any
+    if (!sandbox) {
+      sandbox = ownerDocument.createElement('iframe')
+      sandbox.id = sandboxId
+      sandbox.width = '0'
+      sandbox.height = '0'
+      sandbox.style.visibility = 'hidden'
+      sandbox.style.position = 'fixed'
+      ownerDocument.body.appendChild(sandbox)
+      sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
+    }
   }
 
   const context: Context<T> = {
