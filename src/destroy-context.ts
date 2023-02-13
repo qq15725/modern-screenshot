@@ -14,6 +14,7 @@ export function destroyContext(context: Context) {
     context.sandbox = undefined
   }
   context.fontFamilies.clear()
+  context.fontCssTexts.clear()
   context.requestImagesCount = 0
   context.requests.clear()
   context.tasks = []

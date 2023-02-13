@@ -8,6 +8,9 @@ export const IN_SAFARI = USER_AGENT.includes('AppleWebKit') && !IN_CHROME
 
 export const isContext = <T extends Node>(value: any): value is Context<T> => value && '__CONTEXT__' in value
 
+// CSS
+export const isCssFontFaceRule = (rule: CSSRule): rule is CSSFontFaceRule => rule.constructor.name === 'CSSFontFaceRule'
+
 // Element
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'

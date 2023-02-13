@@ -23,7 +23,8 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     ownerWindow,
     svgStyleElement: createStyleElement(ownerDocument),
     defaultComputedStyles: new Map<string, Record<string, any>>(),
-    fontFamilies: new Set(),
+    fontFamilies: new Set<string>(),
+    fontCssTexts: new Map<string, string>(),
     requests: new Map(),
     requestImagesCount: 0,
     tasks: [],
@@ -59,7 +60,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
   return context
 }
 
-function createStyleElement(ownerDocument?: Document) {
+export function createStyleElement(ownerDocument?: Document) {
   if (!ownerDocument) return undefined
   const style = ownerDocument.createElement('style')
   const cssText = style.ownerDocument.createTextNode(`

@@ -1,6 +1,6 @@
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 import { fetch, fetchText } from './fetch'
-import { consoleWarn } from './utils'
+import { consoleWarn, isCssFontFaceRule } from './utils'
 import type { Context } from './context'
 
 export async function embedWebFont<T extends Element>(
@@ -8,46 +8,53 @@ export async function embedWebFont<T extends Element>(
   context: Context,
 ) {
   const {
+    ownerDocument,
     svgStyleElement,
     fontFamilies,
+    fontCssTexts,
     tasks,
     font,
   } = context
 
-  if (!svgStyleElement) return
-
-  const { ownerDocument } = clone
-  const { styleSheets } = ownerDocument
+  if (
+    !ownerDocument
+    || !svgStyleElement
+    || !fontFamilies.size
+  ) return
 
   if (font && font.cssText) {
     const cssText = filterPreferredFormat(font.cssText, context)
     svgStyleElement.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
   } else {
     try {
-      const cssRules = await getCssRules(Array.from(styleSheets), context)
+      const cssRules = await getCssRules(Array.from(ownerDocument.styleSheets), context)
 
       cssRules
         .filter(rule => (
-          rule.constructor.name === 'CSSFontFaceRule'
-          && (
-            !(rule as CSSFontFaceRule).style.fontFamily
-            || fontFamilies.has((rule as CSSFontFaceRule).style.fontFamily)
-          )
-          && hasCssUrl((rule as CSSFontFaceRule).style.getPropertyValue('src'))
+          isCssFontFaceRule(rule)
+          && hasCssUrl(rule.style.getPropertyValue('src'))
+          && fontFamilies.has(rule.style.fontFamily)
         ))
-        .forEach(rule => {
-          tasks.push(
-            replaceCssUrlToDataUrl(
-              rule.cssText,
-              rule.parentStyleSheet
-                ? rule.parentStyleSheet.href
-                : null,
-              context,
-            ).then(cssText => {
-              cssText = filterPreferredFormat(cssText, context)
-              svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
-            }),
-          )
+        .forEach((value) => {
+          const rule = value as CSSFontFaceRule
+          const cssText = fontCssTexts.get(rule.cssText)
+          if (cssText) {
+            svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+          } else {
+            tasks.push(
+              replaceCssUrlToDataUrl(
+                rule.cssText,
+                rule.parentStyleSheet
+                  ? rule.parentStyleSheet.href
+                  : null,
+                context,
+              ).then(cssText => {
+                cssText = filterPreferredFormat(cssText, context)
+                fontCssTexts.set(rule.cssText, cssText)
+                svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+              }),
+            )
+          }
         })
     } catch (error) {
       consoleWarn('Failed to parse web font css', error)

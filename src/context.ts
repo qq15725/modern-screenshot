@@ -42,6 +42,11 @@ export interface InternalContext<T extends Node> {
   fontFamilies: Set<string>
 
   /**
+   * Map<CssUrl, DataUrl>
+   */
+  fontCssTexts: Map<string, string>
+
+  /**
    * All requests for `fetch`
    */
   requests: Map<string, {
