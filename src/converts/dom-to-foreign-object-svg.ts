@@ -1,5 +1,6 @@
 import { cloneNode } from '../clone-node'
-import { createContext, destroyContext } from '../create-context'
+import { createContext } from '../create-context'
+import { destroyContext } from '../destroy-context'
 import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
 import {

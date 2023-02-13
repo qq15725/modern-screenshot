@@ -8,28 +8,11 @@ import {
 import type { Context } from './context'
 import type { Options } from './options'
 
-const sandboxId = '__MODERN_SCREENSHOT_SANDBOX__'
-
 export async function createContext<T extends Node>(node: T, options?: Options & { autodestruct?: boolean }): Promise<Context<T>> {
   const debug = Boolean(options?.debug)
 
   const ownerDocument = node.ownerDocument ?? (IN_BROWSER ? window.document : undefined)
   const ownerWindow = node.ownerDocument?.defaultView ?? (IN_BROWSER ? window : undefined)
-
-  let sandbox: HTMLIFrameElement | undefined
-  if (ownerDocument) {
-    sandbox = ownerDocument.getElementById(sandboxId) as any
-    if (!sandbox) {
-      sandbox = ownerDocument.createElement('iframe')
-      sandbox.id = sandboxId
-      sandbox.width = '0'
-      sandbox.height = '0'
-      sandbox.style.visibility = 'hidden'
-      sandbox.style.position = 'fixed'
-      ownerDocument.body.appendChild(sandbox)
-      sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
-    }
-  }
 
   const context: Context<T> = {
     __CONTEXT__: true,
@@ -40,7 +23,6 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     ownerWindow,
     svgStyleElement: createStyleElement(ownerDocument),
     defaultComputedStyles: new Map<string, Record<string, any>>(),
-    sandbox,
     fontFamilies: new Set(),
     requests: new Map(),
     requestImagesCount: 0,
@@ -75,21 +57,6 @@ export async function createContext<T extends Node>(node: T, options?: Options &
   context.height = height
 
   return context
-}
-
-export function destroyContext(context: Context) {
-  context.ownerDocument = undefined
-  context.ownerWindow = undefined
-  context.svgStyleElement = undefined
-  context.defaultComputedStyles.clear()
-  if (context.sandbox) {
-    context.sandbox.remove()
-    context.sandbox = undefined
-  }
-  context.fontFamilies.clear()
-  context.requestImagesCount = 0
-  context.requests.clear()
-  context.tasks = []
 }
 
 function createStyleElement(ownerDocument?: Document) {
