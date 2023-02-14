@@ -127,16 +127,23 @@ DOM 转 HTMLElement
 ```ts
 import { createContext, destroyContext, domToPng } from 'modern-screenshot'
 
-createContext(document.querySelector('#app')).then(context => {
-  setInterval(() => {
+async function screenshotsPerSecond() {
+  const context = awiat createContext(document.querySelector('#app'))
+  for (let i = 0; i < 10; i++) {
     domToPng(context).then(dataUrl => {
       const link = document.createElement('a')
-      link.download = 'screenshot.png'
+      link.download = `screenshot-${ i + 1 }.png`
       link.href = dataUrl
       link.click()
+      if (i + 1 === 10) {
+        destroyContext(context)
+      }
     })
-  }, 1000)
-})
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+}
+
+screenshotsPerSecond()
 ```
 
 请查看 [context.ts](src/context.ts)
