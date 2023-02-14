@@ -18,7 +18,7 @@
   </a>
 </p>
 
-<p align="center">使用 HTML5 canvas 和 SVG 从 DOM 节点生成图像</p>
+<p align="center">使用 HTML5 canvas 和 SVG 从 DOM 节点快速生成图像</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
@@ -32,56 +32,66 @@ npm i modern-screenshot
 
 ## 🦄 使用
 
-### 基本用法
-
 ```ts
 import { domToPng } from 'modern-screenshot'
 
-domToPng(document.querySelector('#app')).then(dataURL => {
-  open().document.write(`<img src="${ dataURL }" />`)
+domToPng(document.querySelector('#app')).then(dataUrl => {
+  const link = document.createElement('a')
+  link.download = 'screenshot.png'
+  link.href = dataUrl
+  link.click()
 })
 ```
 
-### CDN
+<details>
+<summary>CDN</summary><br>
 
 ```html
 <script src="https://unpkg.com/modern-screenshot"></script>
 <script>
-  modernScreenshot.domToPng(document.querySelector('body')).then(dataURL => {
-    open().document.write(`<img src="${ dataURL }" />`)
+  modernScreenshot.domToPng(document.querySelector('body')).then(dataUrl => {
+    const link = document.createElement('a')
+    link.download = 'screenshot.png'
+    link.href = dataUrl
+    link.click()
   })
 </script>
 ```
 
-### 浏览器控制台
+<br></details>
+
+<details>
+<summary>浏览器控制台</summary><br>
 
 > ⚠️ 由于 CORS 部分嵌入将失败
 
-```js
-const script = document.createElement('script')
-script.src = "https://unpkg.com/modern-screenshot"
-document.getElementsByTagName('head')[0].appendChild(script)
+  ```js
+  const script = document.createElement('script')
+  script.src = "https://unpkg.com/modern-screenshot"
+  document.getElementsByTagName('head')[0].appendChild(script)
 
-script.onload = () => {
-  modernScreenshot
-    .domToImage(document.querySelector('body'), {
-      debug: true,
-      progress: (current, total) => {
-        console.log(`${ current }/${ total }`)
-      }
-    })
-    .then(img => {
-      const width = 600
-      const height = img.height * (width / img.width)
-      console.log('%c ', [
-        `padding: 0 ${ width / 2 }px;`,
-        `line-height: ${ height }px;`,
-        `background-image: url('${ img.src }');`,
-        `background-size: 100% 100%;`,
-      ].join(''))
-    })
-}
-```
+  script.onload = () => {
+    modernScreenshot
+      .domToImage(document.querySelector('body'), {
+        debug: true,
+        progress: (current, total) => {
+          console.log(`${ current }/${ total }`)
+        }
+      })
+      .then(img => {
+        const width = 600
+        const height = img.height * (width / img.width)
+        console.log('%c ', [
+          `padding: 0 ${ width / 2 }px;`,
+          `line-height: ${ height }px;`,
+          `background-image: url('${ img.src }');`,
+          `background-size: 100% 100%;`,
+        ].join(''))
+      })
+  }
+  ```
+
+<br></details>
 
 ## 方法
 
@@ -109,6 +119,27 @@ DOM 转 HTMLElement
 ## 选项
 
 请查看 [options.ts](src/options.ts)
+
+## 上下文
+
+通过重用上下文，每秒快速截图
+
+```ts
+import { createContext, destroyContext, domToPng } from 'modern-screenshot'
+
+createContext(document.querySelector('#app')).then(context => {
+  setInterval(() => {
+    domToPng(context).then(dataUrl => {
+      const link = document.createElement('a')
+      link.download = 'screenshot.png'
+      link.href = dataUrl
+      link.click()
+    })
+  }, 1000)
+})
+```
+
+请查看 [context.ts](src/context.ts)
 
 ## 待办事项
 

@@ -18,7 +18,7 @@
   </a>
 </p>
 
-<p align="center">Generates an image from a DOM node using HTML5 canvas and SVG</p>
+<p align="center">Fast generates an image from a DOM node using HTML5 canvas and SVG</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
@@ -32,28 +32,36 @@ npm i modern-screenshot
 
 ## 🦄 Usage
 
-### Basic
-
 ```ts
 import { domToPng } from 'modern-screenshot'
 
-domToPng(document.querySelector('#app')).then(dataURL => {
-  open().document.write(`<img src="${ dataURL }" />`)
+domToPng(document.querySelector('#app')).then(dataUrl => {
+  const link = document.createElement('a')
+  link.download = 'screenshot.png'
+  link.href = dataUrl
+  link.click()
 })
 ```
 
-### CDN
+<details>
+<summary>CDN</summary><br>
 
 ```html
 <script src="https://unpkg.com/modern-screenshot"></script>
 <script>
-  modernScreenshot.domToPng(document.querySelector('body')).then(dataURL => {
-    open().document.write(`<img src="${ dataURL }" />`)
+  modernScreenshot.domToPng(document.querySelector('body')).then(dataUrl => {
+    const link = document.createElement('a')
+    link.download = 'screenshot.png'
+    link.href = dataUrl
+    link.click()
   })
 </script>
 ```
 
-### Browser console
+<br></details>
+
+<details>
+<summary>Browser Console</summary><br>
 
 > ⚠️ Partial embedding will fail due to CORS
 
@@ -83,6 +91,8 @@ script.onload = () => {
 }
 ```
 
+<br></details>
+
 ## Methods
 
 > Such as `domToPng(node, options)`
@@ -109,6 +119,27 @@ DOM to HTMLElement
 ## Options
 
 See the [options.ts](src/options.ts)
+
+## Context
+
+Quick screenshots per second by reusing context
+
+```ts
+import { createContext, destroyContext, domToPng } from 'modern-screenshot'
+
+createContext(document.querySelector('#app')).then(context => {
+  setInterval(() => {
+    domToPng(context).then(dataUrl => {
+      const link = document.createElement('a')
+      link.download = 'screenshot.png'
+      link.href = dataUrl
+      link.click()
+    })
+  }, 1000)
+})
+```
+
+See the [context.ts](src/context.ts)
 
 ## TODO
 
