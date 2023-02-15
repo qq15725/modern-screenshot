@@ -95,7 +95,7 @@ export function cloneNode<T extends Node>(
     }
 
     if (cloneStyle.fontFamily) {
-      fontFamilies.add(cloneStyle.fontFamily)
+      cloneStyle.fontFamily.split(',').forEach(val => fontFamilies.add(val))
     }
 
     copyPseudoContent(node, clone, ownerWindow)

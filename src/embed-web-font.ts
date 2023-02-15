@@ -33,7 +33,7 @@ export async function embedWebFont<T extends Element>(
         .filter(rule => (
           isCssFontFaceRule(rule)
           && hasCssUrl(rule.style.getPropertyValue('src'))
-          && fontFamilies.has(rule.style.fontFamily)
+          && rule.style.fontFamily.split(',').some(val => fontFamilies.has(val))
         ))
         .forEach((value) => {
           const rule = value as CSSFontFaceRule

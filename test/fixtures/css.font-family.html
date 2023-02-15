@@ -2,14 +2,24 @@
   @import url(__BASE_URL__/font/font.css);
 
   #root {
-    font-family: 'CustomFont';
-    font-size: 40px;
     width: 380px;
+    font-size: 40px;
+  }
+
+  .font-family-custom {
+    font-family: 'CustomFont';
+  }
+
+  .font-family-multiple {
+    font-family: -apple-system, SegoeUI, "Segoe UI", "Helvetica Neue", Helvetica, "Microsoft YaHei", "Meiryo UI", Meiryo, Arial Unicode MS, sans-serif;
   }
 </style>
 
 <template>
-  <div id="root">TEST TEMPLATE</div>
+  <div id="root">
+    <div class="font-family-custom">custom</div>
+    <div class="font-family-multiple">multiple</div>
+  </div>
 </template>
 
 <skip-expect />
