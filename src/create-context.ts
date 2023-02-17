@@ -53,10 +53,15 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     debug,
     fetch: {
       requestInit: getDefaultRequestInit(options?.fetch?.bypassingCache),
+      placeholderImage: 'data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+      bypassingCache: false,
       ...options?.fetch,
     },
     font: {},
     drawImageInterval: 100,
+    onCloneNode: null,
+    onEmbedNode: null,
+    onCreateForeignObjectSvg: null,
     ...options,
   }
 

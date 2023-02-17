@@ -16,15 +16,8 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   isRoot: boolean,
   context: Context,
 ) {
-  const cloneClasses = clone.classList
   const cloneStyle = clone.style
   const defaultStyle = getDefaultStyle(node.tagName, context)
-
-  // clean class list
-  while (cloneClasses.length > 0) {
-    const name = cloneClasses.item(0)
-    name && cloneClasses.remove(name)
-  }
 
   cloneStyle.transitionProperty = 'none'
 

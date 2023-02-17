@@ -40,18 +40,6 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
   } = context
 
   if (!requests.has(url)) {
-    const getPlaceholder = () => {
-      let content = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-      if (placeholderImage) {
-        const parts = placeholderImage.split(/,/)
-        if (parts && parts[1]) content = parts[1]
-      }
-      return {
-        contentType: 'image/png',
-        content,
-      }
-    }
-
     if (isImage) {
       context.requestImagesCount++
     }
@@ -84,7 +72,10 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
 
           if (isImage) {
             consoleWarn('Failed to fetch image base64, trying to use placeholder image', url)
-            return getPlaceholder()
+            return {
+              contentType: 'image/png',
+              content: placeholderImage!.split(/,/)[1],
+            }
           }
 
           throw error

@@ -83,6 +83,8 @@ export interface Options {
     /**
      * Set to `true` to append the current time as a query string to URL
      * requests to enable cache busting.
+     *
+     * default: false
      */
     bypassingCache?: boolean
 
@@ -90,6 +92,8 @@ export interface Options {
      * A data URL for a placeholder image that will be used when fetching
      * an image fails. Defaults to an empty string and will render empty
      * areas for failed images.
+     *
+     * default: data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
      */
     placeholderImage?: string
   }
@@ -117,4 +121,19 @@ export interface Options {
    * default: 100
    */
   drawImageInterval?: number
+
+  /**
+   * Triggered after a node is cloned
+   */
+  onCloneNode?: ((cloend: Node) => void) | null
+
+  /**
+   * Triggered after a node is embed
+   */
+  onEmbedNode?: ((cloend: Node) => void) | null
+
+  /**
+   * Triggered after a ForeignObjectSvg is created
+   */
+  onCreateForeignObjectSvg?: ((svg: SVGSVGElement) => void) | null
 }

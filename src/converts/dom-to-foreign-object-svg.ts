@@ -31,11 +31,16 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
     font,
     progress,
     autodestruct,
+    onCloneNode,
+    onEmbedNode,
+    onCreateForeignObjectSvg,
   } = context
 
   debug && consoleTime('clone node')
   const clone = cloneNode(context.node, context, true)
   debug && consoleTimeEnd('clone node')
+
+  onCloneNode?.(clone)
 
   if (font !== false && isElementNode(clone)) {
     debug && consoleTime('embed web font')
@@ -63,10 +68,14 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   await Promise.all([...Array(4)].map(runTask))
   debug && consoleTimeEnd('embed node')
 
+  onEmbedNode?.(clone)
+
   const svg = createForeignObjectSvg(clone, context)
   svgStyleElement && svg.insertBefore(svgStyleElement, svg.children[0])
 
   autodestruct && destroyContext(context)
+
+  onCreateForeignObjectSvg?.(svg)
 
   return svg
 }

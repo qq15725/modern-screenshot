@@ -43,7 +43,9 @@ export const isSupportWebp = (ownerDocument?: Document) => {
   if (canvas) {
     canvas.height = canvas.width = 1
   }
-  return Boolean(canvas?.toDataURL('image/webp')?.includes('image/webp'))
+  return canvas
+    && 'toDataURL' in canvas
+    && Boolean(canvas.toDataURL('image/webp').includes('image/webp'))
 }
 
 export const isDataUrl = (url: string) => url.startsWith('data:')
