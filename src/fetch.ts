@@ -67,7 +67,7 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
                 const content = (reader.result as string).split(/,/)[1]
                 if (content) {
                   resolve({
-                    contentType: rep.headers.get('Content-Type') || '',
+                    contentType: blob.type || rep.headers.get('Content-Type') || '',
                     content,
                   })
                 } else {
@@ -97,7 +97,7 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
 
 export async function fetchDataUrl(url: string, context: Context, isImage?: boolean) {
   const { content, contentType } = await fetchBase64(url, context, isImage)
-  const mimeType = getMimeType(url) || contentType
+  const mimeType = contentType || getMimeType(url)
   return `data:${ mimeType };base64,${ content }`
 }
 

@@ -38,7 +38,13 @@ export const consoleTime = (label: string) => console.time(`${ PREFIX } ${ label
 export const consoleTimeEnd = (label: string) => console.timeEnd(`${ PREFIX } ${ label }`)
 
 // Supports
-export const isSupportWebp = (ownerDocument?: Document) => Boolean(ownerDocument?.createElement?.('canvas').toDataURL('image/webp').includes('image/webp'))
+export const isSupportWebp = (ownerDocument?: Document) => {
+  const canvas = ownerDocument?.createElement?.('canvas')
+  if (canvas) {
+    canvas.height = canvas.width = 1
+  }
+  return Boolean(canvas?.toDataURL('image/webp')?.includes('image/webp'))
+}
 
 export const isDataUrl = (url: string) => url.startsWith('data:')
 export function resolveUrl(url: string, baseUrl: string | null): string {

@@ -29,6 +29,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     fontCssTexts: new Map<string, string>(),
     acceptOfImage: `${ [
       isSupportWebp(ownerDocument) && 'image/webp',
+      'image/svg+xml',
       'image/*',
       '*/*',
     ].filter(Boolean).join(',') };q=0.8`,
