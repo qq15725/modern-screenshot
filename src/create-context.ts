@@ -1,8 +1,10 @@
+import { getDefaultRequestInit } from './get-default-request-init'
 import {
   IN_BROWSER,
   consoleTime,
   consoleTimeEnd,
   isElementNode,
+  isSupportWebp,
   waitUntilLoad,
 } from './utils'
 import type { Context } from './context'
@@ -25,6 +27,11 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     defaultComputedStyles: new Map<string, Record<string, any>>(),
     fontFamilies: new Set<string>(),
     fontCssTexts: new Map<string, string>(),
+    acceptOfImage: `${ [
+      isSupportWebp(ownerDocument) && 'image/webp',
+      'image/*',
+      '*/*',
+    ].filter(Boolean).join(',') };q=0.8`,
     requests: new Map(),
     requestImagesCount: 0,
     tasks: [],
@@ -43,7 +50,10 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     timeout: 30000,
     progress: null,
     debug,
-    fetch: {},
+    fetch: {
+      requestInit: getDefaultRequestInit(options?.fetch?.bypassingCache),
+      ...options?.fetch,
+    },
     font: {},
     drawImageInterval: 100,
     ...options,

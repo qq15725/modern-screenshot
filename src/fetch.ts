@@ -1,8 +1,9 @@
 import { consoleWarn, getMimeType } from './utils'
 import type { Context } from './context'
 
-export function fetch(url: string, context: Context) {
+export function fetch(url: string, context: Context, isImage = false) {
   const {
+    acceptOfImage,
     timeout,
     fetch: {
       bypassingCache,
@@ -22,7 +23,11 @@ export function fetch(url: string, context: Context) {
     ? setTimeout(() => controller.abort(), timeout)
     : undefined
 
-  return window.fetch(url, { ...requestInit, signal: controller.signal })
+  return window.fetch(url, {
+    signal: controller.signal,
+    headers: isImage ? { accept: acceptOfImage } : undefined,
+    ...requestInit,
+  })
     .finally(() => clearTimeout(timer))
 }
 
@@ -53,7 +58,7 @@ export function fetchBase64(url: string, context: Context, isImage?: boolean) {
 
     requests.set(url, {
       type: isImage ? 'image' : 'text',
-      response: fetch(url, context)
+      response: fetch(url, context, isImage)
         .then(rep => {
           return rep.blob().then(blob => {
             return new Promise((resolve, reject) => {

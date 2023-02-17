@@ -47,6 +47,11 @@ export interface InternalContext<T extends Node> {
   fontCssTexts: Map<string, string>
 
   /**
+   * `headers.accept` to use when `window.fetch` fetches images
+   */
+  acceptOfImage: string
+
+  /**
    * All requests for `fetch`
    */
   requests: Map<string, {

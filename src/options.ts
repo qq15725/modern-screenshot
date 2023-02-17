@@ -73,6 +73,10 @@ export interface Options {
   fetch?: {
     /**
      * The second parameter of `window.fetch` RequestInit
+     *
+     * default: {
+     *   cache: 'force-cache',
+     * }
      */
     requestInit?: RequestInit
 
