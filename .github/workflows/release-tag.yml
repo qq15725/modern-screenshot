@@ -1,0 +1,23 @@
+name: 🚀 Add GitHub Release Tag
+
+on:
+  push:
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+# $GITHUB_REF_NAME - https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: 🔀 Create Release for Tag
+        id: release_tag
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          body: |
+            Please refer to [CHANGELOG.md](https://github.com/qq15725/modern-screenshot/blob/${{ github.ref_name }}/CHANGELOG.md) for details.

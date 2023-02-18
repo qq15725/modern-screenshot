@@ -1,0 +1,35 @@
+name: 🚀 Publish Package
+
+on:
+  push:
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: Release
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🎉 Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      - name: 🎉 Set node version to 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: https://registry.npmjs.org/
+          cache: "pnpm"
+
+      - name: 🚧 Install deps
+        run: pnpm install
+
+      - name: 📦 Build
+        run: pnpm run build
+
+      - name: 🔀 Publish package
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

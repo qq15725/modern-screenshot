@@ -1,29 +1,100 @@
-name: 👷　CI
+name: CI
+
+env:
+  # 7 GiB by default on GitHub, setting to 6 GiB
+  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  NODE_OPTIONS: --max-old-space-size=6144
+  # Vitest auto retry on flaky segfault
+  VITEST_SEGFAULT_RETRY: 3
+
+# Remove default permissions of GITHUB_TOKEN for security
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions: {}
+
 on:
-  pull_request_target:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
+
 jobs:
-  ci:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        node-version: [16]
+  test:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    name: "👷 Build&Test: node-18, ubuntu-latest"
     steps:
-      - name: ⤵️　Checkout
-        uses: actions/checkout@v2
-      - name: ⤵️　Setup pnpm
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+        with:
+          # Assume PRs are less than 50 commits
+          fetch-depth: 50
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@57d9664f8e2aa45f26bcb59095f99aa47ae8e90d # v35.4.4
+        with:
+          files: |
+            docs/**
+            .github/**
+            !.github/workflows/ci.yml
+            **.md
+
+      - name: 🎉 Install pnpm
+        if: steps.changed-files.outputs.only_changed != 'true'
         uses: pnpm/action-setup@v2.2.4
+
+      - name: 🎉 Set node version to 18
+        if: steps.changed-files.outputs.only_changed != 'true'
+        uses: actions/setup-node@v3
         with:
-          version: latest
-      - name: 🎉 Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: 🚧　Install
+          node-version: 18
+          cache: "pnpm"
+
+      - name: 🚧 Install deps
+        if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm install
-      - name: 📦　Build
-        run: pnpm build
-      - name: ✅　Test
-        run: pnpm test
+
+      - name: 📦 Build
+        if: steps.changed-files.outputs.only_changed != 'true'
+        run: pnpm run build
+
+      - name: 🔀 Test unit
+        if: steps.changed-files.outputs.only_changed != 'true'
+        run: pnpm run test
+
+  lint:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    name: "👷 Lint: node-18, ubuntu-latest"
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🎉 Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      - name: 🎉 Set node version to 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: 🚧 Install deps
+        run: pnpm install
+
+      - name: 📦 Build
+        run: pnpm run build
+
+      - name: 🔀 Lint
+        run: pnpm run lint
+
+      # From https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
+      - name: 🔀 Check workflow files
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color -shellcheck=""
