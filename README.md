@@ -120,15 +120,20 @@ DOM to HTMLElement
 
 See the [options.ts](src/options.ts)
 
-## Context
+## Singleton context and web worker
 
-Quick screenshots per second by reusing context
+Quick screenshots per second by reusing context and web worker
 
 ```ts
+// use vite
+import workerUrl from 'modern-screenshot/worker?url'
 import { createContext, destroyContext, domToPng } from 'modern-screenshot'
 
 async function screenshotsPerSecond() {
-  const context = awiat createContext(document.querySelector('#app'))
+  const context = await createContext(document.querySelector('#app'), {
+    workerUrl,
+    workerNumber: 1,
+  })
   for (let i = 0; i < 10; i++) {
     domToPng(context).then(dataUrl => {
       const link = document.createElement('a')

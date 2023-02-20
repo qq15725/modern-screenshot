@@ -120,15 +120,20 @@ DOM 转 HTMLElement
 
 请查看 [options.ts](src/options.ts)
 
-## 上下文
+## 单例上下文和 web worker
 
-通过重用上下文，每秒快速截图
+通过重用上下文和 web worker，每秒快速截图
 
 ```ts
+// use vite
+import workerUrl from 'modern-screenshot/worker?url'
 import { createContext, destroyContext, domToPng } from 'modern-screenshot'
 
 async function screenshotsPerSecond() {
-  const context = awiat createContext(document.querySelector('#app'))
+  const context = await createContext(document.querySelector('#app'), {
+    workerUrl,
+    workerNumber: 1,
+  })
   for (let i = 0; i < 10; i++) {
     domToPng(context).then(dataUrl => {
       const link = document.createElement('a')
