@@ -13,6 +13,7 @@ export function destroyContext(context: Context) {
     }
     context.sandbox = undefined
   }
+  context.workers = []
   context.fontFamilies.clear()
   context.fontCssTexts.clear()
   context.requestImagesCount = 0

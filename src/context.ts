@@ -1,5 +1,12 @@
 import type { Options } from './options'
 
+export type Request = {
+  type: 'image' | 'text'
+  resovle?: (response: string) => void
+  reject?: (error: Error) => void
+  response: Promise<string>
+}
+
 export interface InternalContext<T extends Node> {
   /**
    * FLAG
@@ -37,6 +44,11 @@ export interface InternalContext<T extends Node> {
   sandbox?: HTMLIFrameElement
 
   /**
+   * Web Workers
+   */
+  workers: Worker[]
+
+  /**
    * The set of `font-family` values for all cloend elements
    */
   fontFamilies: Set<string>
@@ -54,13 +66,7 @@ export interface InternalContext<T extends Node> {
   /**
    * All requests for `fetch`
    */
-  requests: Map<string, {
-    type: 'image' | 'text'
-    response: Promise<{
-      content: string
-      contentType: string
-    }>
-  }>
+  requests: Map<string, Request>
 
   /**
    * All request images count

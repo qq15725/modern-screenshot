@@ -95,7 +95,7 @@ export interface Options {
      *
      * default: data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
      */
-    placeholderImage?: string
+    placeholderImage?: string | ((cloned: HTMLImageElement | SVGImageElement) => string)
   }
 
   /**
@@ -121,6 +121,16 @@ export interface Options {
    * default: 100
    */
   drawImageInterval?: number
+
+  /**
+   * Web Worker script url
+   */
+  workerUrl?: string | null
+
+  /**
+   * Web Worker number
+   */
+  workerNumber?: number
 
   /**
    * Triggered after a node is cloned

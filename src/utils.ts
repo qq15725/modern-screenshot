@@ -3,6 +3,7 @@ import type { Context } from './context'
 // Constants
 export const PREFIX = '[modern-screenshot]'
 export const IN_BROWSER = typeof window !== 'undefined'
+export const SUPPORT_WEB_WORKER = IN_BROWSER && 'Worker' in window
 export const USER_AGENT = IN_BROWSER ? window.navigator?.userAgent : ''
 export const IN_CHROME = USER_AGENT.includes('Chrome')
 export const IN_SAFARI = USER_AGENT.includes('AppleWebKit') && !IN_CHROME
@@ -38,7 +39,7 @@ export const consoleTime = (label: string) => console.time(`${ PREFIX } ${ label
 export const consoleTimeEnd = (label: string) => console.timeEnd(`${ PREFIX } ${ label }`)
 
 // Supports
-export const isSupportWebp = (ownerDocument?: Document) => {
+export const supportWebp = (ownerDocument?: Document) => {
   const canvas = ownerDocument?.createElement?.('canvas')
   if (canvas) {
     canvas.height = canvas.width = 1
@@ -235,24 +236,3 @@ export const uuid = (function uuid() {
     return `u${ random() }${ counter }`
   }
 })()
-
-const MIMES = {
-  woff: 'application/font-woff',
-  woff2: 'application/font-woff',
-  ttf: 'application/font-truetype',
-  eot: 'application/vnd.ms-fontobject',
-  png: 'image/png',
-  jpg: 'image/jpeg',
-  jpeg: 'image/jpeg',
-  avif: 'image/avif',
-  gif: 'image/gif',
-  apng: 'image/apng',
-  tiff: 'image/tiff',
-  svg: 'image/svg+xml',
-  webp: 'image/webp',
-} as const
-
-const EXT_RE = /\.([^.\/?]+?)(\?.*)?$/
-export function getMimeType(url: string): string | undefined {
-  return MIMES[url.match(EXT_RE)?.[1]?.toLowerCase() as keyof typeof MIMES]
-}

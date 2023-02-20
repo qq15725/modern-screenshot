@@ -1,4 +1,4 @@
-import { fetchDataUrl } from './fetch'
+import { contextFetch } from './fetch'
 import { consoleWarn, isDataUrl, resolveUrl } from './utils'
 import type { Context } from './context'
 
@@ -12,12 +12,15 @@ export async function replaceCssUrlToDataUrl(
 
   for (const url of parseCssUrls(cssText)) {
     try {
-      const dataUrl = await fetchDataUrl(
-        baseUrl
-          ? resolveUrl(url, baseUrl)
-          : url,
+      const dataUrl = await contextFetch(
         context,
-        isImage,
+        {
+          url: baseUrl
+            ? resolveUrl(url, baseUrl)
+            : url,
+          requestType: isImage ? 'image' : 'text',
+          responseType: 'base64',
+        },
       )
       cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)
     } catch (error) {

@@ -1,21 +1,19 @@
-import { consoleWarn, getMimeType } from './utils'
-import type { Context } from './context'
+import { consoleWarn } from './utils'
+import type { Context, Request } from './context'
 
-export function fetch(url: string, context: Context, isImage = false) {
-  const {
-    acceptOfImage,
-    timeout,
-    fetch: {
-      bypassingCache,
-      requestInit,
-    },
-  } = context
+export type BaseFetchOptions = RequestInit & {
+  url: string
+  timeout?: number
+  responseType?: 'text' | 'base64'
+}
 
-  // cache bypass so we dont have CORS issues with cached images
-  // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
-  if (bypassingCache) {
-    url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
-  }
+export type ContextFetchOptions = BaseFetchOptions & {
+  requestType?: 'text' | 'image'
+  imageDom?: HTMLImageElement | SVGImageElement
+}
+
+export function baseFetch(options: BaseFetchOptions): Promise<string> {
+  const { url, timeout, responseType, ...requestInit } = options
 
   const controller = new AbortController()
 
@@ -23,89 +21,102 @@ export function fetch(url: string, context: Context, isImage = false) {
     ? setTimeout(() => controller.abort(), timeout)
     : undefined
 
-  return window.fetch(url, {
-    signal: controller.signal,
-    headers: isImage ? { accept: acceptOfImage } : undefined,
-    ...requestInit,
-  })
+  return fetch(url, { signal: controller.signal, ...requestInit })
     .finally(() => clearTimeout(timer))
-}
-
-export function fetchBase64(url: string, context: Context, isImage?: boolean) {
-  const {
-    requests,
-    fetch: {
-      placeholderImage,
-    },
-  } = context
-
-  if (!requests.has(url)) {
-    if (isImage) {
-      context.requestImagesCount++
-    }
-
-    requests.set(url, {
-      type: isImage ? 'image' : 'text',
-      response: fetch(url, context, isImage)
-        .then(rep => {
-          return rep.blob().then(blob => {
+    .then(response => {
+      switch (responseType) {
+        case 'base64':
+          return response.blob().then(blob => {
             return new Promise((resolve, reject) => {
               const reader = new FileReader()
               reader.onloadend = () => {
-                const content = (reader.result as string).split(/,/)[1]
-                if (content) {
-                  resolve({
-                    contentType: blob.type || rep.headers.get('Content-Type') || '',
-                    content,
-                  })
+                if (reader.result) {
+                  resolve(reader.result as string)
                 } else {
-                  reject(new Error(`Empty response content by ${ url }`))
+                  reject(new Error(`Empty response content by ${ response.url }`))
                 }
               }
               reader.onerror = reject
               reader.readAsDataURL(blob)
             })
           })
-        })
-        .catch(error => {
-          requests.delete(url)
-
-          if (isImage) {
-            consoleWarn('Failed to fetch image base64, trying to use placeholder image', url)
-            return {
-              contentType: 'image/png',
-              content: placeholderImage!.split(/,/)[1],
-            }
-          }
-
-          throw error
-        }) as any,
+        case 'text':
+        default:
+          return response.text()
+      }
     })
-  }
-
-  return requests.get(url)!.response
 }
 
-export async function fetchDataUrl(url: string, context: Context, isImage?: boolean) {
-  const { content, contentType } = await fetchBase64(url, context, isImage)
-  const mimeType = contentType || getMimeType(url)
-  return `data:${ mimeType };base64,${ content }`
-}
+export function contextFetch(context: Context, options: ContextFetchOptions) {
+  const { url: rawUrl, requestType = 'text', responseType = 'text', imageDom } = options
+  let url = rawUrl
 
-export async function fetchText(url: string, context: Context): Promise<string> {
-  const { requests } = context
-  if (!requests.has(url)) {
-    requests.set(url, {
-      type: 'text',
-      response: fetch(url, context).then(rep => {
-        return rep.text().then(content => {
-          return {
-            contentType: rep.headers.get('Content-Type') || '',
-            content,
-          }
+  const {
+    timeout,
+    acceptOfImage,
+    requests,
+    fetch: {
+      requestInit,
+      bypassingCache,
+      placeholderImage,
+    },
+    workers,
+  } = context
+
+  let request: Request
+
+  if (!requests.has(rawUrl)) {
+    // cache bypass so we dont have CORS issues with cached images
+    // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
+    if (bypassingCache) {
+      url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
+    }
+
+    if (requestType === 'image') {
+      context.requestImagesCount++
+    }
+
+    const baseFetchOptions: BaseFetchOptions = {
+      url,
+      timeout,
+      responseType,
+      headers: requestType === 'image' ? { accept: acceptOfImage } : undefined,
+      ...requestInit,
+    }
+
+    request = {
+      type: requestType,
+      resovle: undefined,
+      reject: undefined,
+      response: null as any,
+    }
+
+    request.response = (
+      workers.length
+        ? new Promise((resolve, reject) => {
+          const worker = workers[requests.size & (workers.length - 1)]
+          worker.postMessage({ rawUrl, ...baseFetchOptions })
+          request.resovle = resolve
+          request.reject = reject
         })
-      }),
-    })
+        : baseFetch(baseFetchOptions)
+    ).catch(error => {
+      requests.delete(rawUrl)
+
+      if (requestType === 'image' && placeholderImage) {
+        consoleWarn('Failed to fetch image base64, trying to use placeholder image', url)
+        return typeof placeholderImage === 'string'
+          ? placeholderImage
+          : placeholderImage(imageDom!)
+      }
+
+      throw error
+    }) as any
+
+    requests.set(rawUrl, request)
+  } else {
+    request = requests.get(rawUrl)!
   }
-  return requests.get(url)!.response.then(rep => rep.content)
+
+  return request.response
 }

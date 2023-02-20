@@ -1,5 +1,5 @@
 import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
-import { fetch, fetchText } from './fetch'
+import { contextFetch } from './fetch'
 import { consoleWarn, isCssFontFaceRule } from './utils'
 import type { Context } from './context'
 
@@ -79,7 +79,11 @@ async function getCssRules(
               let importIndex = index + 1
               const url = (rule as CSSImportRule).href
               try {
-                const cssText = await fetchText(url, context)
+                const cssText = await contextFetch(context, {
+                  url,
+                  requestType: 'text',
+                  responseType: 'text',
+                })
                 const embedCssText = await embedFonts(cssText, url, context)
                 for (const rule of parseCss(embedCssText)) {
                   try {
@@ -122,21 +126,17 @@ async function embedFonts(cssText: string, baseUrl: string, context: Context): P
   await Promise.all(
     cssText.match(URL_MATCH_RE)?.map(async location => {
       let url = location.replace(URL_REPLACE_RE, '$1')
-      if (!url.startsWith('https://')) url = new URL(url, baseUrl).href
-      const rep = await fetch(url, context)
-      const blob = await rep.blob()
-      return new Promise<[string, string | ArrayBuffer | null]>(
-        (resolve, reject) => {
-          const reader = new FileReader()
-          reader.onloadend = () => {
-            // Side Effect
-            cssText = cssText.replace(location, `url(${ reader.result })`)
-            resolve([location, reader.result])
-          }
-          reader.onerror = reject
-          reader.readAsDataURL(blob)
-        },
-      )
+      if (!url.startsWith('https://')) {
+        url = new URL(url, baseUrl).href
+      }
+      return contextFetch(context, {
+        url,
+        requestType: 'text',
+        responseType: 'base64',
+      }).then(base64 => {
+        // Side Effect
+        cssText = cssText.replace(location, `url(${ base64 })`)
+      })
     }) ?? [],
   )
   return cssText
