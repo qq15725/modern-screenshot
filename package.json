@@ -1,7 +1,7 @@
 {
   "name": "modern-screenshot",
   "type": "module",
-  "version": "4.3.5",
+  "version": "4.3.6",
   "packageManager": "pnpm@7.26.2",
   "description": "Fast generates an image from a DOM node using HTML5 canvas and SVG",
   "author": "wxm",
