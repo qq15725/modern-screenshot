@@ -22,8 +22,10 @@ export function baseFetch(options: BaseFetchOptions): Promise<string> {
     : undefined
 
   return fetch(url, { signal: controller.signal, ...requestInit })
-    .finally(() => clearTimeout(timer))
     .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed fetch, not 2xx response', { cause: response })
+      }
       switch (responseType) {
         case 'dataUrl':
           return response.blob().then(blobToDataUrl)
@@ -32,6 +34,7 @@ export function baseFetch(options: BaseFetchOptions): Promise<string> {
           return response.text()
       }
     })
+    .finally(() => clearTimeout(timer))
 }
 
 export function contextFetch(context: Context, options: ContextFetchOptions) {

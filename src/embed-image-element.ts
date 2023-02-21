@@ -17,7 +17,7 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
         requestType: 'image',
         responseType: 'dataUrl',
       }).then(url => {
-        clone.src = url
+        clone.src = url || ''
       }),
     ]
   } else if (isSVGElementNode(clone) && !isDataUrl(clone.href.baseVal)) {
@@ -30,7 +30,7 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
         requestType: 'image',
         responseType: 'dataUrl',
       }).then(url => {
-        clone.href.baseVal = url
+        clone.href.baseVal = url || ''
       }),
     ]
   }

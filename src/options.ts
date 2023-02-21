@@ -97,7 +97,7 @@ export interface Options {
      *
      * default: data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
      */
-    placeholderImage?: string | ((cloned: HTMLImageElement | SVGImageElement) => string)
+    placeholderImage?: string | ((cloned: HTMLImageElement | SVGImageElement) => string | Promise<string>)
   }
 
   /**
