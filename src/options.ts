@@ -22,6 +22,8 @@ export interface Options {
   /**
    * The pixel ratio of captured image.
    *
+   * DPI = 96 * scale
+   *
    * default: 1
    */
   scale?: number
