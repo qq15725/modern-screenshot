@@ -15,7 +15,7 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
         url,
         imageDom: clone,
         requestType: 'image',
-        responseType: 'base64',
+        responseType: 'dataUrl',
       }).then(url => {
         clone.src = url
       }),
@@ -28,7 +28,7 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
         url,
         imageDom: clone,
         requestType: 'image',
-        responseType: 'base64',
+        responseType: 'dataUrl',
       }).then(url => {
         clone.href.baseVal = url
       }),

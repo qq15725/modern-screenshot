@@ -4,6 +4,8 @@ import type { Context } from './context'
 export const PREFIX = '[modern-screenshot]'
 export const IN_BROWSER = typeof window !== 'undefined'
 export const SUPPORT_WEB_WORKER = IN_BROWSER && 'Worker' in window
+export const SUPPORT_ATOB = IN_BROWSER && 'atob' in window
+export const SUPPORT_BTOA = IN_BROWSER && 'btoa' in window
 export const USER_AGENT = IN_BROWSER ? window.navigator?.userAgent : ''
 export const IN_CHROME = USER_AGENT.includes('Chrome')
 export const IN_SAFARI = USER_AGENT.includes('AppleWebKit') && !IN_CHROME
@@ -94,6 +96,57 @@ export function svgToDataUrl(svg: SVGElement) {
   const xhtml = new XMLSerializer().serializeToString(svg)
   return `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
 }
+
+// To Blob
+export async function canvasToBlob(canvas: HTMLCanvasElement, type = 'image/png', quality = 1): Promise<Blob> {
+  try {
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (blob) {
+          resolve(blob)
+        } else {
+          reject(new Error('Blob is null'))
+        }
+      }, type, quality)
+    })
+  } catch (error) {
+    if (SUPPORT_ATOB) {
+      consoleWarn('Failed canvas to blob', { type, quality }, error)
+      return dataUrlToBlob(canvas.toDataURL(type, quality))
+    }
+    throw error
+  }
+}
+export function dataUrlToBlob(dataUrl: string) {
+  const [header, base64] = dataUrl.split(',')
+  const type = header.match(/data:(.+);/)?.[1] ?? undefined
+  const decoded = window.atob(base64)
+  const length = decoded.length
+  const buffer = new Uint8Array(length)
+  for (let i = 0; i < length; i += 1) {
+    buffer[i] = decoded.charCodeAt(i)
+  }
+  return new Blob([buffer], { type })
+}
+
+// Blob to
+export function readBlob(blob: Blob, type: 'dataUrl'): Promise<string>
+export function readBlob(blob: Blob, type: 'arrayBuffer'): Promise<ArrayBuffer>
+export function readBlob(blob: Blob, type: 'dataUrl' | 'arrayBuffer') {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.onabort = () => reject(new Error(`Failed read blob to ${ type }`))
+    if (type === 'dataUrl') {
+      reader.readAsDataURL(blob)
+    } else if (type === 'arrayBuffer') {
+      reader.readAsArrayBuffer(blob)
+    }
+  })
+}
+export const blobToDataUrl = (blob: Blob) => readBlob(blob, 'dataUrl')
+export const blobToArrayBuffer = (blob: Blob) => readBlob(blob, 'arrayBuffer')
 
 export function createImage(url: string, ownerDocument?: Document | null, useCORS = false): HTMLImageElement {
   const img = getDocument(ownerDocument).createElement('img')

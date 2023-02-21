@@ -1,4 +1,4 @@
-export function createImageClone<T extends HTMLImageElement>(
+export function cloneImage<T extends HTMLImageElement>(
   image: T,
 ): HTMLImageElement {
   const clone = image.cloneNode(false) as T

@@ -14,6 +14,15 @@ export interface InternalContext<T extends Node> {
   __CONTEXT__: true
 
   /**
+   * Logger
+   */
+  log: {
+    time: (label: string) => void
+    timeEnd: (label: string) => void
+    warn: (...args: any[]) => void
+  }
+
+  /**
    * Node
    */
   node: T
@@ -27,6 +36,13 @@ export interface InternalContext<T extends Node> {
    * Owner window
    */
   ownerWindow?: Window
+
+  /**
+   * DPI
+   *
+   * scale === 1 ? null : 96 * scale
+   */
+  dpi: number | null
 
   /**
    * The `style` element under the root `svg` element

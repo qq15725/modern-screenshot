@@ -1,10 +1,10 @@
-import { consoleWarn } from './utils'
+import { blobToDataUrl, consoleWarn } from './utils'
 import type { Context, Request } from './context'
 
 export type BaseFetchOptions = RequestInit & {
   url: string
   timeout?: number
-  responseType?: 'text' | 'base64'
+  responseType?: 'text' | 'dataUrl'
 }
 
 export type ContextFetchOptions = BaseFetchOptions & {
@@ -25,21 +25,8 @@ export function baseFetch(options: BaseFetchOptions): Promise<string> {
     .finally(() => clearTimeout(timer))
     .then(response => {
       switch (responseType) {
-        case 'base64':
-          return response.blob().then(blob => {
-            return new Promise((resolve, reject) => {
-              const reader = new FileReader()
-              reader.onloadend = () => {
-                if (reader.result) {
-                  resolve(reader.result as string)
-                } else {
-                  reject(new Error(`Empty response content by ${ response.url }`))
-                }
-              }
-              reader.onerror = reject
-              reader.readAsDataURL(blob)
-            })
-          })
+        case 'dataUrl':
+          return response.blob().then(blobToDataUrl)
         case 'text':
         default:
           return response.text()

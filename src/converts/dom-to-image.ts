@@ -1,5 +1,5 @@
-import { createContext } from '../create-context'
-import { createImage, isContext } from '../utils'
+import { orCreateContext } from '../create-context'
+import { createImage } from '../utils'
 import { domToDataUrl } from './dom-to-data-url'
 import { domToSvg } from './dom-to-svg'
 import type { Context } from '../context'
@@ -8,9 +8,7 @@ import type { Options } from '../options'
 export async function domToImage<T extends Node>(node: T, options?: Options): Promise<HTMLImageElement>
 export async function domToImage<T extends Node>(context: Context<T>): Promise<HTMLImageElement>
 export async function domToImage(node: any, options?: any) {
-  const context = isContext(node)
-    ? node
-    : await createContext(node, { ...options, autodestruct: true })
+  const context = await orCreateContext(node, options)
   const { ownerDocument, width, height, scale, type } = context
   const url = type === 'image/svg+xml'
     ? await domToSvg(context)

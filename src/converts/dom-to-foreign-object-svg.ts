@@ -1,14 +1,11 @@
 import { cloneNode } from '../clone-node'
-import { createContext } from '../create-context'
+import { orCreateContext } from '../create-context'
 import { destroyContext } from '../destroy-context'
 import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
 import {
-  consoleTime,
-  consoleTimeEnd,
   consoleWarn,
   createSvg,
-  isContext,
   isElementNode,
   isSVGElementNode,
 } from '../utils'
@@ -18,14 +15,12 @@ import type { Options } from '../options'
 export async function domToForeignObjectSvg<T extends Node>(node: T, options?: Options): Promise<SVGElement>
 export async function domToForeignObjectSvg<T extends Node>(context: Context<T>): Promise<SVGElement>
 export async function domToForeignObjectSvg(node: any, options?: any) {
-  const context = isContext(node)
-    ? node
-    : await createContext(node, { ...options, autodestruct: true })
+  const context = await orCreateContext(node, options)
 
   if (isElementNode(context.node) && isSVGElementNode(context.node)) return context.node
 
   const {
-    debug,
+    log,
     tasks,
     svgStyleElement,
     font,
@@ -36,19 +31,19 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
     onCreateForeignObjectSvg,
   } = context
 
-  debug && consoleTime('clone node')
+  log.time('clone node')
   const clone = cloneNode(context.node, context, true)
-  debug && consoleTimeEnd('clone node')
+  log.timeEnd('clone node')
 
   onCloneNode?.(clone)
 
   if (font !== false && isElementNode(clone)) {
-    debug && consoleTime('embed web font')
+    log.time('embed web font')
     await embedWebFont(clone, context)
-    debug && consoleTimeEnd('embed web font')
+    log.timeEnd('embed web font')
   }
 
-  debug && consoleTime('embed node')
+  log.time('embed node')
   embedNode(clone, context)
   const count = tasks.length
   let current = 0
@@ -66,7 +61,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   }
   progress?.(current, count)
   await Promise.all([...Array(4)].map(runTask))
-  debug && consoleTimeEnd('embed node')
+  log.timeEnd('embed node')
 
   onEmbedNode?.(clone)
 

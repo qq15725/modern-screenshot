@@ -1,24 +1,18 @@
-import { createContext } from '../create-context'
-import { IN_SAFARI, consoleTime, consoleTimeEnd, consoleWarn, isContext, loadMedia } from '../utils'
-import type { Context } from '../context'
-import type { Options } from '../options'
+import { IN_SAFARI, consoleWarn, loadMedia } from './utils'
+import type { Context } from './context'
 
 export async function imageToCanvas<T extends HTMLImageElement>(
   image: T,
-  options?: Options | Context,
+  context: Context,
 ): Promise<HTMLCanvasElement> {
-  const context = isContext(options)
-    ? options
-    : await createContext(image, { ...options, autodestruct: true })
-
   const {
+    log,
     requestImagesCount,
     timeout,
     drawImageInterval,
-    debug,
   } = context
 
-  debug && consoleTime('image to canvas')
+  log.time('image to canvas')
   const loaded = await loadMedia(image, { timeout })
   const { canvas, context2d } = createCanvas(image.ownerDocument, context)
   const drawImage = () => {
@@ -40,7 +34,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
       })
     }
   }
-  debug && consoleTimeEnd('image to canvas')
+  log.timeEnd('image to canvas')
   return canvas
 }
 

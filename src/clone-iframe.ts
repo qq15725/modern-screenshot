@@ -2,7 +2,7 @@ import { cloneNode } from './clone-node'
 import { consoleWarn } from './utils'
 import type { Context } from './context'
 
-export function createIframeClone<T extends HTMLIFrameElement>(
+export function cloneIframe<T extends HTMLIFrameElement>(
   iframe: T,
   context: Context,
 ): HTMLIFrameElement | HTMLBodyElement {

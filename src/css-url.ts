@@ -19,7 +19,7 @@ export async function replaceCssUrlToDataUrl(
             ? resolveUrl(url, baseUrl)
             : url,
           requestType: isImage ? 'image' : 'text',
-          responseType: 'base64',
+          responseType: 'dataUrl',
         },
       )
       cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)

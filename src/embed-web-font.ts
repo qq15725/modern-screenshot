@@ -132,7 +132,7 @@ async function embedFonts(cssText: string, baseUrl: string, context: Context): P
       return contextFetch(context, {
         url,
         requestType: 'text',
-        responseType: 'base64',
+        responseType: 'dataUrl',
       }).then(base64 => {
         // Side Effect
         cssText = cssText.replace(location, `url(${ base64 })`)

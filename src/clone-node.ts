@@ -11,7 +11,7 @@ import {
   isTextNode,
   isVideoElement,
 } from './utils'
-import { createElementClone } from './create-element-clone'
+import { cloneElement } from './clone-element'
 import type { Context } from './context'
 
 function appendChildNode<T extends Node>(
@@ -85,7 +85,7 @@ export function cloneNode<T extends Node>(
       return ownerDocument.createComment(node.tagName.toLowerCase())
     }
 
-    const clone = createElementClone(node, context)
+    const clone = cloneElement(node, context)
     const cloneStyle = clone.style
 
     copyCssStyles(node, style, clone, isRoot, context)

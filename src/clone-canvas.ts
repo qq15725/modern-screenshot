@@ -1,6 +1,6 @@
 import { consoleWarn, createImage } from './utils'
 
-export function createCanvasClone<T extends HTMLCanvasElement>(
+export function cloneCanvas<T extends HTMLCanvasElement>(
   canvas: T,
 ): HTMLCanvasElement | HTMLImageElement {
   if (canvas.ownerDocument) {

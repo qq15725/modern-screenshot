@@ -1,18 +1,23 @@
+import { createLogger } from './create-logger'
 import { getDefaultRequestInit } from './get-default-request-init'
 import {
   IN_BROWSER,
   SUPPORT_WEB_WORKER,
-  consoleTime,
-  consoleTimeEnd,
+  isContext,
   isElementNode,
-  supportWebp,
-  waitUntilLoad,
+  supportWebp, waitUntilLoad,
 } from './utils'
 import type { Context, Request } from './context'
 import type { Options } from './options'
 
+export async function orCreateContext<T extends Node>(context: Context<T>): Promise<Context<T>>
+export async function orCreateContext<T extends Node>(node: T, options?: Options): Promise<Context<T>>
+export async function orCreateContext(node: any, options?: Options): Promise<Context> {
+  return isContext(node) ? node : createContext(node, { ...options, autodestruct: true })
+}
+
 export async function createContext<T extends Node>(node: T, options?: Options & { autodestruct?: boolean }): Promise<Context<T>> {
-  const { workerUrl, workerNumber = 1 } = options || {}
+  const { scale = 1, workerUrl, workerNumber = 1 } = options || {}
 
   const debug = Boolean(options?.debug)
 
@@ -26,7 +31,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     height: 0,
     quality: 1,
     type: 'image/png',
-    scale: 1,
+    scale,
     backgroundColor: null,
     style: null,
     filter: null,
@@ -50,12 +55,13 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     autodestruct: false,
     ...options,
 
-    __CONTEXT__: true,
-
     // InternalContext
+    __CONTEXT__: true,
+    log: createLogger(debug),
     node,
     ownerDocument,
     ownerWindow,
+    dpi: scale === 1 ? null : 96 * scale,
     svgStyleElement: createStyleElement(ownerDocument),
     defaultComputedStyles: new Map<string, Record<string, any>>(),
     workers: [
@@ -94,9 +100,9 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     tasks: [],
   }
 
-  debug && consoleTime('wait until load')
+  context.log.time('wait until load')
   await waitUntilLoad(node, context.timeout)
-  debug && consoleTimeEnd('wait until load')
+  context.log.timeEnd('wait until load')
 
   const { width, height } = resolveBoundingBox(node, context)
   context.width = width

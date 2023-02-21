@@ -1,7 +1,7 @@
-import { createCanvasClone } from './create-canvas-clone'
+import { cloneCanvas } from './clone-canvas'
 import { consoleWarn, createImage } from './utils'
 
-export function createVideoClone<T extends HTMLVideoElement>(
+export function cloneVideo<T extends HTMLVideoElement>(
   video: T,
 ): HTMLCanvasElement | HTMLImageElement | HTMLVideoElement {
   if (video.ownerDocument) {
@@ -17,7 +17,7 @@ export function createVideoClone<T extends HTMLVideoElement>(
       } catch (error) {
         consoleWarn('Failed to clone video', error)
       }
-      return createCanvasClone(canvas)
+      return cloneCanvas(canvas)
     }
 
     if (video.poster) {
