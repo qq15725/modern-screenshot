@@ -26,7 +26,7 @@ jobs:
   test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    name: "Build&Test: node-18, ubuntu-latest"
+    name: "Build&Test: node-16.x, ubuntu-latest"
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v3
@@ -48,11 +48,11 @@ jobs:
         if: steps.changed-files.outputs.only_changed != 'true'
         uses: pnpm/action-setup@v2.2.4
 
-      - name: 🎉 Set node version to 18
+      - name: 🎉 Set node version to 16.x
         if: steps.changed-files.outputs.only_changed != 'true'
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16.x
           cache: "pnpm"
 
       - name: 🚧 Install deps
@@ -70,7 +70,7 @@ jobs:
   lint:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    name: "Lint: node-18, ubuntu-latest"
+    name: "Lint: node-16, ubuntu-latest"
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v3
@@ -78,10 +78,10 @@ jobs:
       - name: 🎉 Install pnpm
         uses: pnpm/action-setup@v2.2.4
 
-      - name: 🎉 Set node version to 18
+      - name: 🎉 Set node version to 16.x
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16.x
           cache: "pnpm"
 
       - name: 🚧 Install deps
