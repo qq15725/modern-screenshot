@@ -1,3 +1,14 @@
+## [4.4.1](https://github.com/qq15725/modern-screenshot/compare/v4.4.0...v4.4.1) (2023-02-22)
+
+
+### Bug Fixes
+
+* logic interruptions caused by video cors errors ([2bb1c3f](https://github.com/qq15725/modern-screenshot/commit/2bb1c3fa6c7b389fe544090ade491f0b3ca78a01))
+* remove debug code ([88232a2](https://github.com/qq15725/modern-screenshot/commit/88232a27036c49cfdd9882695f77effa442065cc))
+* video clone ([#10](https://github.com/qq15725/modern-screenshot/issues/10)) ([3c473d5](https://github.com/qq15725/modern-screenshot/commit/3c473d5283aefa19cb30ff8cc05e71fb6ef89f35))
+
+
+
 # [4.4.0](https://github.com/qq15725/modern-screenshot/compare/v4.3.6...v4.4.0) (2023-02-21)
 
 
