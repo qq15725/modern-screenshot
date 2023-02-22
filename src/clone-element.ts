@@ -8,7 +8,7 @@ import type { Context } from './context'
 export function cloneElement<T extends HTMLElement | SVGElement>(
   node: T,
   context: Context,
-): HTMLElement | SVGElement {
+): (HTMLElement | SVGElement) | Promise<HTMLElement | SVGElement> {
   if (isCanvasElement(node)) {
     return cloneCanvas(node)
   }

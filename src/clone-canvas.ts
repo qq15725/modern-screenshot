@@ -10,13 +10,11 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
         return createImage(dataURL, canvas.ownerDocument)
       }
     } catch (error) {
-      consoleWarn('Failed to clone canvas', error)
+      //
     }
   }
 
   const clone = canvas.cloneNode(false) as T
-  clone.width = canvas.width
-  clone.height = canvas.height
   const ctx = canvas.getContext('2d')
   const clonedCtx = clone.getContext('2d')
 

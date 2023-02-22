@@ -148,11 +148,8 @@ export function readBlob(blob: Blob, type: 'dataUrl' | 'arrayBuffer') {
 export const blobToDataUrl = (blob: Blob) => readBlob(blob, 'dataUrl')
 export const blobToArrayBuffer = (blob: Blob) => readBlob(blob, 'arrayBuffer')
 
-export function createImage(url: string, ownerDocument?: Document | null, useCORS = false): HTMLImageElement {
+export function createImage(url: string, ownerDocument?: Document | null): HTMLImageElement {
   const img = getDocument(ownerDocument).createElement('img')
-  if (useCORS) {
-    img.crossOrigin = 'anonymous'
-  }
   img.decoding = 'sync'
   img.loading = 'eager'
   img.src = url
@@ -188,12 +185,14 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
     }
 
     if (isVideoElement(node)) {
-      const poster = node.poster
-      if (poster) {
-        return loadMedia(poster, options).then(resolve)
-      }
       const currentSrc = (node.currentSrc || node.src)
-      if (node.readyState >= 2 || !currentSrc) {
+      if (!currentSrc) {
+        if (node.poster) {
+          return loadMedia(node.poster, options).then(resolve)
+        }
+        return onResolve()
+      }
+      if (node.readyState >= 2) {
         return onResolve()
       }
       const onLoadeddata = onResolve

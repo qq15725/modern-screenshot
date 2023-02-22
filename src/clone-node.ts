@@ -14,23 +14,23 @@ import {
 import { cloneElement } from './clone-element'
 import type { Context } from './context'
 
-function appendChildNode<T extends Node>(
+async function appendChildNode<T extends Node>(
   clone: T,
   child: ChildNode,
   context: Context,
-): void {
+): Promise<void> {
   if (isElementNode(child) && (isStyleElement(child) || isScriptElement(child))) return
 
   if (context.filter && !context.filter(child)) return
 
-  clone.appendChild(cloneNode(child, context))
+  clone.appendChild(await cloneNode(child, context))
 }
 
-function cloneChildNodes<T extends Node>(
+async function cloneChildNodes<T extends Node>(
   node: T,
   clone: T,
   context: Context,
-): void {
+): Promise<void> {
   const firstChild = (
     isElementNode(node)
       ? node.shadowRoot?.firstChild
@@ -43,11 +43,12 @@ function cloneChildNodes<T extends Node>(
       && isSlotElement(child)
       && typeof child.assignedNodes === 'function'
     ) {
-      child.assignedNodes().forEach(assignedNode => {
-        appendChildNode(clone, assignedNode as ChildNode, context)
-      })
+      const nodes = child.assignedNodes()
+      for (let i = 0; i < nodes.length; i++) {
+        await appendChildNode(clone, nodes[i] as ChildNode, context)
+      }
     } else {
-      appendChildNode(clone, child, context)
+      await appendChildNode(clone, child, context)
     }
   }
 }
@@ -64,11 +65,11 @@ function applyCssStyleWithOptions(style: CSSStyleDeclaration, context: Context) 
   }
 }
 
-export function cloneNode<T extends Node>(
+export async function cloneNode<T extends Node>(
   node: T,
   context: Context,
   isRoot = false,
-): Node {
+): Promise<Node> {
   const { ownerDocument, ownerWindow, fontFamilies } = context
 
   if (ownerDocument && isTextNode(node)) {
@@ -85,7 +86,7 @@ export function cloneNode<T extends Node>(
       return ownerDocument.createComment(node.tagName.toLowerCase())
     }
 
-    const clone = cloneElement(node, context)
+    const clone = await cloneElement(node, context)
     const cloneStyle = clone.style
 
     copyCssStyles(node, style, clone, isRoot, context)
@@ -103,7 +104,7 @@ export function cloneNode<T extends Node>(
     copyInputValue(node, clone)
 
     if (!isVideoElement(node)) {
-      cloneChildNodes(node, clone, context)
+      await cloneChildNodes(node, clone, context)
     }
 
     return clone
@@ -111,7 +112,7 @@ export function cloneNode<T extends Node>(
 
   const clone = node.cloneNode(false)
 
-  cloneChildNodes(node, clone, context)
+  await cloneChildNodes(node, clone, context)
 
   return clone
 }

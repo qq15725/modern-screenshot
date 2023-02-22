@@ -32,7 +32,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   } = context
 
   log.time('clone node')
-  const clone = cloneNode(context.node, context, true)
+  const clone = await cloneNode(context.node, context, true)
   log.timeEnd('clone node')
 
   onCloneNode?.(clone)

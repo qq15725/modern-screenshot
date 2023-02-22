@@ -1,29 +1,44 @@
 import { cloneCanvas } from './clone-canvas'
-import { consoleWarn, createImage } from './utils'
+import { consoleWarn, createImage, loadMedia } from './utils'
 
-export function cloneVideo<T extends HTMLVideoElement>(
+export async function cloneVideo<T extends HTMLVideoElement>(
   video: T,
-): HTMLCanvasElement | HTMLImageElement | HTMLVideoElement {
-  if (video.ownerDocument) {
-    const ownerDocument = video.ownerDocument
-
-    if (video.currentSrc && video.currentTime) {
-      const canvas = ownerDocument.createElement('canvas')
-      canvas.width = video.offsetWidth
-      canvas.height = video.offsetHeight
-      try {
-        const ctx = canvas.getContext('2d')
-        if (ctx) ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-      } catch (error) {
-        consoleWarn('Failed to clone video', error)
-      }
-      return cloneCanvas(canvas)
-    }
-
-    if (video.poster) {
-      return createImage(video.poster, ownerDocument, true)
-    }
+): Promise<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement> {
+  if (
+    video.ownerDocument
+    && !video.currentSrc
+    && video.poster
+  ) {
+    return createImage(video.poster, video.ownerDocument)
   }
 
-  return video.cloneNode(false) as T
+  video.currentTime = 3
+
+  const clone = video.cloneNode(false) as T
+  clone.crossOrigin = 'anonymous'
+  if (video.currentSrc && video.currentSrc !== video.src) {
+    clone.src = video.currentSrc
+  }
+
+  // video to canvas
+  const ownerDocument = clone.ownerDocument
+  if (ownerDocument) {
+    await loadMedia(clone)
+    clone.currentTime = video.currentTime
+    await new Promise(resolve => {
+      clone.addEventListener('seeked', resolve, { once: true })
+    })
+    const canvas = ownerDocument.createElement('canvas')
+    canvas.width = video.offsetWidth
+    canvas.height = video.offsetHeight
+    try {
+      const ctx = canvas.getContext('2d')
+      if (ctx) ctx.drawImage(clone, 0, 0, canvas.width, canvas.height)
+    } catch (error) {
+      consoleWarn('Failed to clone video', error)
+    }
+    return cloneCanvas(canvas)
+  }
+
+  return clone
 }
