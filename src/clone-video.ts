@@ -12,8 +12,6 @@ export async function cloneVideo<T extends HTMLVideoElement>(
     return createImage(video.poster, video.ownerDocument)
   }
 
-  video.currentTime = 3
-
   const clone = video.cloneNode(false) as T
   clone.crossOrigin = 'anonymous'
   if (video.currentSrc && video.currentSrc !== video.src) {
@@ -28,6 +26,9 @@ export async function cloneVideo<T extends HTMLVideoElement>(
       onError: () => canPlay = false,
     })
     if (!canPlay) {
+      if (video.poster) {
+        return createImage(video.poster, video.ownerDocument)
+      }
       return clone
     }
     clone.currentTime = video.currentTime
@@ -42,6 +43,9 @@ export async function cloneVideo<T extends HTMLVideoElement>(
       if (ctx) ctx.drawImage(clone, 0, 0, canvas.width, canvas.height)
     } catch (error) {
       consoleWarn('Failed to clone video', error)
+      if (video.poster) {
+        return createImage(video.poster, video.ownerDocument)
+      }
       return clone
     }
     return cloneCanvas(canvas)
