@@ -23,7 +23,13 @@ export async function cloneVideo<T extends HTMLVideoElement>(
   // video to canvas
   const ownerDocument = clone.ownerDocument
   if (ownerDocument) {
-    await loadMedia(clone)
+    let canPlay = true
+    await loadMedia(clone, {
+      onError: () => canPlay = false,
+    })
+    if (!canPlay) {
+      return clone
+    }
     clone.currentTime = video.currentTime
     await new Promise(resolve => {
       clone.addEventListener('seeked', resolve, { once: true })
@@ -36,6 +42,7 @@ export async function cloneVideo<T extends HTMLVideoElement>(
       if (ctx) ctx.drawImage(clone, 0, 0, canvas.width, canvas.height)
     } catch (error) {
       consoleWarn('Failed to clone video', error)
+      return clone
     }
     return cloneCanvas(canvas)
   }

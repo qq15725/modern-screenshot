@@ -161,13 +161,14 @@ type Media = HTMLVideoElement | HTMLImageElement | SVGImageElement
 interface LoadMediaOptions {
   ownerDocument?: Document
   timeout?: number
+  onError?: (error: Error) => void
 }
 
 export function loadMedia<T extends Media>(media: T, options?: LoadMediaOptions): Promise<T>
 export function loadMedia(media: string, options?: LoadMediaOptions): Promise<HTMLImageElement>
 export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> {
   return new Promise(resolve => {
-    const { timeout, ownerDocument } = options ?? {}
+    const { timeout, ownerDocument, onError: userOnError } = options ?? {}
     const node: Media = typeof media === 'string'
       ? createImage(media, getDocument(ownerDocument))
       : media
@@ -198,10 +199,11 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       const onLoadeddata = onResolve
       const onError = (error: any) => {
         consoleWarn(
-          'Video load failed',
+          'Failed video load',
           currentSrc,
           error,
         )
+        userOnError?.(error)
         onResolve()
       }
       removeEventListeners = () => {
@@ -236,7 +238,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
 
       const onError = (error: any) => {
         consoleWarn(
-          'Image load failed',
+          'Failed image load',
           node.dataset.originalSrc || currentSrc,
           error,
         )
