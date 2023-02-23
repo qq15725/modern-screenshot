@@ -18,7 +18,7 @@
   </a>
 </p>
 
-<p align="center">Fast generates an image from a DOM node using HTML5 canvas and SVG</p>
+<p align="center">Quickly generate image from DOM node using HTML5 canvas and SVG</p>
 
 <p align="center">Fork from <a href="https://github.com/bubkoo/html-to-image">html-to-image</a></p>
 
