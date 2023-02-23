@@ -95,7 +95,7 @@ domToPng(document.querySelector('#app')).then(dataUrl => {
 
 ## 方法
 
-> 比如 `domToPng(node, options)`
+> `method(node: Node, options?: Options)`
 
 DOM 转 dataURL
 

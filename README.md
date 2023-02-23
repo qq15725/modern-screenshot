@@ -95,7 +95,7 @@ script.onload = () => {
 
 ## Methods
 
-> Such as `domToPng(node, options)`
+> `method(node: Node, options?: Options)`
 
 DOM to dataURL
 
