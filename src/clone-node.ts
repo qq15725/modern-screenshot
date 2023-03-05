@@ -2,6 +2,7 @@ import { copyPseudoContent } from './copy-pseudo-content'
 import { copyInputValue } from './copy-input-value'
 import { copyCssStyles } from './copy-css-styles'
 import {
+  isCommentNode,
   isElementNode,
   isHTMLElementNode,
   isSVGElementNode,
@@ -38,6 +39,7 @@ async function cloneChildNodes<T extends Node>(
   ) ?? node.firstChild
 
   for (let child = firstChild; child; child = child.nextSibling) {
+    if (isCommentNode(child)) continue
     if (
       isElementNode(child)
       && isSlotElement(child)

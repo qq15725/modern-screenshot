@@ -11,16 +11,18 @@
     body, html {
       margin: 0;
     }
+
+    #root {
+      display: inline-flex;
+      font-size: .875rem;
+      font-family: "Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <div>
-    <div id="root" style="text-align: center;">
-      <h1>egami</h1>
-      <h1>→</h1>
-      <h1>image</h1>
-      <video src='/docs/movie.mp4' controls autoPlay></video>
-    </div>
+    <div id="root">前缀 <!---->after</div>
   </div>
 
   <script type="module" async>
