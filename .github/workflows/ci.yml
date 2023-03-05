@@ -53,7 +53,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: "pnpm"
 
       - name: 🚧 Install deps
         if: steps.changed-files.outputs.only_changed != 'true'
