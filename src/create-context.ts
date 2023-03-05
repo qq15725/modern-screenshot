@@ -73,10 +73,9 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     ].map(() => {
       const worker = new Worker(workerUrl!)
       worker.onmessage = async event => {
-        const { url, stream } = event.data
-        if (stream) {
-          const data = await (stream as ReadableStream).getReader().read()
-          requests.get(url)?.resovle?.(data.value)
+        const { url, result } = event.data
+        if (result) {
+          requests.get(url)?.resovle?.(result)
         } else {
           requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
         }
