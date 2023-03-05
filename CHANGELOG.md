@@ -1,3 +1,13 @@
+## [4.4.2](https://github.com/qq15725/modern-screenshot/compare/v4.4.1...v4.4.2) (2023-03-05)
+
+
+### Bug Fixes
+
+* some text parsing exceptions caused by comment node ([c2e7df8](https://github.com/qq15725/modern-screenshot/commit/c2e7df87bf1ebb14fe031bfadcbc9e8a66093c96))
+* xml parsing exception caused by ascii control character ([a48cb89](https://github.com/qq15725/modern-screenshot/commit/a48cb8977dd951e672ff3b6f6e6de1719b72343a))
+
+
+
 ## [4.4.1](https://github.com/qq15725/modern-screenshot/compare/v4.4.0...v4.4.1) (2023-02-22)
 
 
