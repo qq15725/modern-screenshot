@@ -1,6 +1,6 @@
-import { hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
+import { URL_RE, hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 import { contextFetch } from './fetch'
-import { consoleWarn, isCssFontFaceRule } from './utils'
+import { consoleWarn, isCssFontFaceRule, resolveUrl } from './utils'
 import type { Context } from './context'
 
 export async function embedWebFont<T extends Element>(
@@ -24,7 +24,7 @@ export async function embedWebFont<T extends Element>(
 
   if (font && font.cssText) {
     const cssText = filterPreferredFormat(font.cssText, context)
-    svgStyleElement.appendChild(ownerDocument.createTextNode(`\n${ cssText }\n`))
+    svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
   } else {
     try {
       const cssRules = await getCssRules(Array.from(ownerDocument.styleSheets), context)
@@ -77,15 +77,17 @@ async function getCssRules(
             .filter(rule => rule.constructor.name === 'CSSImportRule')
             .map(async rule => {
               let importIndex = index + 1
-              const url = (rule as CSSImportRule).href
+              const baseUrl = (rule as CSSImportRule).href
               try {
                 const cssText = await contextFetch(context, {
-                  url,
+                  url: baseUrl,
                   requestType: 'text',
                   responseType: 'text',
                 })
-                const embedCssText = await embedFonts(cssText, url, context)
-                for (const rule of parseCss(embedCssText)) {
+                const replacedCssText = cssText.replace(URL_RE, (raw, quotation, url) => {
+                  return raw.replace(url, resolveUrl(url, baseUrl))
+                })
+                for (const rule of parseCss(replacedCssText)) {
                   try {
                     sheet.insertRule(
                       rule,
@@ -117,29 +119,6 @@ async function getCssRules(
   })
 
   return ret
-}
-
-const URL_MATCH_RE = /url\([^)]+\)/g
-const URL_REPLACE_RE = /url\(["']?([^"')]+)["']?\)/g
-
-async function embedFonts(cssText: string, baseUrl: string, context: Context): Promise<string> {
-  await Promise.all(
-    cssText.match(URL_MATCH_RE)?.map(async location => {
-      let url = location.replace(URL_REPLACE_RE, '$1')
-      if (!url.startsWith('https://')) {
-        url = new URL(url, baseUrl).href
-      }
-      return contextFetch(context, {
-        url,
-        requestType: 'text',
-        responseType: 'dataUrl',
-      }).then(base64 => {
-        // Side Effect
-        cssText = cssText.replace(location, `url(${ base64 })`)
-      })
-    }) ?? [],
-  )
-  return cssText
 }
 
 const COMMENTS_RE = /(\/\*[\s\S]*?\*\/)/gi

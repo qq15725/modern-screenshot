@@ -83,7 +83,6 @@ function createForeignObjectSvg(clone: Node, context: Context): SVGSVGElement {
   foreignObject.setAttributeNS(null, 'y', '0%')
   foreignObject.setAttributeNS(null, 'width', '100%')
   foreignObject.setAttributeNS(null, 'height', '100%')
-  foreignObject.setAttributeNS(null, 'externalResourcesRequired', 'true')
   foreignObject.append(clone)
   svg.appendChild(foreignObject)
   return svg

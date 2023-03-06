@@ -10,21 +10,19 @@ export async function replaceCssUrlToDataUrl(
 ): Promise<string> {
   if (!hasCssUrl(cssText)) return cssText
 
-  for (const url of parseCssUrls(cssText)) {
+  for (const [rawUrl, url] of parseCssUrls(cssText, baseUrl)) {
     try {
       const dataUrl = await contextFetch(
         context,
         {
-          url: baseUrl
-            ? resolveUrl(url, baseUrl)
-            : url,
+          url,
           requestType: isImage ? 'image' : 'text',
           responseType: 'dataUrl',
         },
       )
-      cssText = cssText.replace(toRE(url), `$1${ dataUrl }$3`)
+      cssText = cssText.replace(toRE(rawUrl), `$1${ dataUrl }$3`)
     } catch (error) {
-      consoleWarn('Failed to fetch css data url', url, error)
+      consoleWarn('Failed to fetch css data url', rawUrl, error)
     }
   }
 
@@ -35,15 +33,17 @@ export function hasCssUrl(cssText: string): boolean {
   return /url\((['"]?)([^'"]+?)\1\)/.test(cssText)
 }
 
-function parseCssUrls(cssText: string): string[] {
-  const result: string[] = []
+export const URL_RE = /url\((['"]?)([^'"]+?)\1\)/g
 
-  cssText.replace(/url\((['"]?)([^'"]+?)\1\)/g, (raw, quotation, url) => {
-    result.push(url)
+function parseCssUrls(cssText: string, baseUrl: string | null): [string, string][] {
+  const result: [string, string][] = []
+
+  cssText.replace(URL_RE, (raw, quotation, url) => {
+    result.push([url, resolveUrl(url, baseUrl)])
     return raw
   })
 
-  return result.filter((url) => !isDataUrl(url))
+  return result.filter(([url]) => !isDataUrl(url))
 }
 
 function toRE(url: string): RegExp {
