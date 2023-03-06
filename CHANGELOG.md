@@ -1,3 +1,12 @@
+## [4.4.3](https://github.com/qq15725/modern-screenshot/compare/v4.4.2...v4.4.3) (2023-03-06)
+
+
+### Bug Fixes
+
+* ascii null character regex ([83aee39](https://github.com/qq15725/modern-screenshot/commit/83aee391d461627556b048ec0dd6195fc7593941))
+
+
+
 ## [4.4.2](https://github.com/qq15725/modern-screenshot/compare/v4.4.1...v4.4.2) (2023-03-05)
 
 
