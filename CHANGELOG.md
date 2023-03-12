@@ -1,3 +1,12 @@
+## [4.4.4](https://github.com/qq15725/modern-screenshot/compare/v4.4.3...v4.4.4) (2023-03-12)
+
+
+### Bug Fixes
+
+* emoji ([#11](https://github.com/qq15725/modern-screenshot/issues/11)) ([76cd0b7](https://github.com/qq15725/modern-screenshot/commit/76cd0b7b6beba0215d60635b6a5f2b827a51b3df))
+
+
+
 ## [4.4.3](https://github.com/qq15725/modern-screenshot/compare/v4.4.2...v4.4.3) (2023-03-06)
 
 
