@@ -17,7 +17,9 @@
     // \uFFFE-\uFFFF
     '\uFFFE', '\uFFFF',
   ].forEach(unicode => {
-    root.appendChild(document.createTextNode(unicode))
+    const span = document.createElement('span')
+    span.innerHTML = unicode
+    root.appendChild(span)
   })
 
   export default window.modernScreenshot.domToPng(root)
