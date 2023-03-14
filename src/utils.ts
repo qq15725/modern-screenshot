@@ -96,8 +96,9 @@ export function createSvg(width: number, height: number, ownerDocument?: Documen
 export function svgToDataUrl(svg: SVGElement) {
   const xhtml = new XMLSerializer()
     .serializeToString(svg)
+    // https://www.w3.org/TR/xml/#charsets
     // eslint-disable-next-line no-control-regex
-    .replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g, '')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uD800-\uDFFF\uFFFE\uFFFF]/ug, '')
   return `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
 }
 
