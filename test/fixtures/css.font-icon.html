@@ -1,0 +1,33 @@
+<style>
+  @import url(__BASE_URL__/font/fa.css);
+
+  #root {
+    width: 40px;
+    font-size: 40px;
+  }
+
+  .fa {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    line-height: 1;
+    text-rendering: auto;
+  }
+
+  .fa-list-ol:before {
+    content: "\f0cb";
+  }
+</style>
+
+<template>
+  <div id="root">
+    <span class="fa fa-list-ol"></span>
+  </div>
+</template>
+
+<skip-expect />

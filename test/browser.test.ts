@@ -17,35 +17,25 @@ const corsPort = 3001
 const corsAssetsBaseURL = `http://localhost:${ corsPort }/test/assets`
 
 function parseHTML(str: string) {
-  const styleCode = `
-  ${
-    str.match(/<style>(.*)<\/style>/s)?.[1]
-      .replace(/__BASE_URL__/g, assetsBaseURL)
-      .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
-    ?? ''
-  }
-  * {
-    box-sizing: border-box;
-  }
-`
-
-  const templateCode = (
-    str.match(/<template.*?>(.*)<\/template>/s)?.[1]
-    ?? '<div id="root"></div>'
-  )
-    .replace(/__BASE_URL__/g, assetsBaseURL)
-    .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
-
-  const scriptCode = str.match(/<script.*?>(.*)<\/script>/s)?.[1]?.replace('export default ', 'return ')
-    ?? 'return window.modernScreenshot.domToPng(document.querySelector(\'body > *\'))'
-
-  const skipExpect = !!str.match(/<skip-expect.*\/>/s)?.[0]
-
   return {
-    styleCode,
-    templateCode,
-    scriptCode,
-    skipExpect,
+    styleCode: `${
+      str.match(/<style>(.*)<\/style>/s)?.[1]
+        .replace(/__BASE_URL__/g, assetsBaseURL)
+        .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
+      ?? ''
+}
+  * { box-sizing: border-box; }
+`,
+    templateCode: (
+      str.match(/<template.*?>(.*)<\/template>/s)?.[1]
+      ?? '<div id="root"></div>'
+    )
+      .replace(/__BASE_URL__/g, assetsBaseURL)
+      .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL),
+    scriptCode: str.match(/<script.*?>(.*)<\/script>/s)?.[1]?.replace('export default ', 'return ')
+      ?? 'return window.modernScreenshot.domToPng(document.querySelector(\'body > *\'))',
+    skipExpect: !!str.match(/<skip-expect.*\/>/s)?.[0],
+    debug: !!str.match(/<debug.*\/>/s)?.[0],
   }
 }
 
@@ -59,6 +49,17 @@ describe('dom to image in browser', async () => {
   let body: ElementHandle<HTMLBodyElement>
   let style: ElementHandle<HTMLStyleElement>
 
+  const fixtures = await Promise.all(
+    glob.sync(join(fixturesDir, '*.html'))
+      .map(async path => {
+        return {
+          path,
+          ...parseHTML(await readFile(path, 'utf-8')),
+        }
+      }),
+  )
+  const debug = fixtures.some(fixture => fixture.debug)
+
   beforeAll(async () => {
     server = await preview({
       build: { outDir: join(__dirname, '..') },
@@ -68,7 +69,10 @@ describe('dom to image in browser', async () => {
       build: { outDir: join(__dirname, '..') },
       preview: { port: corsPort },
     })
-    browser = await puppeteer.launch()
+    browser = await puppeteer.launch({
+      headless: !debug,
+      devtools: debug,
+    })
     page = await browser.newPage()
     await page.setContent(`<!DOCTYPE html>
 <html>
@@ -96,23 +100,16 @@ describe('dom to image in browser', async () => {
 
   expect.extend({ toMatchImageSnapshot })
 
-  const fixtures = await Promise.all(
-    glob.sync(join(fixturesDir, '*.html'))
-      .map(async path => {
-        return {
-          path,
-          ...parseHTML(await readFile(path, 'utf-8')),
-        }
-      }),
-  )
-
-  fixtures.forEach(({ path, scriptCode, styleCode, templateCode, skipExpect }) => {
+  fixtures.forEach(({ path, scriptCode, styleCode, templateCode, skipExpect, debug }) => {
     const name = basename(path).replace('.html', '')
     test(name, async () => {
       await style.evaluate((el, val) => el.innerHTML = val, styleCode)
       await body.evaluate((el, val) => el.innerHTML = val, templateCode)
       // eslint-disable-next-line no-new-func
       const png = await page.evaluate(val => new Function(val)(), scriptCode)
+      if (debug) {
+        await new Promise(resolve => setTimeout(resolve, 60_000))
+      }
       const base64 = png.replace('data:image/png;base64,', '')
       const buffer = Buffer.from(base64, 'base64')
       const options = {
