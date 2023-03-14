@@ -1,3 +1,12 @@
+## [4.4.5](https://github.com/qq15725/modern-screenshot/compare/v4.4.4...v4.4.5) (2023-03-14)
+
+
+### Bug Fixes
+
+* xml legal characters regex ([#12](https://github.com/qq15725/modern-screenshot/issues/12)) ([e6f1e0b](https://github.com/qq15725/modern-screenshot/commit/e6f1e0bb15cc42fa592353baf95e47fa9847e88e))
+
+
+
 ## [4.4.4](https://github.com/qq15725/modern-screenshot/compare/v4.4.3...v4.4.4) (2023-03-12)
 
 
