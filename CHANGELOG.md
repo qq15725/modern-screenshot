@@ -1,3 +1,12 @@
+## [4.4.6](https://github.com/qq15725/modern-screenshot/compare/v4.4.5...v4.4.6) (2023-03-15)
+
+
+### Bug Fixes
+
+* logic interruption caused by reading CSS rules ([#12](https://github.com/qq15725/modern-screenshot/issues/12)) ([ecc09df](https://github.com/qq15725/modern-screenshot/commit/ecc09dffbd7464df0779952df7e939479519ae8a))
+
+
+
 ## [4.4.5](https://github.com/qq15725/modern-screenshot/compare/v4.4.4...v4.4.5) (2023-03-14)
 
 
