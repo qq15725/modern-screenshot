@@ -1,6 +1,6 @@
 import { URL_RE, hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 import { contextFetch } from './fetch'
-import { consoleWarn, isCssFontFaceRule, resolveUrl } from './utils'
+import { consoleWarn, isCSSImportRule, isCssFontFaceRule, resolveUrl } from './utils'
 import type { Context } from './context'
 
 export async function embedWebFont<T extends Element>(
@@ -26,99 +26,82 @@ export async function embedWebFont<T extends Element>(
     const cssText = filterPreferredFormat(font.cssText, context)
     svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
   } else {
-    try {
-      const cssRules = await getCssRules(Array.from(ownerDocument.styleSheets), context)
+    const styleSheets = Array.from(ownerDocument.styleSheets).filter(styleSheet => {
+      try {
+        return 'cssRules' in styleSheet && Boolean(styleSheet.cssRules.length)
+      } catch (error) {
+        consoleWarn(`Error while reading CSS rules from ${ styleSheet.href }`, error)
+        return false
+      }
+    })
 
-      cssRules
-        .filter(rule => (
-          isCssFontFaceRule(rule)
-          && hasCssUrl(rule.style.getPropertyValue('src'))
-          && rule.style.fontFamily.split(',').some(val => fontFamilies.has(val))
-        ))
-        .forEach((value) => {
-          const rule = value as CSSFontFaceRule
-          const cssText = fontCssTexts.get(rule.cssText)
-          if (cssText) {
-            svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
-          } else {
-            tasks.push(
-              replaceCssUrlToDataUrl(
-                rule.cssText,
-                rule.parentStyleSheet
-                  ? rule.parentStyleSheet.href
-                  : null,
-                context,
-              ).then(cssText => {
-                cssText = filterPreferredFormat(cssText, context)
-                fontCssTexts.set(rule.cssText, cssText)
-                svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
-              }),
+    await Promise.all(
+      styleSheets.flatMap(styleSheet => {
+        return Array.from(styleSheet.cssRules).map(async (cssRule, index) => {
+          if (isCSSImportRule(cssRule)) {
+            let importIndex = index + 1
+            const baseUrl = cssRule.href
+            let cssText = ''
+            try {
+              cssText = await contextFetch(context, {
+                url: baseUrl,
+                requestType: 'text',
+                responseType: 'text',
+              })
+            } catch (error) {
+              consoleWarn(`Error fetch remote css import from ${ baseUrl }`, error)
+            }
+            const replacedCssText = cssText.replace(
+              URL_RE,
+              (raw, quotation, url) => raw.replace(url, resolveUrl(url, baseUrl)),
             )
+            for (const rule of parseCss(replacedCssText)) {
+              try {
+                styleSheet.insertRule(
+                  rule,
+                  rule.startsWith('@import')
+                    ? (importIndex += 1)
+                    : styleSheet.cssRules.length!,
+                )
+              } catch (error) {
+                consoleWarn('Error inserting rule from remote css import', { rule, error })
+              }
+            }
           }
         })
-    } catch (error) {
-      consoleWarn('Failed to parse web font css', error)
-    }
-  }
-}
-
-async function getCssRules(
-  styleSheets: CSSStyleSheet[],
-  context: Context,
-): Promise<CSSRule[]> {
-  const ret: CSSRule[] = []
-
-  await Promise.all(
-    styleSheets
-      .filter(sheet => 'cssRules' in sheet)
-      .map(async (sheet, index) => {
-        await Promise.all(
-          Array.from(sheet.cssRules)
-            .filter(rule => rule.constructor.name === 'CSSImportRule')
-            .map(async rule => {
-              let importIndex = index + 1
-              const baseUrl = (rule as CSSImportRule).href
-              try {
-                const cssText = await contextFetch(context, {
-                  url: baseUrl,
-                  requestType: 'text',
-                  responseType: 'text',
-                })
-                const replacedCssText = cssText.replace(URL_RE, (raw, quotation, url) => {
-                  return raw.replace(url, resolveUrl(url, baseUrl))
-                })
-                for (const rule of parseCss(replacedCssText)) {
-                  try {
-                    sheet.insertRule(
-                      rule,
-                      rule.startsWith('@import')
-                        ? (importIndex += 1)
-                        : sheet.cssRules.length!,
-                    )
-                  } catch (error) {
-                    consoleWarn('Error inserting rule from remote css', { rule, error })
-                  }
-                }
-              } catch (error) {
-                consoleWarn('Error loading remote css', error)
-              }
-            }),
-        )
       }),
-  )
+    )
 
-  // Second loop parses rules
-  styleSheets.forEach((sheet) => {
-    if ('cssRules' in sheet) {
-      try {
-        ret.push(...sheet.cssRules)
-      } catch (error) {
-        consoleWarn(`Error while reading CSS rules from ${ sheet.href }`, error)
-      }
-    }
-  })
+    const cssRules = styleSheets.flatMap(styleSheet => Array.from(styleSheet.cssRules))
 
-  return ret
+    cssRules
+      .filter(cssRule => (
+        isCssFontFaceRule(cssRule)
+        && hasCssUrl(cssRule.style.getPropertyValue('src'))
+        && cssRule.style.fontFamily.split(',').some(val => fontFamilies.has(val))
+      ))
+      .forEach((value) => {
+        const rule = value as CSSFontFaceRule
+        const cssText = fontCssTexts.get(rule.cssText)
+        if (cssText) {
+          svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+        } else {
+          tasks.push(
+            replaceCssUrlToDataUrl(
+              rule.cssText,
+              rule.parentStyleSheet
+                ? rule.parentStyleSheet.href
+                : null,
+              context,
+            ).then(cssText => {
+              cssText = filterPreferredFormat(cssText, context)
+              fontCssTexts.set(rule.cssText, cssText)
+              svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+            }),
+          )
+        }
+      })
+  }
 }
 
 const COMMENTS_RE = /(\/\*[\s\S]*?\*\/)/gi
