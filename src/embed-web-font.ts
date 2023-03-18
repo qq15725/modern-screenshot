@@ -81,6 +81,7 @@ export async function embedWebFont<T extends Element>(
         && cssRule.style.getPropertyValue('font-family')
           .split(',')
           .filter(Boolean)
+          .map(val => val.toLowerCase())
           .some(val => fontFamilies.has(val))
       ))
       .forEach((value) => {

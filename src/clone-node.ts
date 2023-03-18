@@ -100,6 +100,7 @@ export async function cloneNode<T extends Node>(
     cloneStyle.getPropertyValue('font-family')
       .split(',')
       .filter(Boolean)
+      .map(val => val.toLowerCase())
       .forEach(val => fontFamilies.add(val))
 
     copyPseudoContent(node, clone, ownerWindow)
