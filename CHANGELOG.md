@@ -1,3 +1,12 @@
+## [4.4.7](https://github.com/qq15725/modern-screenshot/compare/v4.4.6...v4.4.7) (2023-03-18)
+
+
+### Bug Fixes
+
+* `cssRule.style.fontFamily` null safe (close [#14](https://github.com/qq15725/modern-screenshot/issues/14)) ([b8ca4d4](https://github.com/qq15725/modern-screenshot/commit/b8ca4d491c3ca9e830476e903b4e86a674e8153b))
+
+
+
 ## [4.4.6](https://github.com/qq15725/modern-screenshot/compare/v4.4.5...v4.4.6) (2023-03-15)
 
 
