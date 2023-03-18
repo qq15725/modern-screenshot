@@ -1,3 +1,12 @@
+## [4.4.8](https://github.com/qq15725/modern-screenshot/compare/v4.4.7...v4.4.8) (2023-03-18)
+
+
+### Bug Fixes
+
+* font-family is case insensitive ([#14](https://github.com/qq15725/modern-screenshot/issues/14)) ([8aa3fac](https://github.com/qq15725/modern-screenshot/commit/8aa3fac898b24a47b134972a00d76a5d37d88fe6))
+
+
+
 ## [4.4.7](https://github.com/qq15725/modern-screenshot/compare/v4.4.6...v4.4.7) (2023-03-18)
 
 
