@@ -97,9 +97,10 @@ export async function cloneNode<T extends Node>(
       applyCssStyleWithOptions(cloneStyle, context)
     }
 
-    if (cloneStyle.fontFamily) {
-      cloneStyle.fontFamily.split(',').forEach(val => fontFamilies.add(val))
-    }
+    cloneStyle.getPropertyValue('font-family')
+      .split(',')
+      .filter(Boolean)
+      .forEach(val => fontFamilies.add(val))
 
     copyPseudoContent(node, clone, ownerWindow)
 
