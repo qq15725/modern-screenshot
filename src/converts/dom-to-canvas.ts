@@ -12,7 +12,7 @@ export async function domToCanvas(node: any, options?: any) {
   const context = await orCreateContext(node, options)
   const svg = await domToForeignObjectSvg(context)
   const dataUrl = svgToDataUrl(svg)
-  if (!context.autodestruct) {
+  if (!context.autoDestruct) {
     context.svgStyleElement = createStyleElement(context.ownerDocument)
   }
   const image = createImage(dataUrl, svg.ownerDocument)

@@ -1,4 +1,4 @@
-import { blobToDataUrl, consoleWarn } from './utils'
+import { IN_SAFARI, blobToDataUrl, consoleWarn } from './utils'
 import type { Context, Request } from './context'
 
 export type BaseFetchOptions = RequestInit & {
@@ -62,8 +62,8 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
       url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
     }
 
-    if (requestType === 'image') {
-      context.requestImagesCount++
+    if (requestType === 'image' && IN_SAFARI) {
+      context.drawImageCount++
     }
 
     const baseFetchOptions: BaseFetchOptions = {

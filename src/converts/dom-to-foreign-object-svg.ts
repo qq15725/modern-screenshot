@@ -25,7 +25,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
     svgStyleElement,
     font,
     progress,
-    autodestruct,
+    autoDestruct,
     onCloneNode,
     onEmbedNode,
     onCreateForeignObjectSvg,
@@ -68,7 +68,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   const svg = createForeignObjectSvg(clone, context)
   svgStyleElement && svg.insertBefore(svgStyleElement, svg.children[0])
 
-  autodestruct && destroyContext(context)
+  autoDestruct && destroyContext(context)
 
   onCreateForeignObjectSvg?.(svg)
 

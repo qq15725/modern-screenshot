@@ -1,4 +1,5 @@
 import { replaceCssUrlToDataUrl } from './css-url'
+import { IN_FIREFOX, IN_SAFARI } from './utils'
 import type { Context } from './context'
 
 const properties = [
@@ -18,6 +19,9 @@ export function embedCssStyleImage(
       const value = style.getPropertyValue(property)
       if (!value) {
         return null
+      }
+      if ((IN_SAFARI || IN_FIREFOX) && value.includes('data:image/svg+xml')) {
+        context.drawImageCount++
       }
       return replaceCssUrlToDataUrl(value, null, context, true).then(newValue => {
         if (!newValue || value === newValue) return

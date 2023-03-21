@@ -85,9 +85,9 @@ export interface InternalContext<T extends Node> {
   requests: Map<string, Request>
 
   /**
-   * All request images count
+   * Canvas multiple draw image fix svg+xml image decoding in Safari and Firefox
    */
-  requestImagesCount: number
+  drawImageCount: number
 
   /**
    * Wait for all tasks embedded in
@@ -97,7 +97,7 @@ export interface InternalContext<T extends Node> {
   /**
    * Automatically destroy context
    */
-  autodestruct: boolean
+  autoDestruct: boolean
 }
 
 export type Context<T extends Node = Node> = InternalContext<T> & Required<Options>

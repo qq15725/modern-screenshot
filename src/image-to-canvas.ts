@@ -1,4 +1,4 @@
-import { IN_SAFARI, consoleWarn, loadMedia } from './utils'
+import { consoleWarn, loadMedia } from './utils'
 import type { Context } from './context'
 
 export async function imageToCanvas<T extends HTMLImageElement>(
@@ -7,8 +7,8 @@ export async function imageToCanvas<T extends HTMLImageElement>(
 ): Promise<HTMLCanvasElement> {
   const {
     log,
-    requestImagesCount,
     timeout,
+    drawImageCount,
     drawImageInterval,
   } = context
 
@@ -22,18 +22,20 @@ export async function imageToCanvas<T extends HTMLImageElement>(
       consoleWarn('Failed to drawImage', error)
     }
   }
+
   drawImage()
-  // fix: image not decode when drawImage svg+xml in safari/webkit
-  if (IN_SAFARI) {
-    for (let i = 0; i < requestImagesCount; i++) {
-      await new Promise<void>(resolve => {
-        setTimeout(() => {
-          drawImage()
-          resolve()
-        }, i + drawImageInterval)
-      })
-    }
+
+  for (let i = 0; i < drawImageCount; i++) {
+    await new Promise<void>(resolve => {
+      setTimeout(() => {
+        drawImage()
+        resolve()
+      }, i + drawImageInterval)
+    })
   }
+
+  context.drawImageCount = 0
+
   log.timeEnd('image to canvas')
   return canvas
 }

@@ -9,6 +9,7 @@ export const SUPPORT_BTOA = IN_BROWSER && 'btoa' in window
 export const USER_AGENT = IN_BROWSER ? window.navigator?.userAgent : ''
 export const IN_CHROME = USER_AGENT.includes('Chrome')
 export const IN_SAFARI = USER_AGENT.includes('AppleWebKit') && !IN_CHROME
+export const IN_FIREFOX = USER_AGENT.includes('Firefox')
 
 // Context
 export const isContext = <T extends Node>(value: any): value is Context<T> => value && '__CONTEXT__' in value

@@ -13,10 +13,10 @@ import type { Options } from './options'
 export async function orCreateContext<T extends Node>(context: Context<T>): Promise<Context<T>>
 export async function orCreateContext<T extends Node>(node: T, options?: Options): Promise<Context<T>>
 export async function orCreateContext(node: any, options?: Options): Promise<Context> {
-  return isContext(node) ? node : createContext(node, { ...options, autodestruct: true })
+  return isContext(node) ? node : createContext(node, { ...options, autoDestruct: true })
 }
 
-export async function createContext<T extends Node>(node: T, options?: Options & { autodestruct?: boolean }): Promise<Context<T>> {
+export async function createContext<T extends Node>(node: T, options?: Options & { autoDestruct?: boolean }): Promise<Context<T>> {
   const { scale = 1, workerUrl, workerNumber = 1 } = options || {}
 
   const debug = Boolean(options?.debug)
@@ -52,7 +52,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     onCloneNode: null,
     onEmbedNode: null,
     onCreateForeignObjectSvg: null,
-    autodestruct: false,
+    autoDestruct: false,
     ...options,
 
     // InternalContext
@@ -95,7 +95,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
       '*/*',
     ].filter(Boolean).join(',') };q=0.8`,
     requests,
-    requestImagesCount: 0,
+    drawImageCount: 0,
     tasks: [],
   }
 
