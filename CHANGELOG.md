@@ -1,3 +1,12 @@
+## [4.4.9](https://github.com/qq15725/modern-screenshot/compare/v4.4.8...v4.4.9) (2023-03-21)
+
+
+### Bug Fixes
+
+* svg+xml image decoding in Safari and Firefox (close [#15](https://github.com/qq15725/modern-screenshot/issues/15)) ([86085a3](https://github.com/qq15725/modern-screenshot/commit/86085a3e5bf29afceb1f49d5c5bfeedf4f80cc62))
+
+
+
 ## [4.4.8](https://github.com/qq15725/modern-screenshot/compare/v4.4.7...v4.4.8) (2023-03-18)
 
 
