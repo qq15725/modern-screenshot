@@ -10,7 +10,7 @@
   <div id="app">
     <div style="display: flex;">
       <textarea rows="10" style="min-width: 500px;" v-model="code"></textarea>
-      <div style="flex: 1;" class="egami" v-html="code"></div>
+      <div style="flex: 1;" class="screenshot" v-html="code"></div>
     </div>
     <div style="margin: 30px 0;">dom to image:</div>
     <div style="text-align: center;">
@@ -29,7 +29,6 @@
   <h1>egami</h1>
   <h1>→</h1>
   <h1>image</h1>
-  <video src='/movie.mp4' controls autoPlay></video>
 </div>`,
           src: null,
         }
@@ -44,7 +43,7 @@
       },
       methods: {
         genSrc() {
-          domToPng(document.querySelector('.egami')).then(src => {
+          domToPng(document.querySelector('.screenshot')).then(src => {
             this.src = src
           })
         },
