@@ -166,13 +166,3 @@ See the [context.ts](src/context.ts)
 - [ ] unable to clone [-webkit-scrollbar](https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar)
 
   `body::-webkit-scrollbar-thumb { background-color: red; }`
-
-## Other interesting packages
-
-| name         | description                                 |
-|--------------|---------------------------------------------|
-| [modern-gif] | `GIF` decoder / encoder                     |
-| [dom-vcr]    | Generates an `MP4` or `GIF` from a DOM node |
-
-[modern-gif]: https://github.com/qq15725/modern-gif
-[dom-vcr]: https://github.com/qq15725/dom-vcr

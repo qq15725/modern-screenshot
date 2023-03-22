@@ -166,13 +166,3 @@ screenshotsPerSecond()
 - [ ] 无法克隆 [-webkit-scrollbar](https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar)
 
   `body::-webkit-scrollbar-thumb { background-color: red; }`
-
-## 其他有趣的包
-
-| 名字           | 描述                       |
-|--------------|--------------------------|
-| [modern-gif] | `GIF` 解码器 / 编码器          |
-| [dom-vcr]    | 从 DOM 节点生成 `MP4` 或 `GIF` |
-
-[modern-gif]: https://github.com/qq15725/modern-gif
-[dom-vcr]: https://github.com/qq15725/dom-vcr
