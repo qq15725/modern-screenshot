@@ -10,7 +10,9 @@ assignees: ''
 
 <!--- Provide a link to a live example -->
 
-[Playground link](https://sfc.vuejs.org/#eNp9kk1r4zAQhv/KoEtTSKTC3rxJYA972MNCKe1NF9We2GqtDzRy0hD83zu247ZpoAaDNPPO885IOok/Mcp9h6IQayqTjRkIcxe32lsXQ8pwgiq4x3Dva+hhl4KDGxcqTH7FekRPTcg3X9QJd0sI/n/ofMbqo4Y9WKV9GTxlSCHkvy1sBvXido5WJpunh3+fYe0/QAtDR1/C4hY2WzhpD7Na7k3bIdeYg7HMODe7mCymLKN6/tdqGpGH401GF1uTkXcA68ruB9eNFlOhFlC2hugc0GKUsZCi8dv71hzrxJ1VzBwCI0MxZGTz2roaCkol158bZaLi7Fp9MeYt5WM79SAHo2m24TvYKjcF/Lq7i2+/52CDtm7yZbQfJxsxYimmi1g5E+ULBc8XOxL1OUFaFLOHFnwrw16LJudIhVK0K4fn8EIypFrxSiY+futQIrnVcwoHwsRgLZYz4+o1XBI7H19rWQanroR8XpSV9RW+SXfBZGPFRntMq4ScT5h+6vOb9KrXAcun1Iv+HadLAqE=)
+[Codepen playground](https://codepen.io/qq15725/pen/VwGeqwa)
+
+[Vue.js playground](https://play.vuejs.org/#eNplkU1rwzAMhv+K8KUttElhtywt7LDDDoMytpsvJnYTd/EHttIPSv77lDjtCj0YrFevHknoyt68z46dYgUrYxW0R4gKO7/lVhvvAsIVpDPfbmdr6GEfnIGZcVIFuyK/UjY2DmcP7qD2S3D203UWlbzXUA9ycVs5GxGCc/jewmZwzxc3VQoUP18f/zK3d9BcxIutYL6AzRau3MLNnR1F2ymqESehiTENO08tUpZQPb0yTyvSchSgMr4VqCgCKKU+Dl03nKVCzqBqRYyTwNloI2P0wm53rbjUgSaTxByEkZETZGTTX5saihgqqp8GJWJO2TJ/aExhxEubZsiGRmk3gJOW2BTwsl7782uSGqXrBh+1ftxpBLAlSydYGeGzQ3SWTjqy+JSInBU3OmdPNxyynDWIPhZ53ln/W2eVM/mTkbaMmGsr1TkzB6JOk/Ss/wNoc8tP)
 
 <details><summary>Error Message & Stack Trace</summary><p>
 
