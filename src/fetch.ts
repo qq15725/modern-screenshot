@@ -82,7 +82,7 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
     }
 
     request.response = (
-      workers.length
+      rawUrl.startsWith('http') && workers.length
         ? new Promise((resolve, reject) => {
           const worker = workers[requests.size & (workers.length - 1)]
           worker.postMessage({ rawUrl, ...baseFetchOptions })
