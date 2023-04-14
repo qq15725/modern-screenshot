@@ -1,3 +1,12 @@
+## [4.4.10](https://github.com/qq15725/modern-screenshot/compare/v4.4.9...v4.4.10) (2023-04-14)
+
+
+### Bug Fixes
+
+* web worker only http request ([77714aa](https://github.com/qq15725/modern-screenshot/commit/77714aaa3817eb7a3a7d321491dfa9a1242e2a4d))
+
+
+
 ## [4.4.9](https://github.com/qq15725/modern-screenshot/compare/v4.4.8...v4.4.9) (2023-03-21)
 
 
