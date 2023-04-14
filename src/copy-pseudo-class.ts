@@ -11,6 +11,9 @@ const pseudoClasses = [
   ':before',
   ':after',
   // ':placeholder', TODO
+]
+
+const scrollbarPseudoClasses = [
   ':-webkit-scrollbar',
   ':-webkit-scrollbar-button',
   // ':-webkit-scrollbar:horizontal', TODO
@@ -24,6 +27,7 @@ const pseudoClasses = [
 
 export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   node: T,
+  style: CSSStyleDeclaration,
   cloned: T,
   context: Context,
 ) {
@@ -31,8 +35,8 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
   if (!svgStyleElement || !ownerDocument || !ownerWindow) return
 
-  pseudoClasses.forEach(pseudoClass => {
-    const style = ownerWindow.getComputedStyle(node, pseudoClass)
+  function copyBy(pseudoClass: string) {
+    const style = ownerWindow!.getComputedStyle(node, pseudoClass)
     const content = style.getPropertyValue('content')
     if (!content || content === 'none') return
     const klasses = [uuid()]
@@ -59,8 +63,17 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
     } catch (err) {
       return
     }
-    svgStyleElement.appendChild(
-      ownerDocument.createTextNode(`.${ klasses[0] }:${ pseudoClass } {\n  ${ cloneStyle.join('\n  ') }\n}\n`),
+    svgStyleElement!.appendChild(
+      ownerDocument!.createTextNode(`.${ klasses[0] }:${ pseudoClass } {\n  ${ cloneStyle.join('\n  ') }\n}\n`),
     )
-  })
+  }
+
+  pseudoClasses.forEach(copyBy)
+
+  if (
+    style.overflow !== 'hidden'
+    && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
+  ) {
+    scrollbarPseudoClasses.forEach(copyBy)
+  }
 }

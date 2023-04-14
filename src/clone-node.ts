@@ -97,15 +97,15 @@ export async function cloneNode<T extends Node>(
       applyCssStyleWithOptions(cloneStyle, context)
     }
 
+    copyPseudoClass(node, style, clone, context)
+
+    copyInputValue(node, clone)
+
     cloneStyle.getPropertyValue('font-family')
       .split(',')
       .filter(Boolean)
       .map(val => val.toLowerCase())
       .forEach(val => fontFamilies.add(val))
-
-    copyPseudoClass(node, clone, context)
-
-    copyInputValue(node, clone)
 
     if (!isVideoElement(node)) {
       await cloneChildNodes(node, clone, context)
