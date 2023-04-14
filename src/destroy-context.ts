@@ -4,6 +4,7 @@ export function destroyContext(context: Context) {
   context.ownerDocument = undefined
   context.ownerWindow = undefined
   context.svgStyleElement = undefined
+  context.svgStyles.clear()
   context.defaultComputedStyles.clear()
   if (context.sandbox) {
     try {

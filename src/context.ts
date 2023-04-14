@@ -50,6 +50,13 @@ export interface InternalContext<T extends Node> {
   svgStyleElement?: HTMLStyleElement
 
   /**
+   * The `svgStyleElement` class styles
+   *
+   * Map<cssText, class[]>
+   */
+  svgStyles: Map<string, string[]>
+
+  /**
    * The map of default `getComputedStyle` for all tagnames
    */
   defaultComputedStyles: Map<string, Record<string, any>>

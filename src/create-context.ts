@@ -63,6 +63,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     ownerWindow,
     dpi: scale === 1 ? null : 96 * scale,
     svgStyleElement: createStyleElement(ownerDocument),
+    svgStyles: new Map<string, string[]>(),
     defaultComputedStyles: new Map<string, Record<string, any>>(),
     workers: [
       ...new Array(

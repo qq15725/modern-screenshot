@@ -20,9 +20,11 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   if (isElementNode(context.node) && isSVGElementNode(context.node)) return context.node
 
   const {
+    ownerDocument,
     log,
     tasks,
     svgStyleElement,
+    svgStyles,
     font,
     progress,
     autoDestruct,
@@ -33,6 +35,13 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
 
   log.time('clone node')
   const clone = await cloneNode(context.node, context, true)
+  if (svgStyleElement && ownerDocument) {
+    let allCssText = ''
+    svgStyles.forEach((klasses, cssText) => {
+      allCssText += `${ klasses.join(',\n') } {\n  ${ cssText }\n}\n`
+    })
+    svgStyleElement.appendChild(ownerDocument.createTextNode(allCssText))
+  }
   log.timeEnd('clone node')
 
   onCloneNode?.(clone)
