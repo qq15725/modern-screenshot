@@ -2,7 +2,7 @@ import { getDefaultStyle } from './get-default-style'
 import { IN_CHROME } from './utils'
 import type { Context } from './context'
 
-const ignored = [
+const ignoredStyle = [
   'transitionProperty',
   'all', // svg: all
   'd', // svg: d
@@ -17,20 +17,15 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   context: Context,
 ) {
   const cloneStyle = clone.style
-  const defaultStyle = getDefaultStyle(node.tagName, context)
+  const defaultStyle = getDefaultStyle(node.tagName, null, context)
 
   cloneStyle.transitionProperty = 'none'
 
   for (let i = style.length - 1; i >= 0; i--) {
     const name = style.item(i)
-
-    if (ignored.includes(name)) {
-      continue
-    }
-
+    if (ignoredStyle.includes(name)) continue
     const value = style.getPropertyValue(name)
     const priority = style.getPropertyPriority(name)
-
     // Clean "margin" of root node
     if (
       isRoot
@@ -40,12 +35,10 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
       cloneStyle.setProperty(name, '0', priority)
       continue
     }
-
     // fix background-clip: text
     if (name === 'background-clip' && value === 'text') {
       clone.classList.add('______background-clip--text')
     }
-
     // Skip default style
     if (
       defaultStyle[name] === value
@@ -54,9 +47,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
     ) {
       continue
     }
-
     cloneStyle.setProperty(name, value, priority)
-
     // fix border width
     if (name.startsWith('border') && name.endsWith('style')) {
       const widthName = name.replace('style', 'width')

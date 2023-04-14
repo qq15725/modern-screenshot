@@ -1,4 +1,4 @@
-import { copyPseudoContent } from './copy-pseudo-content'
+import { copyPseudoClass } from './copy-pseudo-class'
 import { copyInputValue } from './copy-input-value'
 import { copyCssStyles } from './copy-css-styles'
 import {
@@ -103,7 +103,7 @@ export async function cloneNode<T extends Node>(
       .map(val => val.toLowerCase())
       .forEach(val => fontFamilies.add(val))
 
-    copyPseudoContent(node, clone, ownerWindow)
+    copyPseudoClass(node, clone, context)
 
     copyInputValue(node, clone)
 

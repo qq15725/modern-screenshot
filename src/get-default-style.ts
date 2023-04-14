@@ -1,9 +1,10 @@
 import { uuid } from './utils'
 import type { Context } from './context'
 
-export function getDefaultStyle(tagName: string, context: Context) {
+export function getDefaultStyle(tagName: string, pseudoElement: string | null, context: Context) {
   const { defaultComputedStyles, ownerDocument } = context
-  if (defaultComputedStyles.has(tagName)) return defaultComputedStyles.get(tagName)!
+  const key = `${ tagName }${ pseudoElement ?? '' }`
+  if (defaultComputedStyles.has(key)) return defaultComputedStyles.get(key)!
   let sandbox = context.sandbox
   if (!sandbox) {
     if (ownerDocument) {
@@ -26,7 +27,7 @@ export function getDefaultStyle(tagName: string, context: Context) {
   sandboxDocument.body.appendChild(el)
   // Ensure that there is some content, so properties like margin are applied
   el.textContent = ' '
-  const style = sandboxWindow.getComputedStyle(el)
+  const style = sandboxWindow.getComputedStyle(el, pseudoElement)
   const styles: Record<string, any> = {}
   for (let i = style.length - 1; i >= 0; i--) {
     const name = style.item(i)
@@ -37,6 +38,6 @@ export function getDefaultStyle(tagName: string, context: Context) {
     }
   }
   sandboxDocument.body.removeChild(el)
-  defaultComputedStyles.set(tagName, styles)
+  defaultComputedStyles.set(key, styles)
   return styles
 }

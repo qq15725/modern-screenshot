@@ -1,0 +1,30 @@
+<style>
+  .scrollbar {
+    display: block;
+    width: 10em;
+    overflow: auto;
+    height: 2em;
+  }
+
+  /* Demonstrate a "mostly customized" scrollbar
+   * (won't be visible otherwise if width/height is specified) */
+  .scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #aaa; /* or add it to the track */
+  }
+
+  /* Add a thumb */
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #000;
+  }
+</style>
+
+<template>
+  <div id="root" class="scrollbar">
+    Thisisaveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerylongword<br />
+    And pretty tall<br />
+    thing with weird scrollbars.<br />
+    Who thought scrollbars could be made weird?
+  </div>
+</template>
