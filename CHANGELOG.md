@@ -1,3 +1,12 @@
+## [4.4.11](https://github.com/qq15725/modern-screenshot/compare/v4.4.10...v4.4.11) (2023-04-14)
+
+
+### Features
+
+* support `css.-webkit-scrollbar` (close [#19](https://github.com/qq15725/modern-screenshot/issues/19)) ([0a3bfe3](https://github.com/qq15725/modern-screenshot/commit/0a3bfe3ba4bd780511923805f783934a673f96e7))
+
+
+
 ## [4.4.10](https://github.com/qq15725/modern-screenshot/compare/v4.4.9...v4.4.10) (2023-04-14)
 
 
