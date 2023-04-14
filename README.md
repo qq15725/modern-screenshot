@@ -155,14 +155,6 @@ See the [context.ts](src/context.ts)
 
 ## TODO
 
-- [ ] unable to clone closed [shadowDom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM)
-
-  `input::placeholder { color: red; }`
-
 - [ ] unable to clone [css counters](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Counter_Styles/Using_CSS_counters)
 
   `content: counter(step);`
-
-- [ ] unable to clone [-webkit-scrollbar](https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar)
-
-  `body::-webkit-scrollbar-thumb { background-color: red; }`

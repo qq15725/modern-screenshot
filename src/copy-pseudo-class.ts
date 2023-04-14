@@ -10,6 +10,7 @@ const ignoredStyles = [
 const pseudoClasses = [
   ':before',
   ':after',
+  // ':placeholder', TODO
   ':-webkit-scrollbar',
   ':-webkit-scrollbar-button',
   // ':-webkit-scrollbar:horizontal', TODO
