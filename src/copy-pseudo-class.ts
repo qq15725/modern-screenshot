@@ -5,6 +5,7 @@ import type { Context } from './context'
 const ignoredStyles = [
   'content',
   '-webkit-locale',
+  '-webkit-text-fill-color',
 ]
 
 const pseudoClasses = [
@@ -40,7 +41,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
     const content = style.getPropertyValue('content')
     if (!content || content === 'none') return
     const klasses = [uuid()]
-    const defaultStyle = getDefaultStyle('DIV', pseudoClass, context)
+    const defaultStyle = getDefaultStyle(node.nodeName, pseudoClass, context)
     const cloneStyle = [
       `content: '${ content.replace(/'|"/g, '') }';`,
     ]

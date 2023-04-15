@@ -1,9 +1,10 @@
 import { uuid } from './utils'
 import type { Context } from './context'
 
-export function getDefaultStyle(tagName: string, pseudoElement: string | null, context: Context) {
+export function getDefaultStyle(nodeName: string, pseudoElement: string | null, context: Context) {
+  nodeName = nodeName.toLowerCase()
   const { defaultComputedStyles, ownerDocument } = context
-  const key = `${ tagName }${ pseudoElement ?? '' }`
+  const key = `${ nodeName }${ pseudoElement ?? '' }`
   if (defaultComputedStyles.has(key)) return defaultComputedStyles.get(key)!
   let sandbox = context.sandbox
   if (!sandbox) {
@@ -23,7 +24,7 @@ export function getDefaultStyle(tagName: string, pseudoElement: string | null, c
   const sandboxWindow = sandbox.contentWindow
   if (!sandboxWindow) return {}
   const sandboxDocument = sandboxWindow.document
-  const el = sandboxDocument.createElement(tagName)
+  const el = sandboxDocument.createElement(nodeName)
   sandboxDocument.body.appendChild(el)
   // Ensure that there is some content, so properties like margin are applied
   el.textContent = ' '

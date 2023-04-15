@@ -7,6 +7,7 @@ const ignoredStyle = [
   'all', // svg: all
   'd', // svg: d
   'content', // Safari shows pseudoelements if content is set
+  '-webkit-text-fill-color',
 ]
 
 export function copyCssStyles<T extends HTMLElement | SVGElement>(
@@ -17,7 +18,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   context: Context,
 ) {
   const cloneStyle = clone.style
-  const defaultStyle = getDefaultStyle(node.tagName, null, context)
+  const defaultStyle = getDefaultStyle(node.nodeName, null, context)
 
   cloneStyle.transitionProperty = 'none'
 
