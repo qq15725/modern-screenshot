@@ -1,3 +1,12 @@
+## [4.4.15](https://github.com/qq15725/modern-screenshot/compare/v4.4.14...v4.4.15) (2023-04-15)
+
+
+### Bug Fixes
+
+* `getDefaultStyle` nodeName not being converted to lower case ([c3d5c92](https://github.com/qq15725/modern-screenshot/commit/c3d5c920234db98d70cf9d6aac844f23db462794))
+
+
+
 ## [4.4.14](https://github.com/qq15725/modern-screenshot/compare/v4.4.13...v4.4.14) (2023-04-14)
 
 
