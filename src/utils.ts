@@ -21,7 +21,8 @@ export const isCSSImportRule = (rule: CSSRule): rule is CSSImportRule => rule.co
 // Element
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'
-export const isSVGImageElementNode = (node: Element): node is SVGImageElement => isSVGElementNode(node) && node.tagName === 'IMAGE'
+export const isSVGSVGElementNode = (node: Element): node is SVGSVGElement => isSVGElementNode(node) && node.tagName === 'svg'
+export const isSVGImageElementNode = (node: Element): node is SVGImageElement => isSVGElementNode(node) && node.tagName === 'image'
 export const isHTMLElementNode = (node: Node): node is HTMLElement => isElementNode(node) && typeof (node as HTMLElement).style !== 'undefined' && !isSVGElementNode(node)
 export const isCommentNode = (node: Node): node is Text => node.nodeType === 8 // Node.COMMENT_NODE
 export const isTextNode = (node: Node): node is Text => node.nodeType === 3 // Node.TEXT_NODE
@@ -87,8 +88,10 @@ export function getDocument<T extends Node>(target?: T | null): Document {
   ) as any
 }
 
+export const xmlns = 'http://www.w3.org/2000/svg'
+
 export function createSvg(width: number, height: number, ownerDocument?: Document | null): SVGSVGElement {
-  const svg = getDocument(ownerDocument).createElementNS('http://www.w3.org/2000/svg', 'svg')
+  const svg = getDocument(ownerDocument).createElementNS(xmlns, 'svg')
   svg.setAttributeNS(null, 'width', width.toString())
   svg.setAttributeNS(null, 'height', height.toString())
   svg.setAttributeNS(null, 'viewBox', `0 0 ${ width } ${ height }`)

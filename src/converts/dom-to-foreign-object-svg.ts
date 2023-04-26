@@ -24,6 +24,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
     log,
     tasks,
     svgStyleElement,
+    svgDefsElement,
     svgStyles,
     font,
     progress,
@@ -75,6 +76,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   onEmbedNode?.(clone)
 
   const svg = createForeignObjectSvg(clone, context)
+  svgDefsElement && svg.insertBefore(svgDefsElement, svg.children[0])
   svgStyleElement && svg.insertBefore(svgStyleElement, svg.children[0])
 
   autoDestruct && destroyContext(context)

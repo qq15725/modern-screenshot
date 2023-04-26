@@ -50,6 +50,11 @@ export interface InternalContext<T extends Node> {
   svgStyleElement?: HTMLStyleElement
 
   /**
+   * The `defs` element under the root `svg` element
+   */
+  svgDefsElement?: SVGDefsElement
+
+  /**
    * The `svgStyleElement` class styles
    *
    * Map<cssText, class[]>

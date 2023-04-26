@@ -5,7 +5,7 @@ import {
   SUPPORT_WEB_WORKER,
   isContext,
   isElementNode,
-  supportWebp, waitUntilLoad,
+  supportWebp, waitUntilLoad, xmlns,
 } from './utils'
 import type { Context, Request } from './context'
 import type { Options } from './options'
@@ -63,6 +63,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     ownerWindow,
     dpi: scale === 1 ? null : 96 * scale,
     svgStyleElement: createStyleElement(ownerDocument),
+    svgDefsElement: ownerDocument?.createElementNS(xmlns, 'defs'),
     svgStyles: new Map<string, string[]>(),
     defaultComputedStyles: new Map<string, Record<string, any>>(),
     workers: [
