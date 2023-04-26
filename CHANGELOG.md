@@ -1,3 +1,12 @@
+## [4.4.16](https://github.com/qq15725/modern-screenshot/compare/v4.4.15...v4.4.16) (2023-04-26)
+
+
+### Bug Fixes
+
+* copy input value in web-component(close [#22](https://github.com/qq15725/modern-screenshot/issues/22)) ([5e4edce](https://github.com/qq15725/modern-screenshot/commit/5e4edce18ce84bc34f098e5627fcf844c9850019))
+
+
+
 ## [4.4.15](https://github.com/qq15725/modern-screenshot/compare/v4.4.14...v4.4.15) (2023-04-15)
 
 
