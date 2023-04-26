@@ -1,3 +1,12 @@
+## [4.4.19](https://github.com/qq15725/modern-screenshot/compare/v4.4.18...v4.4.19) (2023-04-26)
+
+
+### Features
+
+* support svg <use> href ([81a78ce](https://github.com/qq15725/modern-screenshot/commit/81a78ce10037c91bd54dd443e3244c2463fb9dce))
+
+
+
 ## [4.4.18](https://github.com/qq15725/modern-screenshot/compare/v4.4.17...v4.4.18) (2023-04-26)
 
 
