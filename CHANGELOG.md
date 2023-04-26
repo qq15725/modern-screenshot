@@ -1,3 +1,12 @@
+## [4.4.18](https://github.com/qq15725/modern-screenshot/compare/v4.4.17...v4.4.18) (2023-04-26)
+
+
+### Features
+
+* support currentColor in svg.symbol ([322b223](https://github.com/qq15725/modern-screenshot/commit/322b223a1e09d0b6e8c22b7f62d59d18a0a3dfdf))
+
+
+
 ## [4.4.17](https://github.com/qq15725/modern-screenshot/compare/v4.4.16...v4.4.17) (2023-04-26)
 
 
