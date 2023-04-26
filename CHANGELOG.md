@@ -1,3 +1,12 @@
+## [4.4.17](https://github.com/qq15725/modern-screenshot/compare/v4.4.16...v4.4.17) (2023-04-26)
+
+
+### Bug Fixes
+
+* diff style logic(close [#17](https://github.com/qq15725/modern-screenshot/issues/17)) ([4fc4174](https://github.com/qq15725/modern-screenshot/commit/4fc4174820b00262c8c91f79eb34eadcfc558475))
+
+
+
 ## [4.4.16](https://github.com/qq15725/modern-screenshot/compare/v4.4.15...v4.4.16) (2023-04-26)
 
 
