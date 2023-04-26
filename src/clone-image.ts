@@ -1,16 +1,16 @@
 export function cloneImage<T extends HTMLImageElement>(
   image: T,
 ): HTMLImageElement {
-  const clone = image.cloneNode(false) as T
+  const cloned = image.cloneNode(false) as T
 
   if (image.currentSrc && image.currentSrc !== image.src) {
-    clone.src = image.currentSrc
-    clone.srcset = ''
+    cloned.src = image.currentSrc
+    cloned.srcset = ''
   }
 
-  if (clone.loading === 'lazy') {
-    clone.loading = 'eager'
+  if (cloned.loading === 'lazy') {
+    cloned.loading = 'eager'
   }
 
-  return clone
+  return cloned
 }

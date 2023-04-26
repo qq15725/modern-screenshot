@@ -12,44 +12,44 @@ export async function cloneVideo<T extends HTMLVideoElement>(
     return createImage(video.poster, video.ownerDocument)
   }
 
-  const clone = video.cloneNode(false) as T
-  clone.crossOrigin = 'anonymous'
+  const cloned = video.cloneNode(false) as T
+  cloned.crossOrigin = 'anonymous'
   if (video.currentSrc && video.currentSrc !== video.src) {
-    clone.src = video.currentSrc
+    cloned.src = video.currentSrc
   }
 
   // video to canvas
-  const ownerDocument = clone.ownerDocument
+  const ownerDocument = cloned.ownerDocument
   if (ownerDocument) {
     let canPlay = true
-    await loadMedia(clone, {
+    await loadMedia(cloned, {
       onError: () => canPlay = false,
     })
     if (!canPlay) {
       if (video.poster) {
         return createImage(video.poster, video.ownerDocument)
       }
-      return clone
+      return cloned
     }
-    clone.currentTime = video.currentTime
+    cloned.currentTime = video.currentTime
     await new Promise(resolve => {
-      clone.addEventListener('seeked', resolve, { once: true })
+      cloned.addEventListener('seeked', resolve, { once: true })
     })
     const canvas = ownerDocument.createElement('canvas')
     canvas.width = video.offsetWidth
     canvas.height = video.offsetHeight
     try {
       const ctx = canvas.getContext('2d')
-      if (ctx) ctx.drawImage(clone, 0, 0, canvas.width, canvas.height)
+      if (ctx) ctx.drawImage(cloned, 0, 0, canvas.width, canvas.height)
     } catch (error) {
       consoleWarn('Failed to clone video', error)
       if (video.poster) {
         return createImage(video.poster, video.ownerDocument)
       }
-      return clone
+      return cloned
     }
     return cloneCanvas(canvas)
   }
 
-  return clone
+  return cloned
 }

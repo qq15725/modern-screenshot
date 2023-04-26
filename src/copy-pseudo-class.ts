@@ -1,11 +1,11 @@
 import { getDefaultStyle } from './get-default-style'
+import { getDiffStyle } from './get-diff-style'
 import { uuid } from './utils'
 import type { Context } from './context'
 
 const ignoredStyles = [
   'content',
   '-webkit-locale',
-  '-webkit-text-fill-color',
 ]
 
 const pseudoClasses = [
@@ -28,7 +28,7 @@ const scrollbarPseudoClasses = [
 
 export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   node: T,
-  style: CSSStyleDeclaration,
+  computedStyle: CSSStyleDeclaration,
   cloned: T,
   context: Context,
 ) {
@@ -37,33 +37,37 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   if (!svgStyleElement || !ownerWindow) return
 
   function copyBy(pseudoClass: string) {
-    const style = ownerWindow!.getComputedStyle(node, pseudoClass)
-    const content = style.getPropertyValue('content')
+    const computedStyle = ownerWindow!.getComputedStyle(node, pseudoClass)
+    const content = computedStyle.getPropertyValue('content')
+
     if (!content || content === 'none') return
+
     const klasses = [uuid()]
     const defaultStyle = getDefaultStyle(node.nodeName, pseudoClass, context)
     const cloneStyle = [
       `content: '${ content.replace(/'|"/g, '') }';`,
     ]
-    for (let i = style.length - 1; i >= 0; i--) {
-      const name = style.item(i)
+
+    const diffStyle = getDiffStyle(computedStyle, defaultStyle)
+
+    for (const [name, [value, priority]] of Object.entries(diffStyle)) {
       if (ignoredStyles.includes(name)) continue
-      const value = style.getPropertyValue(name)
-      const priority = style.getPropertyPriority(name)
-      // fix background-clip: text
+
       if (name === 'background-clip' && value === 'text') {
         klasses.push(' ______background-clip--text')
       }
-      // Skip default style
-      if (defaultStyle[name] === value && !priority) continue
+
       cloneStyle.push(`${ name }: ${ value }${ priority ? ' !important' : '' };`)
     }
+
     if (cloneStyle.length === 1) return
+
     try {
       (cloned as any).className = [(cloned as any).className, ...klasses].join(' ')
     } catch (err) {
       return
     }
+
     const cssText = cloneStyle.join('\n  ')
     let allClasses = svgStyles.get(cssText)
     if (!allClasses) {
@@ -75,7 +79,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
   pseudoClasses.forEach(copyBy)
 
-  const overflow = style.overflow
+  const overflow = computedStyle.getPropertyValue('overflow')
 
   if (
     overflow.includes('scroll')

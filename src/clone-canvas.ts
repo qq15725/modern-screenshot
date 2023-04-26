@@ -14,9 +14,9 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
     }
   }
 
-  const clone = canvas.cloneNode(false) as T
+  const cloned = canvas.cloneNode(false) as T
   const ctx = canvas.getContext('2d')
-  const clonedCtx = clone.getContext('2d')
+  const clonedCtx = cloned.getContext('2d')
 
   try {
     if (ctx && clonedCtx) {
@@ -25,10 +25,10 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
         0, 0,
       )
     }
-    return clone
+    return cloned
   } catch (error) {
     consoleWarn('Failed to clone canvas', error)
   }
 
-  return clone
+  return cloned
 }

@@ -16,7 +16,7 @@ import { cloneElement } from './clone-element'
 import type { Context } from './context'
 
 async function appendChildNode<T extends Node>(
-  clone: T,
+  cloned: T,
   child: ChildNode,
   context: Context,
 ): Promise<void> {
@@ -24,12 +24,12 @@ async function appendChildNode<T extends Node>(
 
   if (context.filter && !context.filter(child)) return
 
-  clone.appendChild(await cloneNode(child, context))
+  cloned.appendChild(await cloneNode(child, context))
 }
 
 async function cloneChildNodes<T extends Node>(
   node: T,
-  clone: T,
+  cloned: T,
   context: Context,
 ): Promise<void> {
   const firstChild = (
@@ -47,22 +47,22 @@ async function cloneChildNodes<T extends Node>(
     ) {
       const nodes = child.assignedNodes()
       for (let i = 0; i < nodes.length; i++) {
-        await appendChildNode(clone, nodes[i] as ChildNode, context)
+        await appendChildNode(cloned, nodes[i] as ChildNode, context)
       }
     } else {
-      await appendChildNode(clone, child, context)
+      await appendChildNode(cloned, child, context)
     }
   }
 }
 
-function applyCssStyleWithOptions(style: CSSStyleDeclaration, context: Context) {
+function applyCssStyleWithOptions(clonedStyle: CSSStyleDeclaration, context: Context) {
   const { backgroundColor, width, height, style: styles } = context
-  if (backgroundColor) style.backgroundColor = backgroundColor
-  if (width) style.width = `${ width }px`
-  if (height) style.height = `${ height }px`
+  if (backgroundColor) clonedStyle.backgroundColor = backgroundColor
+  if (width) clonedStyle.width = `${ width }px`
+  if (height) clonedStyle.height = `${ height }px`
   if (styles) {
     for (const name in styles) {
-      style[name] = styles[name]!
+      clonedStyle[name] = styles[name]!
     }
   }
 }
@@ -82,41 +82,41 @@ export async function cloneNode<T extends Node>(
     && ownerWindow
     && isElementNode(node)
     && (isHTMLElementNode(node) || isSVGElementNode(node))) {
-    const style = ownerWindow.getComputedStyle(node)
+    const computedStyle = ownerWindow.getComputedStyle(node)
 
-    if (style.display === 'none') {
+    if (computedStyle.display === 'none') {
       return ownerDocument.createComment(node.tagName.toLowerCase())
     }
 
-    const clone = await cloneElement(node, context)
-    const cloneStyle = clone.style
+    const cloned = await cloneElement(node, context)
+    const clonedStyle = cloned.style
 
-    copyCssStyles(node, style, clone, isRoot, context)
+    copyCssStyles(node, computedStyle, cloned, context)
 
     if (isRoot) {
-      applyCssStyleWithOptions(cloneStyle, context)
+      applyCssStyleWithOptions(clonedStyle, context)
     }
 
-    copyPseudoClass(node, style, clone, context)
+    copyPseudoClass(node, computedStyle, cloned, context)
 
-    copyInputValue(node, clone)
+    copyInputValue(node, cloned)
 
-    cloneStyle.getPropertyValue('font-family')
+    clonedStyle.getPropertyValue('font-family')
       .split(',')
       .filter(Boolean)
       .map(val => val.toLowerCase())
       .forEach(val => fontFamilies.add(val))
 
     if (!isVideoElement(node)) {
-      await cloneChildNodes(node, clone, context)
+      await cloneChildNodes(node, cloned, context)
     }
 
-    return clone
+    return cloned
   }
 
-  const clone = node.cloneNode(false)
+  const cloned = node.cloneNode(false)
 
-  await cloneChildNodes(node, clone, context)
+  await cloneChildNodes(node, cloned, context)
 
-  return clone
+  return cloned
 }
