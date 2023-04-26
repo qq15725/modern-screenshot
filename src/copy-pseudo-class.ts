@@ -43,7 +43,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
     if (!content || content === 'none') return
 
     const klasses = [uuid()]
-    const defaultStyle = getDefaultStyle(node.nodeName, pseudoClass, context)
+    const defaultStyle = getDefaultStyle(node, pseudoClass, context)
     const cloneStyle = [
       `content: '${ content.replace(/'|"/g, '') }';`,
     ]

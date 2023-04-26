@@ -6,7 +6,6 @@ const getPrefix = (name: string) => name
 export function getDiffStyle(
   style: CSSStyleDeclaration,
   defaultStyle: Record<string, string>,
-  node?: HTMLElement | SVGElement,
 ) {
   const diffStyle: Record<string, [string, string]> = {}
   const diffStylePrefixs: string[] = []
@@ -23,11 +22,7 @@ export function getDiffStyle(
       prefixTree[prefix][name] = [value, priority]
     }
 
-    if (
-      defaultStyle[name] === value
-      && !priority
-      && (node && !node.getAttribute(name))
-    ) continue
+    if (defaultStyle[name] === value && !priority) continue
 
     if (prefix) {
       diffStylePrefixs.push(prefix)

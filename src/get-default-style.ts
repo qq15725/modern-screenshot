@@ -1,11 +1,42 @@
-import { uuid } from './utils'
+import { isSVGElementNode, uuid } from './utils'
 import type { Context } from './context'
 
-export function getDefaultStyle(nodeName: string, pseudoElement: string | null, context: Context) {
-  nodeName = nodeName.toLowerCase()
+const ignoredStyles = [
+  'width',
+  'height',
+]
+
+const includedAttributes = [
+  'stroke',
+  'fill',
+]
+
+export function getDefaultStyle(
+  node: HTMLElement | SVGElement,
+  pseudoElement: string | null,
+  context: Context,
+) {
   const { defaultComputedStyles, ownerDocument } = context
-  const key = `${ nodeName }${ pseudoElement ?? '' }`
+
+  const nodeName = node.nodeName.toLowerCase()
+  const isSvgNode = isSVGElementNode(node) && nodeName !== 'svg'
+  const attributes = isSvgNode
+    ? includedAttributes
+      .map(name => [name, node.getAttribute(name)])
+      .filter(([, value]) => value !== null)
+    : []
+
+  const key = [
+    isSvgNode && 'svg',
+    nodeName,
+    attributes.map((name, value) => `${ name }=${ value }`).join(','),
+    pseudoElement,
+  ]
+    .filter(Boolean)
+    .join(':')
+
   if (defaultComputedStyles.has(key)) return defaultComputedStyles.get(key)!
+
   let sandbox = context.sandbox
   if (!sandbox) {
     if (ownerDocument) {
@@ -21,24 +52,35 @@ export function getDefaultStyle(nodeName: string, pseudoElement: string | null, 
     }
   }
   if (!sandbox) return {}
+
   const sandboxWindow = sandbox.contentWindow
   if (!sandboxWindow) return {}
   const sandboxDocument = sandboxWindow.document
-  const el = sandboxDocument.createElement(nodeName)
-  sandboxDocument.body.appendChild(el)
-  // Ensure that there is some content, so properties like margin are applied
-  el.textContent = ' '
-  const style = sandboxWindow.getComputedStyle(el, pseudoElement)
-  const styles: Record<string, any> = {}
-  for (let i = style.length - 1; i >= 0; i--) {
-    const name = style.item(i)
-    if (name === 'width' || name === 'height') {
-      styles[name] = 'auto'
-    } else {
-      styles[name] = style.getPropertyValue(name)
-    }
+
+  let root: HTMLElement | SVGSVGElement
+  let el: Element
+  if (isSvgNode) {
+    root = sandboxDocument.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    el = root.ownerDocument.createElementNS(root.namespaceURI, nodeName)
+    attributes.forEach(([name, value]) => {
+      el.setAttributeNS(null, name!, value!)
+    })
+    root.appendChild(el)
+  } else {
+    root = el = sandboxDocument.createElement(nodeName)
   }
-  sandboxDocument.body.removeChild(el)
+  el.textContent = ' '
+  sandboxDocument.body.appendChild(root)
+  const computedStyle = sandboxWindow.getComputedStyle(el, pseudoElement)
+  const styles: Record<string, any> = {}
+  for (let len = computedStyle.length, i = 0; i < len; i++) {
+    const name = computedStyle.item(i)
+    if (ignoredStyles.includes(name)) continue
+    styles[name] = computedStyle.getPropertyValue(name)
+  }
+  sandboxDocument.body.removeChild(root)
+
   defaultComputedStyles.set(key, styles)
+
   return styles
 }

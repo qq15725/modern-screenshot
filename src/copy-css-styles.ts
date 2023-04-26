@@ -17,8 +17,8 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   context: Context,
 ) {
   const clonedStyle = cloned.style
-  const defaultStyle = getDefaultStyle(node.nodeName, null, context)
-  const diffStyle = getDiffStyle(computedStyle, defaultStyle, node)
+  const defaultStyle = getDefaultStyle(node, null, context)
+  const diffStyle = getDiffStyle(computedStyle, defaultStyle)
 
   for (const [name, [value, priority]] of Object.entries(diffStyle)) {
     if (ignoredStyle.includes(name)) continue

@@ -84,10 +84,6 @@ export async function cloneNode<T extends Node>(
     && (isHTMLElementNode(node) || isSVGElementNode(node))) {
     const computedStyle = ownerWindow.getComputedStyle(node)
 
-    if (computedStyle.display === 'none') {
-      return ownerDocument.createComment(node.tagName.toLowerCase())
-    }
-
     const cloned = await cloneElement(node, context)
     const clonedStyle = cloned.style
 
