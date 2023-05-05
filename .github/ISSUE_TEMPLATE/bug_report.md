@@ -10,9 +10,11 @@ assignees: ''
 
 <!--- Provide a link to a live example -->
 
-[Codepen playground](https://codepen.io/qq15725/pen/VwGeqwa)
+[Playground for https://codesandbox.io](https://codesandbox.io/s/modern-screenshot-lxhrev?file=/index.html)
 
-[Vue.js playground](https://play.vuejs.org/#eNplkU1rwzAMhv+K8KUttElhtywt7LDDDoMytpsvJnYTd/EHttIPSv77lDjtCj0YrFevHknoyt68z46dYgUrYxW0R4gKO7/lVhvvAsIVpDPfbmdr6GEfnIGZcVIFuyK/UjY2DmcP7qD2S3D203UWlbzXUA9ycVs5GxGCc/jewmZwzxc3VQoUP18f/zK3d9BcxIutYL6AzRau3MLNnR1F2ymqESehiTENO08tUpZQPb0yTyvSchSgMr4VqCgCKKU+Dl03nKVCzqBqRYyTwNloI2P0wm53rbjUgSaTxByEkZETZGTTX5saihgqqp8GJWJO2TJ/aExhxEubZsiGRmk3gJOW2BTwsl7782uSGqXrBh+1ftxpBLAlSydYGeGzQ3SWTjqy+JSInBU3OmdPNxyynDWIPhZ53ln/W2eVM/mTkbaMmGsr1TkzB6JOk/Ss/wNoc8tP)
+[Playground for https://codepen.io](https://codepen.io/qq15725/pen/VwGeqwa)
+
+[Playground for https://play.vuejs.org](https://play.vuejs.org/#eNplkk1rg0AQhv/KsFBqIFFpycWYQA899FAIpb3tZdGNmrof7I75IPjfO64mDeSguO++88y7417Ym7XxoZMsY7kvXGMRvMTObrhulDUO4QKlUd9mqyvoYeeMgmdlSun0gvxSal8bfL5zO7mbg9GfptMoy1sN9SAX14XRHsEZg+8trAd3NLuqpUDx8/XxL3N9A0XCn3UB0QzWG7hwDVd3fBBtJ6lGHEVDjClsNLYYd+eUyxeilRm8QE/g4cmT8cB0VFqgVLYVKGkFkJfNYciw5mzEcAZFK7yfBM6CjYzeCr3ZtuJcOcpZEnMQAiMhSGDTd6MqyLwrqH6KTUSP51aSgk5ovzNOZWPIKI2XMwjqkChaLNOnOQzv2YrKEoLmyV1eWgZUaBsP+cYBARybEusMXtPUnlajVMumqvFe68MoAoDN2fgfF0rYeO+NpnsRWHza8JxlVzpnDxdh2OWsRrQ+S5JO298qLoxKHow0HI9Jo0t5itWeqFOSnvV/3hTgRw==)
 
 <details><summary>Error Message & Stack Trace</summary><p>
 
