@@ -3,9 +3,12 @@ import { getDefaultRequestInit } from './get-default-request-init'
 import {
   IN_BROWSER,
   SUPPORT_WEB_WORKER,
+  XMLNS,
+  consoleWarn,
   isContext,
   isElementNode,
-  supportWebp, waitUntilLoad, xmlns,
+  supportWebp,
+  waitUntilLoad,
 } from './utils'
 import type { Context, Request } from './context'
 import type { Options } from './options'
@@ -63,7 +66,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     ownerWindow,
     dpi: scale === 1 ? null : 96 * scale,
     svgStyleElement: createStyleElement(ownerDocument),
-    svgDefsElement: ownerDocument?.createElementNS(xmlns, 'defs'),
+    svgDefsElement: ownerDocument?.createElementNS(XMLNS, 'defs'),
     svgStyles: new Map<string, string[]>(),
     defaultComputedStyles: new Map<string, Record<string, any>>(),
     workers: [
@@ -73,21 +76,26 @@ export async function createContext<T extends Node>(node: T, options?: Options &
           : 0,
       ),
     ].map(() => {
-      const worker = new Worker(workerUrl!)
-      worker.onmessage = async event => {
-        const { url, result } = event.data
-        if (result) {
-          requests.get(url)?.resovle?.(result)
-        } else {
+      try {
+        const worker = new Worker(workerUrl!)
+        worker.onmessage = async event => {
+          const { url, result } = event.data
+          if (result) {
+            requests.get(url)?.resovle?.(result)
+          } else {
+            requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
+          }
+        }
+        worker.onmessageerror = event => {
+          const { url } = event.data
           requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
         }
+        return worker
+      } catch (error) {
+        consoleWarn('Failed to new Worker', error)
+        return null
       }
-      worker.onmessageerror = event => {
-        const { url } = event.data
-        requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
-      }
-      return worker
-    }),
+    }).filter(Boolean) as any,
     fontFamilies: new Set<string>(),
     fontCssTexts: new Map<string, string>(),
     acceptOfImage: `${ [

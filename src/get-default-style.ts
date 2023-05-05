@@ -1,4 +1,4 @@
-import { isSVGElementNode, uuid } from './utils'
+import { XMLNS, consoleWarn, isSVGElementNode, uuid } from './utils'
 import type { Context } from './context'
 
 const ignoredStyles = [
@@ -39,16 +39,20 @@ export function getDefaultStyle(
 
   let sandbox = context.sandbox
   if (!sandbox) {
-    if (ownerDocument) {
-      sandbox = ownerDocument.createElement('iframe')
-      sandbox.id = `__SANDBOX__-${ uuid() }`
-      sandbox.width = '0'
-      sandbox.height = '0'
-      sandbox.style.visibility = 'hidden'
-      sandbox.style.position = 'fixed'
-      ownerDocument.body.appendChild(sandbox)
-      sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
-      context.sandbox = sandbox
+    try {
+      if (ownerDocument) {
+        sandbox = ownerDocument.createElement('iframe')
+        sandbox.id = `__SANDBOX__-${ uuid() }`
+        sandbox.width = '0'
+        sandbox.height = '0'
+        sandbox.style.visibility = 'hidden'
+        sandbox.style.position = 'fixed'
+        ownerDocument.body.appendChild(sandbox)
+        sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
+        context.sandbox = sandbox
+      }
+    } catch (error) {
+      consoleWarn('Failed to create iframe sandbox', error)
     }
   }
   if (!sandbox) return {}
@@ -60,7 +64,7 @@ export function getDefaultStyle(
   let root: HTMLElement | SVGSVGElement
   let el: Element
   if (isSvgNode) {
-    root = sandboxDocument.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    root = sandboxDocument.createElementNS(XMLNS, 'svg')
     el = root.ownerDocument.createElementNS(root.namespaceURI, nodeName)
     attributes.forEach(([name, value]) => {
       el.setAttributeNS(null, name!, value!)

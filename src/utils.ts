@@ -88,10 +88,10 @@ export function getDocument<T extends Node>(target?: T | null): Document {
   ) as any
 }
 
-export const xmlns = 'http://www.w3.org/2000/svg'
+export const XMLNS = 'http://www.w3.org/2000/svg'
 
 export function createSvg(width: number, height: number, ownerDocument?: Document | null): SVGSVGElement {
-  const svg = getDocument(ownerDocument).createElementNS(xmlns, 'svg')
+  const svg = getDocument(ownerDocument).createElementNS(XMLNS, 'svg')
   svg.setAttributeNS(null, 'width', width.toString())
   svg.setAttributeNS(null, 'height', height.toString())
   svg.setAttributeNS(null, 'viewBox', `0 0 ${ width } ${ height }`)

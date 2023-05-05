@@ -1,5 +1,5 @@
 import { createStyleElement, orCreateContext } from '../create-context'
-import { createImage, svgToDataUrl, xmlns } from '../utils'
+import { XMLNS, createImage, svgToDataUrl } from '../utils'
 import { imageToCanvas } from '../image-to-canvas'
 import { domToForeignObjectSvg } from './dom-to-foreign-object-svg'
 
@@ -14,7 +14,7 @@ export async function domToCanvas(node: any, options?: any) {
   const dataUrl = svgToDataUrl(svg)
   if (!context.autoDestruct) {
     context.svgStyleElement = createStyleElement(context.ownerDocument)
-    context.svgDefsElement = context.ownerDocument?.createElementNS(xmlns, 'defs')
+    context.svgDefsElement = context.ownerDocument?.createElementNS(XMLNS, 'defs')
     context.svgStyles.clear()
   }
   const image = createImage(dataUrl, svg.ownerDocument)
