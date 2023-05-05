@@ -1,3 +1,12 @@
+## [4.4.20](https://github.com/qq15725/modern-screenshot/compare/v4.4.19...v4.4.20) (2023-05-05)
+
+
+### Bug Fixes
+
+* safari not use web worker fetch resource(exists blob:null error) ([0b4ec02](https://github.com/qq15725/modern-screenshot/commit/0b4ec0244fa3e89a8174140d52dd805d1a85d82e))
+
+
+
 ## [4.4.19](https://github.com/qq15725/modern-screenshot/compare/v4.4.18...v4.4.19) (2023-04-26)
 
 
