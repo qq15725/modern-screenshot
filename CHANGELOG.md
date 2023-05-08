@@ -1,3 +1,12 @@
+## [4.4.21](https://github.com/qq15725/modern-screenshot/compare/v4.4.20...v4.4.21) (2023-05-08)
+
+
+### Bug Fixes
+
+* skip root margin ([a567b62](https://github.com/qq15725/modern-screenshot/commit/a567b625537db9c8ac035dcf2ec54613e6dc1236))
+
+
+
 ## [4.4.20](https://github.com/qq15725/modern-screenshot/compare/v4.4.19...v4.4.20) (2023-05-05)
 
 
