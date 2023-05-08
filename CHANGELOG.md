@@ -1,3 +1,12 @@
+## [4.4.22](https://github.com/qq15725/modern-screenshot/compare/v4.4.21...v4.4.22) (2023-05-08)
+
+
+### Bug Fixes
+
+* root box-sizing ([f2c66ce](https://github.com/qq15725/modern-screenshot/commit/f2c66ced9c645832c5d22e720886de5c98ea5e60))
+
+
+
 ## [4.4.21](https://github.com/qq15725/modern-screenshot/compare/v4.4.20...v4.4.21) (2023-05-08)
 
 
