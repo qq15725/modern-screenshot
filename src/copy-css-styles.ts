@@ -34,6 +34,10 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
     clonedStyle.setProperty(name, value, priority)
   }
 
+  if (isRoot) {
+    clonedStyle.setProperty('box-sizing', 'border-box')
+  }
+
   clonedStyle.setProperty('transition-property', 'none')
 
   // fix chromium
