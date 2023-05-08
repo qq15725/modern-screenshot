@@ -14,6 +14,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   node: T,
   computedStyle: CSSStyleDeclaration,
   cloned: T,
+  isRoot: boolean,
   context: Context,
 ) {
   const clonedStyle = cloned.style
@@ -22,6 +23,8 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
 
   for (const [name, [value, priority]] of Object.entries(diffStyle)) {
     if (ignoredStyle.includes(name)) continue
+
+    if (isRoot && name.startsWith('margin')) continue
 
     // fix background-clip: text
     if (name === 'background-clip' && value === 'text') {

@@ -87,7 +87,7 @@ export async function cloneNode<T extends Node>(
     const cloned = await cloneElement(node, context)
     const clonedStyle = cloned.style
 
-    copyCssStyles(node, computedStyle, cloned, context)
+    copyCssStyles(node, computedStyle, cloned, isRoot, context)
 
     if (isRoot) {
       applyCssStyleWithOptions(clonedStyle, context)
