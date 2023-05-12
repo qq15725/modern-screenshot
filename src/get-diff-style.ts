@@ -1,44 +1,39 @@
-const getPrefix = (name: string) => name
-  .split('-')
-  .slice(0, -1)
-  .join('-')
-
 export function getDiffStyle(
   style: CSSStyleDeclaration,
-  defaultStyle: Record<string, string>,
+  defaultStyle: Map<string, string>,
 ) {
-  const diffStyle: Record<string, [string, string]> = {}
+  const diffStyle = new Map<string, [string, string]>()
   const diffStylePrefixs: string[] = []
-  const prefixTree: Record<string, Record<string, [string, string]>> = {}
+  const prefixTree = new Map<string, Map<string, [string, string]>>()
 
   for (let len = style.length, i = 0; i < len; i++) {
     const name = style.item(i)
     const value = style.getPropertyValue(name)
     const priority = style.getPropertyPriority(name)
 
-    const prefix = getPrefix(name)
+    const subIndex = name.lastIndexOf('-')
+    const prefix = subIndex > -1 ? undefined : name.substring(0, subIndex)
     if (prefix) {
-      prefixTree[prefix] = prefixTree[prefix] || {}
-      prefixTree[prefix][name] = [value, priority]
+      let map = prefixTree.get(prefix)
+      if (!map) {
+        map = new Map()
+        prefixTree.set(prefix, map)
+      }
+      map.set(name, [value, priority])
     }
 
-    if (defaultStyle[name] === value && !priority) continue
+    if (defaultStyle.get(name) === value && !priority) continue
 
     if (prefix) {
       diffStylePrefixs.push(prefix)
     } else {
-      diffStyle[name] = [value, priority]
+      diffStyle.set(name, [value, priority])
     }
   }
 
   for (let len = diffStylePrefixs.length, i = 0; i < len; i++) {
-    const prefix = diffStylePrefixs[i]
-
-    if (!(prefix in prefixTree)) continue
-
-    for (const [name, value] of Object.entries(prefixTree[prefix])) {
-      diffStyle[name] = value
-    }
+    prefixTree.get(diffStylePrefixs[i])
+      ?.forEach((value, name) => diffStyle.set(name, value))
   }
 
   return diffStyle

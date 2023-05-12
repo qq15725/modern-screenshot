@@ -67,8 +67,8 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     dpi: scale === 1 ? null : 96 * scale,
     svgStyleElement: createStyleElement(ownerDocument),
     svgDefsElement: ownerDocument?.createElementNS(XMLNS, 'defs'),
-    svgStyles: new Map<string, string[]>(),
-    defaultComputedStyles: new Map<string, Record<string, any>>(),
+    svgStyles: new Map(),
+    defaultComputedStyles: new Map(),
     workers: [
       ...new Array(
         SUPPORT_WEB_WORKER && workerUrl && workerNumber
@@ -96,8 +96,8 @@ export async function createContext<T extends Node>(node: T, options?: Options &
         return null
       }
     }).filter(Boolean) as any,
-    fontFamilies: new Set<string>(),
-    fontCssTexts: new Map<string, string>(),
+    fontFamilies: new Set(),
+    fontCssTexts: new Map(),
     acceptOfImage: `${ [
       supportWebp(ownerDocument) && 'image/webp',
       'image/svg+xml',

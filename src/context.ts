@@ -64,7 +64,7 @@ export interface InternalContext<T extends Node> {
   /**
    * The map of default `getComputedStyle` for all tagnames
    */
-  defaultComputedStyles: Map<string, Record<string, any>>
+  defaultComputedStyles: Map<string, Map<string, any>>
 
   /**
    * The IFrame sandbox used to get the `defaultComputedStyles`

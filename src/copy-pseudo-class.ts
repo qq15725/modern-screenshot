@@ -3,11 +3,6 @@ import { getDiffStyle } from './get-diff-style'
 import { uuid } from './utils'
 import type { Context } from './context'
 
-const ignoredStyles = [
-  'content',
-  '-webkit-locale',
-]
-
 const pseudoClasses = [
   ':before',
   ':after',
@@ -28,8 +23,8 @@ const scrollbarPseudoClasses = [
 
 export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   node: T,
-  computedStyle: CSSStyleDeclaration,
   cloned: T,
+  copyScrollbar: boolean,
   context: Context,
 ) {
   const { ownerWindow, svgStyleElement, svgStyles } = context
@@ -50,15 +45,17 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
     const diffStyle = getDiffStyle(computedStyle, defaultStyle)
 
-    for (const [name, [value, priority]] of Object.entries(diffStyle)) {
-      if (ignoredStyles.includes(name)) continue
-
-      if (name === 'background-clip' && value === 'text') {
-        klasses.push(' ______background-clip--text')
-      }
-
-      cloneStyle.push(`${ name }: ${ value }${ priority ? ' !important' : '' };`)
+    // fix
+    diffStyle.delete('content')
+    diffStyle.delete('-webkit-locale')
+    // fix background-clip: text
+    if (diffStyle.get('background-clip')?.[0] === 'text') {
+      cloned.classList.add('______background-clip--text')
     }
+
+    diffStyle.forEach(([value, priority], name) => {
+      cloneStyle.push(`${ name }: ${ value }${ priority ? ' !important' : '' };`)
+    })
 
     if (cloneStyle.length === 1) return
 
@@ -79,15 +76,5 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
   pseudoClasses.forEach(copyBy)
 
-  const overflow = computedStyle.getPropertyValue('overflow')
-
-  if (
-    overflow.includes('scroll')
-    || (
-      (overflow.includes('auto') || overflow.includes('overlay'))
-      && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
-    )
-  ) {
-    scrollbarPseudoClasses.forEach(copyBy)
-  }
+  if (copyScrollbar) scrollbarPseudoClasses.forEach(copyBy)
 }

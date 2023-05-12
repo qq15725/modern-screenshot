@@ -55,16 +55,16 @@ async function cloneChildNodes<T extends Node>(
   }
 }
 
-function applyCssStyleWithOptions(clonedStyle: CSSStyleDeclaration, context: Context) {
+function applyCssStyleWithOptions(
+  cloned: HTMLElement | SVGElement,
+  context: Context,
+) {
   const { backgroundColor, width, height, style: styles } = context
-  if (backgroundColor) clonedStyle.backgroundColor = backgroundColor
-  if (width) clonedStyle.width = `${ width }px`
-  if (height) clonedStyle.height = `${ height }px`
-  if (styles) {
-    for (const name in styles) {
-      clonedStyle[name] = styles[name]!
-    }
-  }
+  const clonedStyle = cloned.style
+  if (backgroundColor) clonedStyle.setProperty('background-color', backgroundColor)
+  if (width) clonedStyle.setProperty('width', `${ width }px`)
+  if (height) clonedStyle.setProperty('height', `${ height }px`)
+  if (styles) for (const name in styles) clonedStyle[name] = styles[name]!
 }
 
 export async function cloneNode<T extends Node>(
@@ -78,26 +78,38 @@ export async function cloneNode<T extends Node>(
     return ownerDocument.createTextNode(node.data)
   }
 
-  if (ownerDocument
+  if (
+    ownerDocument
     && ownerWindow
     && isElementNode(node)
-    && (isHTMLElementNode(node) || isSVGElementNode(node))) {
-    const computedStyle = ownerWindow.getComputedStyle(node)
-
+    && (isHTMLElementNode(node) || isSVGElementNode(node))
+  ) {
     const cloned = await cloneElement(node, context)
-    const clonedStyle = cloned.style
 
-    copyCssStyles(node, computedStyle, cloned, isRoot, context)
+    const diffStyle = copyCssStyles(node, cloned, isRoot, context)
 
-    if (isRoot) {
-      applyCssStyleWithOptions(clonedStyle, context)
-    }
+    if (isRoot) applyCssStyleWithOptions(cloned, context)
 
-    copyPseudoClass(node, computedStyle, cloned, context)
+    const overflow = [
+      diffStyle.get('overflow-x')?.[0],
+      diffStyle.get('overflow-y')?.[1],
+    ]
+
+    copyPseudoClass(
+      node,
+      cloned,
+      // copy scrollbar
+      (overflow.includes('scroll'))
+      || (
+        (overflow.includes('auto') || overflow.includes('overlay'))
+        && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
+      ),
+      context,
+    )
 
     copyInputValue(node, cloned)
 
-    clonedStyle.getPropertyValue('font-family')
+    diffStyle.get('font-family')?.[0]
       .split(',')
       .filter(Boolean)
       .map(val => val.toLowerCase())

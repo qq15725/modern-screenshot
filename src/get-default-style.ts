@@ -15,7 +15,7 @@ export function getDefaultStyle(
   node: HTMLElement | SVGElement,
   pseudoElement: string | null,
   context: Context,
-) {
+): Map<string, any> {
   const { defaultComputedStyles, ownerDocument } = context
 
   const nodeName = node.nodeName.toLowerCase()
@@ -55,10 +55,10 @@ export function getDefaultStyle(
       consoleWarn('Failed to create iframe sandbox', error)
     }
   }
-  if (!sandbox) return {}
+  if (!sandbox) return new Map()
 
   const sandboxWindow = sandbox.contentWindow
-  if (!sandboxWindow) return {}
+  if (!sandboxWindow) return new Map()
   const sandboxDocument = sandboxWindow.document
 
   let root: HTMLElement | SVGSVGElement
@@ -76,11 +76,11 @@ export function getDefaultStyle(
   el.textContent = ' '
   sandboxDocument.body.appendChild(root)
   const computedStyle = sandboxWindow.getComputedStyle(el, pseudoElement)
-  const styles: Record<string, any> = {}
+  const styles = new Map<string, any>()
   for (let len = computedStyle.length, i = 0; i < len; i++) {
     const name = computedStyle.item(i)
     if (ignoredStyles.includes(name)) continue
-    styles[name] = computedStyle.getPropertyValue(name)
+    styles.set(name, computedStyle.getPropertyValue(name))
   }
   sandboxDocument.body.removeChild(root)
 
