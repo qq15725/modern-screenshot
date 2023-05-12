@@ -1,3 +1,12 @@
+## [4.4.23](https://github.com/qq15725/modern-screenshot/compare/v4.4.22...v4.4.23) (2023-05-12)
+
+
+### Performance Improvements
+
+* performance optimization ([aede0a7](https://github.com/qq15725/modern-screenshot/commit/aede0a768d3adc6b4dd6cf5da6d707c227725687))
+
+
+
 ## [4.4.22](https://github.com/qq15725/modern-screenshot/compare/v4.4.21...v4.4.22) (2023-05-08)
 
 
