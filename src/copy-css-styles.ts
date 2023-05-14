@@ -16,7 +16,6 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   const diffStyle = getDiffStyle(computedStyle, defaultStyle)
 
   // fix
-  diffStyle.set('transition-property', ['none', ''])
   diffStyle.delete('transition-property')
   diffStyle.delete('all') // svg: all
   diffStyle.delete('d') // svg: d
