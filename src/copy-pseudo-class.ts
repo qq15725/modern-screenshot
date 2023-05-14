@@ -33,14 +33,18 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
   function copyBy(pseudoClass: string) {
     const computedStyle = ownerWindow!.getComputedStyle(node, pseudoClass)
-    const content = computedStyle.getPropertyValue('content')
+    let content = computedStyle.getPropertyValue('content')
 
     if (!content || content === 'none') return
+
+    content = content
+      // TODO support css.counter
+      .replace(/(')|(")|(counter\(.+\))/g, '')
 
     const klasses = [uuid()]
     const defaultStyle = getDefaultStyle(node, pseudoClass, context)
     const cloneStyle = [
-      `content: '${ content.replace(/'|"/g, '') }';`,
+      `content: '${ content }';`,
     ]
 
     const diffStyle = getDiffStyle(computedStyle, defaultStyle)

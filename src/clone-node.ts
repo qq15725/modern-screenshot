@@ -86,6 +86,9 @@ export async function cloneNode<T extends Node>(
   ) {
     const cloned = await cloneElement(node, context)
 
+    // fix abnormal attribute
+    cloned.removeAttribute('"')
+
     const diffStyle = copyCssStyles(node, cloned, isRoot, context)
 
     if (isRoot) applyCssStyleWithOptions(cloned, context)
