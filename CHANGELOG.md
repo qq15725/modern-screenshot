@@ -1,3 +1,12 @@
+## [4.4.24](https://github.com/qq15725/modern-screenshot/compare/v4.4.23...v4.4.24) (2023-05-14)
+
+
+### Bug Fixes
+
+* get diff style error (closes [#24](https://github.com/qq15725/modern-screenshot/issues/24) [#25](https://github.com/qq15725/modern-screenshot/issues/25)) ([69d11db](https://github.com/qq15725/modern-screenshot/commit/69d11db73708445cdbf62489efe479f795b53cbc))
+
+
+
 ## [4.4.23](https://github.com/qq15725/modern-screenshot/compare/v4.4.22...v4.4.23) (2023-05-12)
 
 
