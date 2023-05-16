@@ -2,21 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>modern-screenshot</title>
+  <meta name="description" content="Quickly generate image from DOM node using HTML5 canvas and SVG">
+  <meta name="keywords" content="dom, screenshot, html2canvas, dom-to-image, html-to-image, dom截图, js截图, 页面截图">
+  <meta name="viewport" content="width=device-width">
+  <meta property="og:title" content="modern-screenshot">
+  <meta property="og:url" content="https://github.com/qq15725/modern-screenshot">
+  <meta property="og:description" content="Quickly generate image from DOM node using HTML5 canvas and SVG">
+  <meta property="og:type" content="website">
   <script src="https://unpkg.com/modern-screenshot"></script>
   <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      background-color: #EEE;
+    }
+
+    header, main {
+      width: 600px;
+      margin: 0 auto 20px;
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <div style="display: flex;">
-      <textarea rows="10" style="min-width: 500px;" v-model="code"></textarea>
-      <div style="flex: 1;" class="screenshot" v-html="code"></div>
+  <header>
+    <h1>modern-screenshot</h1>
+    <p>Quickly generate image from DOM node using HTML5 canvas and SVG</p>
+    <a href="https://github.com/qq15725/modern-screenshot" target="_blank">Download on GitHub</a>
+  </header>
+
+  <main>
+    <div id="app">
+      <textarea rows="10" style="width: 100%;" v-model="code"></textarea>
+      <div style="display: flex">
+        <div style="width: 300px;" class="screenshot" v-html="code"></div>
+        <img width="300" :src="src"/>
+      </div>
     </div>
-    <div style="margin: 30px 0;">dom to image:</div>
-    <div style="text-align: center;">
-      <img width="500" :src="src"/>
-    </div>
-  </div>
+  </main>
 
   <script>
     const { createApp } = window.Vue
@@ -43,9 +66,7 @@
       },
       methods: {
         genSrc() {
-          domToPng(document.querySelector('.screenshot')).then(src => {
-            this.src = src
-          })
+          domToPng(document.querySelector('.screenshot')).then(src => this.src = src)
         },
       },
     }).mount('#app')
