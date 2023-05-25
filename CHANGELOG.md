@@ -1,3 +1,17 @@
+## [4.4.25](https://github.com/qq15725/modern-screenshot/compare/v4.4.24...v4.4.25) (2023-05-25)
+
+
+### Bug Fixes
+
+* transition-property ([5a21371](https://github.com/qq15725/modern-screenshot/commit/5a21371fe9550f64ab7452e891f3519575017bab))
+
+
+### Features
+
+* change worker build target to es2015 ([e72e2e1](https://github.com/qq15725/modern-screenshot/commit/e72e2e1aa20f79dc1d58b0cc6add5ff51807da10))
+
+
+
 ## [4.4.24](https://github.com/qq15725/modern-screenshot/compare/v4.4.23...v4.4.24) (2023-05-14)
 
 
