@@ -61,9 +61,9 @@ function applyCssStyleWithOptions(
 ) {
   const { backgroundColor, width, height, style: styles } = context
   const clonedStyle = cloned.style
-  if (backgroundColor) clonedStyle.setProperty('background-color', backgroundColor)
-  if (width) clonedStyle.setProperty('width', `${ width }px`)
-  if (height) clonedStyle.setProperty('height', `${ height }px`)
+  if (backgroundColor) clonedStyle.setProperty('background-color', backgroundColor, 'important')
+  if (width) clonedStyle.setProperty('width', `${ width }px`, 'important')
+  if (height) clonedStyle.setProperty('height', `${ height }px`, 'important')
   if (styles) for (const name in styles) clonedStyle[name] = styles[name]!
 }
 

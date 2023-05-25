@@ -5,6 +5,7 @@ const resolvePath = (str: string) => resolve(__dirname, str)
 
 export default defineConfig({
   build: {
+    target: 'es2015',
     emptyOutDir: false,
     lib: {
       name: 'worker',
