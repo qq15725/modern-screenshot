@@ -1,6 +1,6 @@
 import { URL_RE, hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
 import { contextFetch } from './fetch'
-import { consoleWarn, isCSSImportRule, isCssFontFaceRule, resolveUrl } from './utils'
+import { consoleWarn, isCSSImportRule, isCssFontFaceRule, resolveUrl, splitFontFamily } from './utils'
 import type { Context } from './context'
 
 export async function embedWebFont<T extends Element>(
@@ -78,11 +78,8 @@ export async function embedWebFont<T extends Element>(
       .filter(cssRule => (
         isCssFontFaceRule(cssRule)
         && hasCssUrl(cssRule.style.getPropertyValue('src'))
-        && cssRule.style.getPropertyValue('font-family')
-          .split(',')
-          .filter(Boolean)
-          .map(val => val.toLowerCase())
-          .some(val => fontFamilies.has(val))
+        && splitFontFamily(cssRule.style.getPropertyValue('font-family'))
+          ?.some(val => fontFamilies.has(val))
       ))
       .forEach((value) => {
         const rule = value as CSSFontFaceRule

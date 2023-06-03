@@ -300,3 +300,12 @@ export const uuid = (function uuid() {
     return `u${ random() }${ counter }`
   }
 })()
+
+export function splitFontFamily(fontFamily?: string): undefined | string[] {
+  return fontFamily
+    ?.split(',')
+    // Chrome  '__Niconne_7b96fe, __Niconne_Fallback_7b96fe'
+    // Firefox '"__Niconne_7b96fe", "__Niconne_Fallback_7b96fe"'
+    .map(val => val.trim().replace(/"|'/g, '').toLowerCase())
+    .filter(Boolean)
+}

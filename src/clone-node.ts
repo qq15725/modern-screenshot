@@ -11,6 +11,7 @@ import {
   isStyleElement,
   isTextNode,
   isVideoElement,
+  splitFontFamily,
 } from './utils'
 import { cloneElement } from './clone-element'
 import type { Context } from './context'
@@ -112,11 +113,8 @@ export async function cloneNode<T extends Node>(
 
     copyInputValue(node, cloned)
 
-    diffStyle.get('font-family')?.[0]
-      .split(',')
-      .filter(Boolean)
-      .map(val => val.toLowerCase())
-      .forEach(val => fontFamilies.add(val))
+    splitFontFamily(diffStyle.get('font-family')?.[0])
+      ?.forEach(val => fontFamilies.add(val))
 
     if (!isVideoElement(node)) {
       await cloneChildNodes(node, cloned, context)
