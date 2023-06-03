@@ -1,3 +1,12 @@
+## [4.4.26](https://github.com/qq15725/modern-screenshot/compare/v4.4.25...v4.4.26) (2023-06-03)
+
+
+### Bug Fixes
+
+* split font-family for Firefox ([#29](https://github.com/qq15725/modern-screenshot/issues/29)) ([a1d1bbc](https://github.com/qq15725/modern-screenshot/commit/a1d1bbc40393b96fd066f766991272f872150fcc))
+
+
+
 ## [4.4.25](https://github.com/qq15725/modern-screenshot/compare/v4.4.24...v4.4.25) (2023-05-25)
 
 
