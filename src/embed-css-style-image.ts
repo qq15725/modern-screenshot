@@ -20,7 +20,7 @@ export function embedCssStyleImage(
       if (!value) {
         return null
       }
-      if ((IN_SAFARI || IN_FIREFOX) && value.includes('data:image/svg+xml')) {
+      if (IN_SAFARI || IN_FIREFOX) {
         context.drawImageCount++
       }
       return replaceCssUrlToDataUrl(value, null, context, true).then(newValue => {

@@ -1,5 +1,5 @@
-import { IN_SAFARI, blobToDataUrl, consoleWarn } from './utils'
-import type { Context, Request } from './context'
+import { IN_FIREFOX, IN_SAFARI, blobToDataUrl, consoleWarn } from './utils'
+import type { Context } from './context'
 
 export type BaseFetchOptions = RequestInit & {
   url: string
@@ -53,17 +53,16 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
     workers,
   } = context
 
-  let request: Request
+  if (requestType === 'image' && (IN_SAFARI || IN_FIREFOX)) {
+    context.drawImageCount++
+  }
 
-  if (!requests.has(rawUrl)) {
+  let request = requests.get(rawUrl)
+  if (!request) {
     // cache bypass so we dont have CORS issues with cached images
     // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
     if (bypassingCache) {
       url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
-    }
-
-    if (requestType === 'image' && IN_SAFARI) {
-      context.drawImageCount++
     }
 
     const baseFetchOptions: BaseFetchOptions = {
@@ -86,8 +85,8 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
         ? new Promise((resolve, reject) => {
           const worker = workers[requests.size & (workers.length - 1)]
           worker.postMessage({ rawUrl, ...baseFetchOptions })
-          request.resovle = resolve
-          request.reject = reject
+          request!.resovle = resolve
+          request!.reject = reject
         })
         : baseFetch(baseFetchOptions)
     ).catch(error => {
@@ -104,8 +103,6 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
     }) as any
 
     requests.set(rawUrl, request)
-  } else {
-    request = requests.get(rawUrl)!
   }
 
   return request.response

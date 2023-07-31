@@ -142,11 +142,18 @@ export interface Options {
      * default: true
      */
     removeControlCharacter?: boolean
+
+    /**
+     * Fix svg+xml image decode (for Safari、Firefox)
+     *
+     * default: true
+     */
+    fixSvgXmlDecode?: boolean
   }
 
   /**
    * Canvas `drawImage` interval
-   * is used to fix errors in decoding images in safari/webkit
+   * is used to fix errors in decoding images in Safari、Firefox
    *
    * default: 100
    */

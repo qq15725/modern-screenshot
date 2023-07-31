@@ -25,7 +25,7 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
       ]
     }
 
-    if ((IN_SAFARI || IN_FIREFOX) && originalSrc.includes('data:image/svg+xml')) {
+    if (IN_SAFARI || IN_FIREFOX) {
       context.drawImageCount++
     }
   } else if (isSVGElementNode(clone) && !isDataUrl(clone.href.baseVal)) {

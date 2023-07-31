@@ -25,13 +25,15 @@ export async function imageToCanvas<T extends HTMLImageElement>(
 
   drawImage()
 
-  for (let i = 0; i < drawImageCount; i++) {
-    await new Promise<void>(resolve => {
-      setTimeout(() => {
-        drawImage()
-        resolve()
-      }, i + drawImageInterval)
-    })
+  if (context.isEnable('fixSvgXmlDecode')) {
+    for (let i = 0; i < drawImageCount; i++) {
+      await new Promise<void>(resolve => {
+        setTimeout(() => {
+          drawImage()
+          resolve()
+        }, i + drawImageInterval)
+      })
+    }
   }
 
   context.drawImageCount = 0
