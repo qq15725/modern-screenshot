@@ -1,3 +1,12 @@
+## [4.4.27](https://github.com/qq15725/modern-screenshot/compare/v4.4.26...v4.4.27) (2023-07-31)
+
+
+### Features
+
+* supports enable part features, fix more abnormal attributes ([#35](https://github.com/qq15725/modern-screenshot/issues/35) [#36](https://github.com/qq15725/modern-screenshot/issues/36)) ([c707dc2](https://github.com/qq15725/modern-screenshot/commit/c707dc2e7fdefc26b1f2c7756ea559d5ee4b66cd))
+
+
+
 ## [4.4.26](https://github.com/qq15725/modern-screenshot/compare/v4.4.25...v4.4.26) (2023-06-03)
 
 
