@@ -1,3 +1,12 @@
+## [4.4.28](https://github.com/qq15725/modern-screenshot/compare/v4.4.27...v4.4.28) (2023-07-31)
+
+
+### Features
+
+* try fix svg+xml decode ([#34](https://github.com/qq15725/modern-screenshot/issues/34)) ([cada074](https://github.com/qq15725/modern-screenshot/commit/cada0740e883601e84d1e049dd10681997a994ce))
+
+
+
 ## [4.4.27](https://github.com/qq15725/modern-screenshot/compare/v4.4.26...v4.4.27) (2023-07-31)
 
 
