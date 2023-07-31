@@ -110,6 +110,13 @@ export interface InternalContext<T extends Node> {
    * Automatically destroy context
    */
   autoDestruct: boolean
+
+  /**
+   * Is enable
+   *
+   * @param key
+   */
+  isEnable: (key: string) => boolean
 }
 
 export type Context<T extends Node = Node> = InternalContext<T> & Required<Options>

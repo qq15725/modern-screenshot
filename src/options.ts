@@ -117,6 +117,34 @@ export interface Options {
   }
 
   /**
+   * All enabled features
+   *
+   * default: true
+   */
+  features?: boolean | {
+    /**
+     * Copy scrollbar css styles
+     *
+     * default: true
+     */
+    copyScrollbar?: boolean
+
+    /**
+     * Remove abnormal attributes to cloned node (for normalize XML)
+     *
+     * default: true
+     */
+    removeAbnormalAttributes?: boolean
+
+    /**
+     * Remove control characters (for normalize XML)
+     *
+     * default: true
+     */
+    removeControlCharacter?: boolean
+  }
+
+  /**
    * Canvas `drawImage` interval
    * is used to fix errors in decoding images in safari/webkit
    *

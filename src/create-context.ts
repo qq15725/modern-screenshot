@@ -23,6 +23,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
   const { scale = 1, workerUrl, workerNumber = 1 } = options || {}
 
   const debug = Boolean(options?.debug)
+  const features = options?.features ?? true
 
   const ownerDocument = node.ownerDocument ?? (IN_BROWSER ? window.document : undefined)
   const ownerWindow = node.ownerDocument?.defaultView ?? (IN_BROWSER ? window : undefined)
@@ -107,6 +108,14 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     requests,
     drawImageCount: 0,
     tasks: [],
+
+    features,
+    isEnable: (key: string): boolean => {
+      if (typeof features === 'boolean') {
+        return features
+      }
+      return (features as any)[key] ?? true
+    },
   }
 
   context.log.time('wait until load')

@@ -16,5 +16,5 @@ export async function domToSvg(node: any, options?: any) {
   svgImage.setAttributeNS(null, 'height', '100%')
   svgImage.setAttributeNS(null, 'width', '100%')
   svg.appendChild(svgImage)
-  return svgToDataUrl(svg)
+  return svgToDataUrl(svg, context.isEnable('removeControlCharacter'))
 }

@@ -68,6 +68,8 @@ function applyCssStyleWithOptions(
   if (styles) for (const name in styles) clonedStyle[name] = styles[name]!
 }
 
+const ABNORMAL_ATTRIBUTE_RE = /^[\w-]+$/
+
 export async function cloneNode<T extends Node>(
   node: T,
   context: Context,
@@ -87,29 +89,34 @@ export async function cloneNode<T extends Node>(
   ) {
     const cloned = await cloneElement(node, context)
 
-    // fix abnormal attribute
-    cloned.removeAttribute('"')
+    if (context.isEnable('removeAbnormalAttributes')) {
+      const names = cloned.getAttributeNames()
+      for (let len = names.length, i = 0; i < len; i++) {
+        const name = names[i]
+        if (!ABNORMAL_ATTRIBUTE_RE.test(name)) {
+          cloned.removeAttribute(name)
+        }
+      }
+    }
 
     const diffStyle = copyCssStyles(node, cloned, isRoot, context)
 
     if (isRoot) applyCssStyleWithOptions(cloned, context)
 
-    const overflow = [
-      diffStyle.get('overflow-x')?.[0],
-      diffStyle.get('overflow-y')?.[1],
-    ]
+    let copyScrollbar = false
+    if (context.isEnable('copyScrollbar')) {
+      const overflow = [
+        diffStyle.get('overflow-x')?.[0],
+        diffStyle.get('overflow-y')?.[1],
+      ]
+      copyScrollbar = (overflow.includes('scroll'))
+        || (
+          (overflow.includes('auto') || overflow.includes('overlay'))
+          && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
+        )
+    }
 
-    copyPseudoClass(
-      node,
-      cloned,
-      // copy scrollbar
-      (overflow.includes('scroll'))
-      || (
-        (overflow.includes('auto') || overflow.includes('overlay'))
-        && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
-      ),
-      context,
-    )
+    copyPseudoClass(node, cloned, copyScrollbar, context)
 
     copyInputValue(node, cloned)
 

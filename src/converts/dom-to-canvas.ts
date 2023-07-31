@@ -11,7 +11,7 @@ export async function domToCanvas<T extends Node>(context: Context<T>): Promise<
 export async function domToCanvas(node: any, options?: any) {
   const context = await orCreateContext(node, options)
   const svg = await domToForeignObjectSvg(context)
-  const dataUrl = svgToDataUrl(svg)
+  const dataUrl = svgToDataUrl(svg, context.isEnable('removeControlCharacter'))
   if (!context.autoDestruct) {
     context.svgStyleElement = createStyleElement(context.ownerDocument)
     context.svgDefsElement = context.ownerDocument?.createElementNS(XMLNS, 'defs')
