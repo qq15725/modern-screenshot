@@ -75,7 +75,7 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
 
     request = {
       type: requestType,
-      resovle: undefined,
+      resolve: undefined,
       reject: undefined,
       response: null as any,
     }
@@ -85,7 +85,7 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
         ? new Promise((resolve, reject) => {
           const worker = workers[requests.size & (workers.length - 1)]
           worker.postMessage({ rawUrl, ...baseFetchOptions })
-          request!.resovle = resolve
+          request!.resolve = resolve
           request!.reject = reject
         })
         : baseFetch(baseFetchOptions)

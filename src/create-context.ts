@@ -82,7 +82,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
         worker.onmessage = async event => {
           const { url, result } = event.data
           if (result) {
-            requests.get(url)?.resovle?.(result)
+            requests.get(url)?.resolve?.(result)
           } else {
             requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
           }
