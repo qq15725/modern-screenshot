@@ -68,7 +68,8 @@ function applyCssStyleWithOptions(
   if (styles) for (const name in styles) clonedStyle[name] = styles[name]!
 }
 
-const ABNORMAL_ATTRIBUTE_RE = /^[\w-]+$/
+/** @example "'{ */
+const NORMAL_ATTRIBUTE_RE = /^[\w-:]+$/
 
 export async function cloneNode<T extends Node>(
   node: T,
@@ -93,7 +94,7 @@ export async function cloneNode<T extends Node>(
       const names = cloned.getAttributeNames()
       for (let len = names.length, i = 0; i < len; i++) {
         const name = names[i]
-        if (!ABNORMAL_ATTRIBUTE_RE.test(name)) {
+        if (!NORMAL_ATTRIBUTE_RE.test(name)) {
           cloned.removeAttribute(name)
         }
       }
