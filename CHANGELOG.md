@@ -1,3 +1,12 @@
+## [4.4.29](https://github.com/qq15725/modern-screenshot/compare/v4.4.28...v4.4.29) (2023-08-25)
+
+
+### Bug Fixes
+
+* abnormal attribute regex ([#42](https://github.com/qq15725/modern-screenshot/issues/42)) ([9a9b2eb](https://github.com/qq15725/modern-screenshot/commit/9a9b2eb83177e8e1daaf77a3c81ac53d3a5ea782))
+
+
+
 ## [4.4.28](https://github.com/qq15725/modern-screenshot/compare/v4.4.27...v4.4.28) (2023-07-31)
 
 
