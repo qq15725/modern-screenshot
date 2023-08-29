@@ -1,11 +1,18 @@
 <template>
   <div id="root">
     <button style="color: red">
-      <svg><use xlink:href="__BASE_URL__/externalsymbol.svg#icon" href="__BASE_URL__/externalsymbol.svg#icon" /></svg>
+      <!-- With href -->
+      <svg><use href="__BASE_URL__/externalsymbol.svg#icon" /></svg>
     </button>
 
     <button style="color: yellow">
-      <svg><use xlink:href="__BASE_URL__/externalsymbol.svg#icon" href="__BASE_URL__/externalsymbol.svg#icon" /></svg>
+      <!-- With legacy xlink:href -->
+      <svg><use xlink:href="__BASE_URL__/externalsymbol.svg#icon"  /></svg>
+    </button>
+
+    <button style="color: green">
+      <!-- With both xlink:href and href, but only href should be used when both are present -->
+      <svg><use xlink:href="some-invalid-ignored-stuff" href="__BASE_URL__/externalsymbol.svg#icon"  /></svg>
     </button>
   </div>
 </template>
