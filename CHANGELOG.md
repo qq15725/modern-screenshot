@@ -1,3 +1,7 @@
+## [4.4.30](https://github.com/qq15725/modern-screenshot/compare/v4.4.29...v4.4.30) (2023-08-29)
+
+
+
 ## [4.4.29](https://github.com/qq15725/modern-screenshot/compare/v4.4.28...v4.4.29) (2023-08-25)
 
 
