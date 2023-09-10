@@ -1,3 +1,13 @@
+## [4.4.31](https://github.com/qq15725/modern-screenshot/compare/v4.4.30...v4.4.31) (2023-09-10)
+
+
+### Features
+
+* `clone-svg` rename to `embed-svg-use` ([67589ab](https://github.com/qq15725/modern-screenshot/commit/67589ab9fee60445089e5c5d094b54bc9dd86cad))
+* supports `fetch.bypassingCache` option value is `RegExp` (closes [#38](https://github.com/qq15725/modern-screenshot/issues/38)) ([936581c](https://github.com/qq15725/modern-screenshot/commit/936581ce934cb189cb1062dc5235e8d056652e29))
+
+
+
 ## [4.4.30](https://github.com/qq15725/modern-screenshot/compare/v4.4.29...v4.4.30) (2023-08-29)
 
 
