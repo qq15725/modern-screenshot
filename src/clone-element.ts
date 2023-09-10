@@ -1,9 +1,7 @@
-import { cloneSvg } from './clone-svg'
 import {
   isCanvasElement,
   isIFrameElement,
   isImageElement,
-  isSVGSVGElementNode,
   isVideoElement,
 } from './utils'
 import { cloneIframe } from './clone-iframe'
@@ -30,10 +28,6 @@ export function cloneElement<T extends HTMLElement | SVGElement>(
 
   if (isVideoElement(node)) {
     return cloneVideo(node)
-  }
-
-  if (isSVGSVGElementNode(node)) {
-    return cloneSvg(node, context)
   }
 
   return node.cloneNode(false) as T

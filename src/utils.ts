@@ -21,8 +21,8 @@ export const isCSSImportRule = (rule: CSSRule): rule is CSSImportRule => rule.co
 // Element
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE
 export const isSVGElementNode = (node: Element): node is SVGElement => typeof (node as SVGElement).className === 'object'
-export const isSVGSVGElementNode = (node: Element): node is SVGSVGElement => isSVGElementNode(node) && node.tagName === 'svg'
-export const isSVGImageElementNode = (node: Element): node is SVGImageElement => isSVGElementNode(node) && node.tagName === 'image'
+export const isSVGImageElementNode = (node: Element): node is SVGImageElement => node.tagName === 'image'
+export const isSVGUseElementNode = (node: Element): node is SVGUseElement => node.tagName === 'use'
 export const isHTMLElementNode = (node: Node): node is HTMLElement => isElementNode(node) && typeof (node as HTMLElement).style !== 'undefined' && !isSVGElementNode(node)
 export const isCommentNode = (node: Node): node is Text => node.nodeType === 8 // Node.COMMENT_NODE
 export const isTextNode = (node: Node): node is Text => node.nodeType === 3 // Node.TEXT_NODE

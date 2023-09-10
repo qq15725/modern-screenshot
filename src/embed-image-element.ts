@@ -3,24 +3,24 @@ import { contextFetch } from './fetch'
 import type { Context } from './context'
 
 export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
-  clone: T,
+  cloned: T,
   context: Context,
 ): Promise<void>[] {
-  if (isImageElement(clone)) {
-    const originalSrc = clone.currentSrc || clone.src
+  if (isImageElement(cloned)) {
+    const originalSrc = cloned.currentSrc || cloned.src
 
     if (!isDataUrl(originalSrc)) {
       return [
         contextFetch(context, {
           url: originalSrc,
-          imageDom: clone,
+          imageDom: cloned,
           requestType: 'image',
           responseType: 'dataUrl',
         }).then(url => {
           if (!url) return
-          clone.srcset = ''
-          clone.dataset.originalSrc = originalSrc
-          clone.src = url || ''
+          cloned.srcset = ''
+          cloned.dataset.originalSrc = originalSrc
+          cloned.src = url || ''
         }),
       ]
     }
@@ -28,18 +28,18 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
     if (IN_SAFARI || IN_FIREFOX) {
       context.drawImageCount++
     }
-  } else if (isSVGElementNode(clone) && !isDataUrl(clone.href.baseVal)) {
-    const originalSrc = clone.href.baseVal
+  } else if (isSVGElementNode(cloned) && !isDataUrl(cloned.href.baseVal)) {
+    const originalSrc = cloned.href.baseVal
     return [
       contextFetch(context, {
         url: originalSrc,
-        imageDom: clone,
+        imageDom: cloned,
         requestType: 'image',
         responseType: 'dataUrl',
       }).then(url => {
         if (!url) return
-        clone.dataset.originalSrc = originalSrc
-        clone.href.baseVal = url || ''
+        cloned.dataset.originalSrc = originalSrc
+        cloned.href.baseVal = url || ''
       }),
     ]
   }
