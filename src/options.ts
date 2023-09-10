@@ -88,7 +88,7 @@ export interface Options {
      *
      * default: false
      */
-    bypassingCache?: boolean
+    bypassingCache?: boolean | RegExp
 
     /**
      * A data URL for a placeholder image that will be used when fetching

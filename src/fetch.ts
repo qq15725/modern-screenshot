@@ -62,7 +62,9 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
     // cache bypass so we dont have CORS issues with cached images
     // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
     if (bypassingCache) {
-      url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
+      if (bypassingCache instanceof RegExp && bypassingCache.test(url)) {
+        url += (/\?/.test(url) ? '&' : '?') + new Date().getTime()
+      }
     }
 
     const baseFetchOptions: BaseFetchOptions = {
