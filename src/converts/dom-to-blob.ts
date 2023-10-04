@@ -22,6 +22,7 @@ export async function domToBlob(node: any, options?: any) {
     } else if (type === 'image/jpeg') {
       uint8Array = changeJpegDpi(uint8Array, dpi)
     }
+    log.timeEnd('canvas to blob')
     return new Blob([uint8Array, blob.slice(33)], { type })
   }
   log.timeEnd('canvas to blob')
