@@ -1,3 +1,12 @@
+## [4.4.32](https://github.com/qq15725/modern-screenshot/compare/v4.4.31...v4.4.32) (2023-10-04)
+
+
+### Bug Fixes
+
+* fix warning `Timer '[modern-screenshot] canvas to blob' already exists` ([1b46b22](https://github.com/qq15725/modern-screenshot/commit/1b46b227587caff3c048aa95b60e4491c9395270))
+
+
+
 ## [4.4.31](https://github.com/qq15725/modern-screenshot/compare/v4.4.30...v4.4.31) (2023-09-10)
 
 
