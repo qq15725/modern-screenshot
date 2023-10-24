@@ -17,7 +17,7 @@ export function embedCssStyleImage(
   return properties
     .map(property => {
       const value = style.getPropertyValue(property)
-      if (!value) {
+      if (!value || value === 'none') {
         return null
       }
       if (IN_SAFARI || IN_FIREFOX) {
