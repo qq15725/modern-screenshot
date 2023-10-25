@@ -1,3 +1,12 @@
+## [4.4.33](https://github.com/qq15725/modern-screenshot/compare/v4.4.32...v4.4.33) (2023-10-25)
+
+
+### Bug Fixes
+
+* when bgImage eq to none, still drawImageCount ([ae67b4d](https://github.com/qq15725/modern-screenshot/commit/ae67b4d7a8ee297c225c1ea847b97b722d8218e5))
+
+
+
 ## [4.4.32](https://github.com/qq15725/modern-screenshot/compare/v4.4.31...v4.4.32) (2023-10-04)
 
 
