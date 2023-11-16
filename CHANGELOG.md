@@ -1,3 +1,12 @@
+## [4.4.34](https://github.com/qq15725/modern-screenshot/compare/v4.4.33...v4.4.34) (2023-11-16)
+
+
+### Bug Fixes
+
+* `color` not taking effect in `font-family: unset` ([b3880c1](https://github.com/qq15725/modern-screenshot/commit/b3880c1a5ecee0853e007a8a4cfce52cb7122b66))
+
+
+
 ## [4.4.33](https://github.com/qq15725/modern-screenshot/compare/v4.4.32...v4.4.33) (2023-10-25)
 
 
