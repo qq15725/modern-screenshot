@@ -4,6 +4,7 @@ import type { Context } from './context'
 const ignoredStyles = [
   'width',
   'height',
+  '-webkit-text-fill-color',
 ]
 
 const includedAttributes = [
