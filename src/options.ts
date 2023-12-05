@@ -70,6 +70,23 @@ export interface Options {
   debug?: boolean
 
   /**
+   * Custom implementation to get image data for a custom URL.
+   * This can be helpful for Capacitor or Cordova when using
+   * native fetch to bypass CORS issues.
+   *
+   * If returns a string, will completely bypass any `Options.fetch`
+   * settings with your custom implementation.
+   *
+   * If returns false, will fall back to normal fetch implementation
+   *
+   * @param url
+   * @returns A data URL for the image
+   */
+  fetchFn?: ((
+    url: string,
+  ) => Promise<string | false>) | null
+
+  /**
    * The options of fetch resources.
    */
   fetch?: {
