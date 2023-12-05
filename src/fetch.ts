@@ -45,6 +45,7 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
     timeout,
     acceptOfImage,
     requests,
+    fetchFn,
     fetch: {
       requestInit,
       bypassingCache,
@@ -82,16 +83,24 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
       response: null as any,
     }
 
-    request.response = (
-      !IN_SAFARI && rawUrl.startsWith('http') && workers.length
-        ? new Promise((resolve, reject) => {
+    request.response = (async () => {
+      if (fetchFn && requestType === 'image') {
+        const result = await fetchFn(rawUrl)
+
+        if (result) return result
+      }
+
+      if (!IN_SAFARI && rawUrl.startsWith('http') && workers.length) {
+        return new Promise<string>((resolve, reject) => {
           const worker = workers[requests.size & (workers.length - 1)]
           worker.postMessage({ rawUrl, ...baseFetchOptions })
           request!.resolve = resolve
           request!.reject = reject
         })
-        : baseFetch(baseFetchOptions)
-    ).catch(error => {
+      }
+
+      return baseFetch(baseFetchOptions)
+    })().catch(error => {
       requests.delete(rawUrl)
 
       if (requestType === 'image' && placeholderImage) {
