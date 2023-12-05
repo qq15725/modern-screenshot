@@ -1,3 +1,12 @@
+## [4.4.36](https://github.com/qq15725/modern-screenshot/compare/v4.4.35...v4.4.36) (2023-12-05)
+
+
+### Features
+
+* add `includeStyleProperties` option ([6f24f17](https://github.com/qq15725/modern-screenshot/commit/6f24f17c023cdecbb414fba1f56b890874190595))
+
+
+
 ## [4.4.35](https://github.com/qq15725/modern-screenshot/compare/v4.4.34...v4.4.35) (2023-12-05)
 
 
