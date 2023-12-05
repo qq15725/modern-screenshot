@@ -47,7 +47,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
       `content: '${ content }';`,
     ]
 
-    const diffStyle = getDiffStyle(computedStyle, defaultStyle)
+    const diffStyle = getDiffStyle(computedStyle, defaultStyle, context.includeStyleProperties)
 
     // fix
     diffStyle.delete('content')

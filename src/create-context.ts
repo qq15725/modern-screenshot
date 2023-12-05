@@ -56,6 +56,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     onCloneNode: null,
     onEmbedNode: null,
     onCreateForeignObjectSvg: null,
+    includeStyleProperties: null,
     autoDestruct: false,
     ...options,
 

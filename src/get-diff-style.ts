@@ -1,13 +1,29 @@
 export function getDiffStyle(
   style: CSSStyleDeclaration,
   defaultStyle: Map<string, string>,
+  includeStyleProperties?: string[] | null,
 ) {
   const diffStyle = new Map<string, [string, string]>()
   const prefixs: string[] = []
   const prefixTree = new Map<string, Map<string, [string, string]>>()
 
-  for (let len = style.length, i = 0; i < len; i++) {
-    const name = style.item(i)
+  if (includeStyleProperties) {
+    for (const name of includeStyleProperties) {
+      applyTo(name)
+    }
+  } else {
+    for (let len = style.length, i = 0; i < len; i++) {
+      const name = style.item(i)
+      applyTo(name)
+    }
+  }
+
+  for (let len = prefixs.length, i = 0; i < len; i++) {
+    prefixTree.get(prefixs[i])
+      ?.forEach((value, name) => diffStyle.set(name, value))
+  }
+
+  function applyTo(name: string) {
     const value = style.getPropertyValue(name)
     const priority = style.getPropertyPriority(name)
 
@@ -22,18 +38,13 @@ export function getDiffStyle(
       map.set(name, [value, priority])
     }
 
-    if (defaultStyle.get(name) === value && !priority) continue
+    if (defaultStyle.get(name) === value && !priority) return
 
     if (prefix) {
       prefixs.push(prefix)
     } else {
       diffStyle.set(name, [value, priority])
     }
-  }
-
-  for (let len = prefixs.length, i = 0; i < len; i++) {
-    prefixTree.get(prefixs[i])
-      ?.forEach((value, name) => diffStyle.set(name, value))
   }
 
   return diffStyle

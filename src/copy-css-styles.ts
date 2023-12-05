@@ -13,7 +13,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   const clonedStyle = cloned.style
   const computedStyle = ownerWindow!.getComputedStyle(node)
   const defaultStyle = getDefaultStyle(node, null, context)
-  const diffStyle = getDiffStyle(computedStyle, defaultStyle)
+  const diffStyle = getDiffStyle(computedStyle, defaultStyle, context.includeStyleProperties)
 
   // fix
   diffStyle.delete('transition-property')

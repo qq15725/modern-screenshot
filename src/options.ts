@@ -183,4 +183,12 @@ export interface Options {
    * Triggered after a ForeignObjectSvg is created
    */
   onCreateForeignObjectSvg?: ((svg: SVGSVGElement) => void) | null
+
+  /**
+   * An array of style property names.
+   * Can be used to manually specify which style properties are
+   * included when cloning nodes.
+   * This can be useful for performance-critical scenarios.
+   */
+  includeStyleProperties?: string[] | null
 }
