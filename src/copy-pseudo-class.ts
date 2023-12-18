@@ -27,7 +27,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   copyScrollbar: boolean,
   context: Context,
 ) {
-  const { ownerWindow, svgStyleElement, svgStyles } = context
+  const { ownerWindow, svgStyleElement, svgStyles, currentNodeStyle } = context
 
   if (!svgStyleElement || !ownerWindow) return
 
@@ -43,21 +43,24 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
     const klasses = [uuid()]
     const defaultStyle = getDefaultStyle(node, pseudoClass, context)
+    currentNodeStyle?.forEach((_, key) => {
+      defaultStyle.delete(key)
+    })
+    const style = getDiffStyle(computedStyle, defaultStyle, context.includeStyleProperties)
+
+    // fix
+    style.delete('content')
+    style.delete('-webkit-locale')
+    // fix background-clip: text
+    if (style.get('background-clip')?.[0] === 'text') {
+      cloned.classList.add('______background-clip--text')
+    }
+
     const cloneStyle = [
       `content: '${ content }';`,
     ]
 
-    const diffStyle = getDiffStyle(computedStyle, defaultStyle, context.includeStyleProperties)
-
-    // fix
-    diffStyle.delete('content')
-    diffStyle.delete('-webkit-locale')
-    // fix background-clip: text
-    if (diffStyle.get('background-clip')?.[0] === 'text') {
-      cloned.classList.add('______background-clip--text')
-    }
-
-    diffStyle.forEach(([value, priority], name) => {
+    style.forEach(([value, priority], name) => {
       cloneStyle.push(`${ name }: ${ value }${ priority ? ' !important' : '' };`)
     })
 

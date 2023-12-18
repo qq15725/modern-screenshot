@@ -117,6 +117,12 @@ export interface InternalContext<T extends Node> {
    * @param key
    */
   isEnable: (key: string) => boolean
+
+  /**
+   * To get the node style set by the user
+   */
+  currentNodeStyle?: Map<string, [string, string]>
+  currentParentNodeStyle?: Map<string, [string, string]>
 }
 
 export type Context<T extends Node = Node> = InternalContext<T> & Required<Options>

@@ -16,6 +16,10 @@ import {
 import { cloneElement } from './clone-element'
 import type { Context } from './context'
 
+const excludeParentNodes = new Set([
+  'symbol', // test/fixtures/svg.symbol.html
+])
+
 async function appendChildNode<T extends Node>(
   cloned: T,
   child: ChildNode,
@@ -24,6 +28,15 @@ async function appendChildNode<T extends Node>(
   if (isElementNode(child) && (isStyleElement(child) || isScriptElement(child))) return
 
   if (context.filter && !context.filter(child)) return
+
+  if (
+    excludeParentNodes.has(cloned.nodeName)
+    || excludeParentNodes.has(child.nodeName)
+  ) {
+    context.currentParentNodeStyle = undefined
+  } else {
+    context.currentParentNodeStyle = context.currentNodeStyle
+  }
 
   cloned.appendChild(await cloneNode(child, context))
 }
@@ -100,15 +113,17 @@ export async function cloneNode<T extends Node>(
       }
     }
 
-    const diffStyle = copyCssStyles(node, cloned, isRoot, context)
+    const style
+      = context.currentNodeStyle
+      = copyCssStyles(node, cloned, isRoot, context)
 
     if (isRoot) applyCssStyleWithOptions(cloned, context)
 
     let copyScrollbar = false
     if (context.isEnable('copyScrollbar')) {
       const overflow = [
-        diffStyle.get('overflow-x')?.[0],
-        diffStyle.get('overflow-y')?.[1],
+        style.get('overflow-x')?.[0],
+        style.get('overflow-y')?.[1],
       ]
       copyScrollbar = (overflow.includes('scroll'))
         || (
@@ -121,7 +136,7 @@ export async function cloneNode<T extends Node>(
 
     copyInputValue(node, cloned)
 
-    splitFontFamily(diffStyle.get('font-family')?.[0])
+    splitFontFamily(style.get('font-family')?.[0])
       ?.forEach(val => fontFamilies.add(val))
 
     if (!isVideoElement(node)) {

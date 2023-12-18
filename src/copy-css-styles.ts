@@ -9,52 +9,55 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   isRoot: boolean,
   context: Context,
 ) {
-  const { ownerWindow } = context
+  const { ownerWindow, includeStyleProperties, currentParentNodeStyle } = context
   const clonedStyle = cloned.style
   const computedStyle = ownerWindow!.getComputedStyle(node)
   const defaultStyle = getDefaultStyle(node, null, context)
-  const diffStyle = getDiffStyle(computedStyle, defaultStyle, context.includeStyleProperties)
+  currentParentNodeStyle?.forEach((_, key) => {
+    defaultStyle.delete(key)
+  })
+  const style = getDiffStyle(computedStyle, defaultStyle, includeStyleProperties)
 
   // fix
-  diffStyle.delete('transition-property')
-  diffStyle.delete('all') // svg: all
-  diffStyle.delete('d') // svg: d
-  diffStyle.delete('content') // Safari shows pseudoelements if content is set
+  style.delete('transition-property')
+  style.delete('all') // svg: all
+  style.delete('d') // svg: d
+  style.delete('content') // Safari shows pseudoelements if content is set
   if (isRoot) {
-    diffStyle.delete('margin-top')
-    diffStyle.delete('margin-right')
-    diffStyle.delete('margin-bottom')
-    diffStyle.delete('margin-left')
-    diffStyle.delete('margin-block-start')
-    diffStyle.delete('margin-block-end')
-    diffStyle.delete('margin-inline-start')
-    diffStyle.delete('margin-inline-end')
-    diffStyle.set('box-sizing', ['border-box', ''])
+    style.delete('margin-top')
+    style.delete('margin-right')
+    style.delete('margin-bottom')
+    style.delete('margin-left')
+    style.delete('margin-block-start')
+    style.delete('margin-block-end')
+    style.delete('margin-inline-start')
+    style.delete('margin-inline-end')
+    style.set('box-sizing', ['border-box', ''])
   }
   // fix background-clip: text
-  if (diffStyle.get('background-clip')?.[0] === 'text') {
+  if (style.get('background-clip')?.[0] === 'text') {
     cloned.classList.add('______background-clip--text')
   }
   // fix chromium
   // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
   if (IN_CHROME) {
-    if (!diffStyle.has('font-kerning')) diffStyle.set('font-kerning', ['normal', ''])
+    if (!style.has('font-kerning')) style.set('font-kerning', ['normal', ''])
 
     if (
       (
-        diffStyle.get('overflow-x')?.[0] === 'hidden'
-        || diffStyle.get('overflow-y')?.[0] === 'hidden'
+        style.get('overflow-x')?.[0] === 'hidden'
+        || style.get('overflow-y')?.[0] === 'hidden'
       )
-      && diffStyle.get('text-overflow')?.[0] === 'ellipsis'
+      && style.get('text-overflow')?.[0] === 'ellipsis'
       && node.scrollWidth === node.clientWidth
     ) {
-      diffStyle.set('text-overflow', ['clip', ''])
+      style.set('text-overflow', ['clip', ''])
     }
   }
 
-  diffStyle.forEach(([value, priority], name) => {
+  style.forEach(([value, priority], name) => {
     clonedStyle.setProperty(name, value, priority)
   })
 
-  return diffStyle
+  return style
 }
