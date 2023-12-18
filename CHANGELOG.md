@@ -1,3 +1,12 @@
+## [4.4.37](https://github.com/qq15725/modern-screenshot/compare/v4.4.36...v4.4.37) (2023-12-18)
+
+
+### Bug Fixes
+
+* get user-set css styles(close [#66](https://github.com/qq15725/modern-screenshot/issues/66)) ([7a99399](https://github.com/qq15725/modern-screenshot/commit/7a9939966ddb13d527f4c2cac59cf96b7a710ae2))
+
+
+
 ## [4.4.36](https://github.com/qq15725/modern-screenshot/compare/v4.4.35...v4.4.36) (2023-12-05)
 
 
