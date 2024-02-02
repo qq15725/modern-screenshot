@@ -1,4 +1,3 @@
-import { cloneNode } from './clone-node'
 import { contextFetch } from './fetch'
 import type { Context } from './context'
 
@@ -29,12 +28,12 @@ export function embedSvgUse<T extends SVGUseElement>(
 
     if (definition) { // found local embedded definition
       return [
-        cloneNode(definition, context)
-          .then(clonedChildNode => {
-            if (!svgDefsElement?.querySelector(query)) {
-              svgDefsElement?.appendChild(clonedChildNode)
-            }
-          }),
+        // If custom cloneNode is used, the element's style will be defined inline, and the use tag cannot override the style.
+        // On balance, the probability that external styles will affect defs elements is small, so origin cloneNode is used.
+        new Promise<void>(resolve => {
+          svgDefsElement?.appendChild(definition.cloneNode(true))
+          resolve()
+        }),
       ]
     } else if (svgUrl) { // no local definition but found an url
       // try to fetch the svg and append it to the svgDefsElement
