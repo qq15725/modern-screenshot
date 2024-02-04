@@ -27,14 +27,10 @@ export function embedSvgUse<T extends SVGUseElement>(
     if (svgDefsElement?.querySelector(query)) return [] // already exists in defs
 
     if (definition) { // found local embedded definition
-      return [
-        // If custom cloneNode is used, the element's style will be defined inline, and the use tag cannot override the style.
-        // On balance, the probability that external styles will affect defs elements is small, so origin cloneNode is used.
-        new Promise<void>(resolve => {
-          svgDefsElement?.appendChild(definition.cloneNode(true))
-          resolve()
-        }),
-      ]
+      // If custom cloneNode is used, the element's style will be defined inline, and the use tag cannot override the style.
+      // On balance, the probability that external styles will affect defs elements is small, so origin cloneNode is used.
+      svgDefsElement?.appendChild(definition.cloneNode(true))
+      return []
     } else if (svgUrl) { // no local definition but found an url
       // try to fetch the svg and append it to the svgDefsElement
       return [
