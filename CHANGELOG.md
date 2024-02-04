@@ -1,3 +1,12 @@
+## [4.4.38](https://github.com/qq15725/modern-screenshot/compare/v4.4.37...v4.4.38) (2024-02-04)
+
+
+### Bug Fixes
+
+* 🐛 fix svg use element color error ([eb405e1](https://github.com/qq15725/modern-screenshot/commit/eb405e1c2519bdfb86221be615bd075126d955fe))
+
+
+
 ## [4.4.37](https://github.com/qq15725/modern-screenshot/compare/v4.4.36...v4.4.37) (2023-12-18)
 
 
