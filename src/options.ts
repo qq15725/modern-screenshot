@@ -189,12 +189,12 @@ export interface Options {
   /**
    * Triggered after a node is cloned
    */
-  onCloneNode?: ((cloend: Node) => void) | null
+  onCloneNode?: ((cloned: Node) => void) | null
 
   /**
    * Triggered after a node is embed
    */
-  onEmbedNode?: ((cloend: Node) => void) | null
+  onEmbedNode?: ((cloned: Node) => void) | null
 
   /**
    * Triggered after a ForeignObjectSvg is created
