@@ -1,3 +1,12 @@
+## [4.4.39](https://github.com/qq15725/modern-screenshot/compare/v4.4.38...v4.4.39) (2024-04-10)
+
+
+### Bug Fixes
+
+* typo ([d238dca](https://github.com/qq15725/modern-screenshot/commit/d238dcade7d5411180ca5883760558f25c8af38b))
+
+
+
 ## [4.4.38](https://github.com/qq15725/modern-screenshot/compare/v4.4.37...v4.4.38) (2024-02-04)
 
 
