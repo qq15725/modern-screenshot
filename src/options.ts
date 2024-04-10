@@ -166,6 +166,13 @@ export interface Options {
      * default: true
      */
     fixSvgXmlDecode?: boolean
+
+    /**
+     * Render scrolled children with scrolled content
+     *
+     * default: false
+     */
+    restoreScrollPosition?: boolean
   }
 
   /**
@@ -208,11 +215,4 @@ export interface Options {
    * This can be useful for performance-critical scenarios.
    */
   includeStyleProperties?: string[] | null
-
-  /**
-   * Render scrolled children with scrolled content
-   *
-   * default: false
-   */
-  restoreScrollPosition?: boolean
 }

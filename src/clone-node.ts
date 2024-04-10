@@ -41,7 +41,7 @@ async function appendChildNode<T extends Node>(
 
   const childCloned = await cloneNode(child, context)
 
-  if (context.restoreScrollPosition) {
+  if (context.isEnable('restoreScrollPosition')) {
     restoreScrollPosition(node, childCloned)
   }
 
