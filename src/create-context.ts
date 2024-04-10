@@ -59,7 +59,6 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     onCreateForeignObjectSvg: null,
     includeStyleProperties: null,
     autoDestruct: false,
-    restoreScrollPosition: false,
     ...options,
 
     // InternalContext
@@ -114,6 +113,9 @@ export async function createContext<T extends Node>(node: T, options?: Options &
 
     features,
     isEnable: (key: string): boolean => {
+      if (key === 'restoreScrollPosition') {
+        return typeof features === 'boolean' ? false : (features as any)[key] ?? false
+      }
       if (typeof features === 'boolean') {
         return features
       }
