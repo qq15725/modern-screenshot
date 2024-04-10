@@ -21,6 +21,7 @@ const excludeParentNodes = new Set([
 ])
 
 async function appendChildNode<T extends Node>(
+  node: T,
   cloned: T,
   child: ChildNode,
   context: Context,
@@ -38,7 +39,13 @@ async function appendChildNode<T extends Node>(
     context.currentParentNodeStyle = context.currentNodeStyle
   }
 
-  cloned.appendChild(await cloneNode(child, context))
+  const childCloned = await cloneNode(child, context)
+
+  if (context.restoreScrollPosition) {
+    restoreScrollPosition(node, childCloned)
+  }
+
+  cloned.appendChild(childCloned)
 }
 
 async function cloneChildNodes<T extends Node>(
@@ -61,12 +68,40 @@ async function cloneChildNodes<T extends Node>(
     ) {
       const nodes = child.assignedNodes()
       for (let i = 0; i < nodes.length; i++) {
-        await appendChildNode(cloned, nodes[i] as ChildNode, context)
+        await appendChildNode(node, cloned, nodes[i] as ChildNode, context)
       }
     } else {
-      await appendChildNode(cloned, child, context)
+      await appendChildNode(node, cloned, child, context)
     }
   }
+}
+
+function restoreScrollPosition<T extends Node>(
+  node: T,
+  chlidCloned: T,
+) {
+  if (!isHTMLElementNode(node) || !isHTMLElementNode(chlidCloned)) return
+
+  const { scrollTop, scrollLeft } = node
+
+  if (!scrollTop && !scrollLeft) {
+    return
+  }
+
+  const { transform } = chlidCloned.style
+  const matrix = new DOMMatrix(transform)
+
+  const { a, b, c, d } = matrix
+  matrix.a = 1
+  matrix.b = 0
+  matrix.c = 0
+  matrix.d = 1
+  matrix.translateSelf(-scrollLeft, -scrollTop)
+  matrix.a = a
+  matrix.b = b
+  matrix.c = c
+  matrix.d = d
+  chlidCloned.style.transform = matrix.toString()
 }
 
 function applyCssStyleWithOptions(
