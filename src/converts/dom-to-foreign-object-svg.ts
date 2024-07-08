@@ -45,7 +45,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   }
   log.timeEnd('clone node')
 
-  onCloneNode?.(clone)
+  await onCloneNode?.(clone)
 
   if (font !== false && isElementNode(clone)) {
     log.time('embed web font')
