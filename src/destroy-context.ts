@@ -1,6 +1,7 @@
 import type { Context } from './context'
+import { consoleWarn } from './utils'
 
-export function destroyContext(context: Context) {
+export function destroyContext(context: Context): void {
   context.ownerDocument = undefined
   context.ownerWindow = undefined
   context.svgStyleElement = undefined
@@ -10,8 +11,9 @@ export function destroyContext(context: Context) {
   if (context.sandbox) {
     try {
       context.sandbox.remove()
-    } catch (err) {
-      //
+    }
+    catch (err) {
+      consoleWarn('Failed to destroyContext', err)
     }
     context.sandbox = undefined
   }

@@ -1,6 +1,6 @@
+import type { Context } from './context'
 import { cloneNode } from './clone-node'
 import { consoleWarn } from './utils'
-import type { Context } from './context'
 
 export function cloneIframe<T extends HTMLIFrameElement>(
   iframe: T,
@@ -10,7 +10,8 @@ export function cloneIframe<T extends HTMLIFrameElement>(
     if (iframe?.contentDocument?.body) {
       return cloneNode(iframe.contentDocument.body, context) as Promise<HTMLBodyElement>
     }
-  } catch (error) {
+  }
+  catch (error) {
     consoleWarn('Failed to clone iframe', error)
   }
 

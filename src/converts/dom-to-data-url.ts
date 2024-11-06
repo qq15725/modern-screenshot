@@ -1,14 +1,14 @@
+import type { Context } from '../context'
+import type { Options } from '../options'
 import { changeJpegDpi } from '../change-jpeg-dpi'
 import { changePngDpi, detectPhysChunkFromDataUrl } from '../change-png-dpi'
 import { orCreateContext } from '../create-context'
 import { SUPPORT_ATOB, SUPPORT_BTOA } from '../utils'
 import { domToCanvas } from './dom-to-canvas'
-import type { Context } from '../context'
-import type { Options } from '../options'
 
 export async function domToDataUrl<T extends Node>(node: T, options?: Options): Promise<string>
 export async function domToDataUrl<T extends Node>(context: Context<T>): Promise<string>
-export async function domToDataUrl(node: any, options?: any) {
+export async function domToDataUrl(node: any, options?: any): Promise<string> {
   const context = await orCreateContext(node, options)
   const { log, quality, type, dpi } = context
   const canvas = await domToCanvas(context)
@@ -29,10 +29,12 @@ export async function domToDataUrl(node: any, options?: any) {
       if (b64Index >= 0) {
         headerLength = Math.ceil((b64Index + 28) / 3) * 4
         overwritepHYs = true
-      } else {
+      }
+      else {
         headerLength = 33 / 3 * 4
       }
-    } else if (type === 'image/jpeg') {
+    }
+    else if (type === 'image/jpeg') {
       headerLength = 18 / 3 * 4
     }
     // 33 bytes are ok for pngs and jpegs

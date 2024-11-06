@@ -38,42 +38,47 @@ export const isSlotElement = (node: Element): node is HTMLSlotElement => node.ta
 export const isIFrameElement = (node: Element): node is HTMLIFrameElement => node.tagName === 'IFRAME'
 
 // Console
-export const consoleWarn = (...args: any[]) => console.warn(PREFIX, ...args)
+export const consoleWarn = (...args: any[]): void => console.warn(PREFIX, ...args)
 // eslint-disable-next-line no-console
-export const consoleTime = (label: string) => console.time(`${ PREFIX } ${ label }`)
+export const consoleTime = (label: string): void => console.time(`${PREFIX} ${label}`)
 // eslint-disable-next-line no-console
-export const consoleTimeEnd = (label: string) => console.timeEnd(`${ PREFIX } ${ label }`)
+export const consoleTimeEnd = (label: string): void => console.timeEnd(`${PREFIX} ${label}`)
 
 // Supports
-export const supportWebp = (ownerDocument?: Document) => {
+export function supportWebp(ownerDocument?: Document): boolean {
   const canvas = ownerDocument?.createElement?.('canvas')
   if (canvas) {
     canvas.height = canvas.width = 1
   }
-  return canvas
-    && 'toDataURL' in canvas
+  return Boolean(canvas)
+    && 'toDataURL' in canvas!
     && Boolean(canvas.toDataURL('image/webp').includes('image/webp'))
 }
 
-export const isDataUrl = (url: string) => url.startsWith('data:')
+export const isDataUrl = (url: string): boolean => url.startsWith('data:')
 export function resolveUrl(url: string, baseUrl: string | null): string {
   // url is absolute already
-  if (url.match(/^[a-z]+:\/\//i)) return url
+  if (url.match(/^[a-z]+:\/\//i))
+    return url
 
   // url is absolute already, without protocol
-  if (IN_BROWSER && url.match(/^\/\//)) return window.location.protocol + url
+  if (IN_BROWSER && url.match(/^\/\//))
+    return window.location.protocol + url
 
   // dataURI, mailto:, tel:, etc.
-  if (url.match(/^[a-z]+:/i)) return url
+  if (url.match(/^[a-z]+:/i))
+    return url
 
-  if (!IN_BROWSER) return url
+  if (!IN_BROWSER)
+    return url
 
   const doc = getDocument().implementation.createHTMLDocument()
   const base = doc.createElement('base')
   const a = doc.createElement('a')
   doc.head.appendChild(base)
   doc.body.appendChild(a)
-  if (baseUrl) base.href = baseUrl
+  if (baseUrl)
+    base.href = baseUrl
   a.href = url
   return a.href
 }
@@ -94,36 +99,38 @@ export function createSvg(width: number, height: number, ownerDocument?: Documen
   const svg = getDocument(ownerDocument).createElementNS(XMLNS, 'svg')
   svg.setAttributeNS(null, 'width', width.toString())
   svg.setAttributeNS(null, 'height', height.toString())
-  svg.setAttributeNS(null, 'viewBox', `0 0 ${ width } ${ height }`)
+  svg.setAttributeNS(null, 'viewBox', `0 0 ${width} ${height}`)
   return svg
 }
 
-export function svgToDataUrl(svg: SVGElement, removeControlCharacter: boolean) {
+export function svgToDataUrl(svg: SVGElement, removeControlCharacter: boolean): string {
   let xhtml = new XMLSerializer().serializeToString(svg)
 
   if (removeControlCharacter) {
     xhtml = xhtml
       // https://www.w3.org/TR/xml/#charsets
       // eslint-disable-next-line no-control-regex
-      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uD800-\uDFFF\uFFFE\uFFFF]/ug, '')
+      .replace(/[\u0000-\u0008\v\f\u000E-\u001F\uD800-\uDFFF\uFFFE\uFFFF]/gu, '')
   }
 
-  return `data:image/svg+xml;charset=utf-8,${ encodeURIComponent(xhtml) }`
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xhtml)}`
 }
 
 // To Blob
 export async function canvasToBlob(canvas: HTMLCanvasElement, type = 'image/png', quality = 1): Promise<Blob> {
   try {
     return await new Promise((resolve, reject) => {
-      canvas.toBlob(blob => {
+      canvas.toBlob((blob) => {
         if (blob) {
           resolve(blob)
-        } else {
+        }
+        else {
           reject(new Error('Blob is null'))
         }
       }, type, quality)
     })
-  } catch (error) {
+  }
+  catch (error) {
     if (SUPPORT_ATOB) {
       consoleWarn('Failed canvas to blob', { type, quality }, error)
       return dataUrlToBlob(canvas.toDataURL(type, quality))
@@ -131,7 +138,7 @@ export async function canvasToBlob(canvas: HTMLCanvasElement, type = 'image/png'
     throw error
   }
 }
-export function dataUrlToBlob(dataUrl: string) {
+export function dataUrlToBlob(dataUrl: string): Blob {
   const [header, base64] = dataUrl.split(',')
   const type = header.match(/data:(.+);/)?.[1] ?? undefined
   const decoded = window.atob(base64)
@@ -146,21 +153,22 @@ export function dataUrlToBlob(dataUrl: string) {
 // Blob to
 export function readBlob(blob: Blob, type: 'dataUrl'): Promise<string>
 export function readBlob(blob: Blob, type: 'arrayBuffer'): Promise<ArrayBuffer>
-export function readBlob(blob: Blob, type: 'dataUrl' | 'arrayBuffer') {
+export function readBlob(blob: Blob, type: 'dataUrl' | 'arrayBuffer'): Promise<string | ArrayBuffer | null> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(reader.result)
     reader.onerror = () => reject(reader.error)
-    reader.onabort = () => reject(new Error(`Failed read blob to ${ type }`))
+    reader.onabort = () => reject(new Error(`Failed read blob to ${type}`))
     if (type === 'dataUrl') {
       reader.readAsDataURL(blob)
-    } else if (type === 'arrayBuffer') {
+    }
+    else if (type === 'arrayBuffer') {
       reader.readAsArrayBuffer(blob)
     }
   })
 }
-export const blobToDataUrl = (blob: Blob) => readBlob(blob, 'dataUrl')
-export const blobToArrayBuffer = (blob: Blob) => readBlob(blob, 'arrayBuffer')
+export const blobToDataUrl = (blob: Blob): Promise<string> => readBlob(blob, 'dataUrl')
+export const blobToArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => readBlob(blob, 'arrayBuffer')
 
 export function createImage(url: string, ownerDocument?: Document | null): HTMLImageElement {
   const img = getDocument(ownerDocument).createElement('img')
@@ -181,7 +189,7 @@ interface LoadMediaOptions {
 export function loadMedia<T extends Media>(media: T, options?: LoadMediaOptions): Promise<T>
 export function loadMedia(media: string, options?: LoadMediaOptions): Promise<HTMLImageElement>
 export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const { timeout, ownerDocument, onError: userOnError } = options ?? {}
     const node: Media = typeof media === 'string'
       ? createImage(media, getDocument(ownerDocument))
@@ -189,7 +197,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
     let timer: any = null
     let removeEventListeners: null | (() => void) = null
 
-    function onResolve() {
+    function onResolve(): void {
       resolve(node)
       timer && clearTimeout(timer)
       removeEventListeners?.()
@@ -211,7 +219,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
         return onResolve()
       }
       const onLoadeddata = onResolve
-      const onError = (error: any) => {
+      const onError = (error: any): void => {
         consoleWarn(
           'Failed video load',
           currentSrc,
@@ -226,7 +234,8 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       }
       node.addEventListener('loadeddata', onLoadeddata, { once: true })
       node.addEventListener('error', onError, { once: true })
-    } else {
+    }
+    else {
       const currentSrc = isSVGImageElementNode(node)
         ? node.href.baseVal
         : (node.currentSrc || node.src)
@@ -235,11 +244,12 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
         return onResolve()
       }
 
-      const onLoad = async () => {
+      const onLoad = async (): Promise<void> => {
         if (isImageElement(node) && 'decode' in node) {
           try {
             await node.decode()
-          } catch (error) {
+          }
+          catch (error) {
             consoleWarn(
               'Failed to decode image, trying to render anyway',
               node.dataset.originalSrc || currentSrc,
@@ -250,7 +260,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
         onResolve()
       }
 
-      const onError = (error: any) => {
+      const onError = (error: any): void => {
         consoleWarn(
           'Failed image load',
           node.dataset.originalSrc || currentSrc,
@@ -274,13 +284,14 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
   })
 }
 
-export async function waitUntilLoad(node: Node, timeout: number) {
+export async function waitUntilLoad(node: Node, timeout: number): Promise<void> {
   if (isHTMLElementNode(node)) {
     if (isImageElement(node) || isVideoElement(node)) {
       await loadMedia(node, { timeout })
-    } else {
+    }
+    else {
       await Promise.all(
-        ['img', 'video'].flatMap(selectors => {
+        ['img', 'video'].flatMap((selectors) => {
           return Array.from(node.querySelectorAll(selectors))
             .map(el => loadMedia(el as any, { timeout }))
         }),
@@ -295,13 +306,11 @@ export const uuid = (function uuid() {
   let counter = 0
 
   // ref: http://stackoverflow.com/a/6248722/2519373
-  const random = () =>
-    // eslint-disable-next-line no-bitwise
-    `0000${ ((Math.random() * 36 ** 4) << 0).toString(36) }`.slice(-4)
+  const random = (): string => `0000${((Math.random() * 36 ** 4) << 0).toString(36)}`.slice(-4)
 
   return () => {
     counter += 1
-    return `u${ random() }${ counter }`
+    return `u${random()}${counter}`
   }
 })()
 

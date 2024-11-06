@@ -1,6 +1,6 @@
+import type { Context } from './context'
 import { contextFetch } from './fetch'
 import { consoleWarn, isDataUrl, resolveUrl } from './utils'
-import type { Context } from './context'
 
 export async function replaceCssUrlToDataUrl(
   cssText: string,
@@ -8,7 +8,8 @@ export async function replaceCssUrlToDataUrl(
   context: Context,
   isImage?: boolean,
 ): Promise<string> {
-  if (!hasCssUrl(cssText)) return cssText
+  if (!hasCssUrl(cssText))
+    return cssText
 
   for (const [rawUrl, url] of parseCssUrls(cssText, baseUrl)) {
     try {
@@ -20,8 +21,9 @@ export async function replaceCssUrlToDataUrl(
           responseType: 'dataUrl',
         },
       )
-      cssText = cssText.replace(toRE(rawUrl), `$1${ dataUrl }$3`)
-    } catch (error) {
+      cssText = cssText.replace(toRE(rawUrl), `$1${dataUrl}$3`)
+    }
+    catch (error) {
       consoleWarn('Failed to fetch css data url', rawUrl, error)
     }
   }
@@ -30,6 +32,7 @@ export async function replaceCssUrlToDataUrl(
 }
 
 export function hasCssUrl(cssText: string): boolean {
+  // eslint-disable-next-line
   return /url\((['"]?)([^'"]+?)\1\)/.test(cssText)
 }
 
@@ -47,7 +50,7 @@ function parseCssUrls(cssText: string, baseUrl: string | null): [string, string]
 }
 
 function toRE(url: string): RegExp {
-  // eslint-disable-next-line no-useless-escape
+  // eslint-disable-next-line
   const escaped = url.replace(/([.*+?^${}()|\[\]\/\\])/g, '\\$1')
-  return new RegExp(`(url\\(['"]?)(${ escaped })(['"]?\\))`, 'g')
+  return new RegExp(`(url\\(['"]?)(${escaped})(['"]?\\))`, 'g')
 }

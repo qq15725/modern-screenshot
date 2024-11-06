@@ -1,9 +1,9 @@
-import { describe, expect, test } from 'vitest'
 import { Window } from 'happy-dom'
+import { describe, expect, it } from 'vitest'
 import { domToForeignObjectSvg } from '../src'
 
 describe('use happy-dom in nodejs', async () => {
-  test('dom to svg', async () => {
+  it('dom to svg', async () => {
     const window = new Window()
     const document = window.document
     document.write(`

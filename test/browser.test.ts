@@ -1,20 +1,20 @@
-import { readFile } from 'fs/promises'
-import { basename, join } from 'path'
-import { afterAll, beforeAll, describe, expect, test } from 'vitest'
-import { preview } from 'vite'
-import puppeteer from 'puppeteer'
-import { toMatchImageSnapshot } from 'jest-image-snapshot'
-import glob from 'glob'
-
 import type { Browser, ElementHandle, Page } from 'puppeteer'
 import type { PreviewServer } from 'vite'
+import { readFile } from 'node:fs/promises'
+import { basename, join } from 'node:path'
+import { glob } from 'glob'
+import { toMatchImageSnapshot } from 'jest-image-snapshot'
+import puppeteer from 'puppeteer'
+
+import { preview } from 'vite'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const port = 3000
-const indexURL = `http://localhost:${ port }/dist/index.js`
-const assetsBaseURL = `http://localhost:${ port }/test/assets`
+const indexURL = `http://localhost:${port}/dist/index.js`
+const assetsBaseURL = `http://localhost:${port}/test/assets`
 
 const corsPort = 3001
-const corsAssetsBaseURL = `http://localhost:${ corsPort }/test/assets`
+const corsAssetsBaseURL = `http://localhost:${corsPort}/test/assets`
 
 function parseHTML(str: string) {
   return {
@@ -22,16 +22,18 @@ function parseHTML(str: string) {
       str.match(/<style>(.*)<\/style>/s)?.[1]
         .replace(/__BASE_URL__/g, assetsBaseURL)
         .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL)
-      ?? ''
-}
+        ?? ''
+    }
   * { box-sizing: border-box; }
 `,
     templateCode: (
+      // eslint-disable-next-line
       str.match(/<template.*?>(.*)<\/template>/s)?.[1]
       ?? '<div id="root"></div>'
     )
       .replace(/__BASE_URL__/g, assetsBaseURL)
       .replace(/__CORS_BASE_URL__/g, corsAssetsBaseURL),
+    // eslint-disable-next-line
     scriptCode: str.match(/<script.*?>(.*)<\/script>/s)?.[1]?.replace('export default ', 'return ')
       ?? 'return window.modernScreenshot.domToPng(document.querySelector(\'body > *\'))',
     skipExpect: !!str.match(/<skip-expect.*\/>/s)?.[0],
@@ -51,7 +53,7 @@ describe('dom to image in browser', async () => {
 
   const fixtures = await Promise.all(
     glob.sync(join(fixturesDir, '*.html'))
-      .map(async path => {
+      .map(async (path) => {
         return {
           path,
           ...parseHTML(await readFile(path, 'utf-8')),
@@ -80,7 +82,7 @@ describe('dom to image in browser', async () => {
   <meta charset="utf-8">
   <title>Puppeteer Vitest Test Page</title>
   <style id="style"></style>
-  <script src="${ indexURL }"></script>
+  <script src="${indexURL}"></script>
 </head>
 <body></body>
 </html>`)
@@ -102,7 +104,7 @@ describe('dom to image in browser', async () => {
 
   fixtures.forEach(({ path, scriptCode, styleCode, templateCode, skipExpect, debug }) => {
     const name = basename(path).replace('.html', '')
-    test(name, async () => {
+    it(name, async () => {
       await style.evaluate((el, val) => el.innerHTML = val, styleCode)
       await body.evaluate((el, val) => el.innerHTML = val, templateCode)
       // eslint-disable-next-line no-new-func
@@ -111,6 +113,7 @@ describe('dom to image in browser', async () => {
         await new Promise(resolve => setTimeout(resolve, 60_000))
       }
       const base64 = png.replace('data:image/png;base64,', '')
+      // eslint-disable-next-line
       const buffer = Buffer.from(base64, 'base64')
       const options = {
         customSnapshotIdentifier: name,
@@ -118,12 +121,15 @@ describe('dom to image in browser', async () => {
       }
       try {
         expect(buffer).toMatchImageSnapshot(options)
-      } catch (e) {
+      }
+      catch (err) {
+        console.warn(err)
         if (!skipExpect) {
           // eslint-disable-next-line no-console
           console.log(png)
           expect(buffer).toMatchImageSnapshot(options)
-        } else {
+        }
+        else {
           expect(base64).not.toBe('')
         }
       }

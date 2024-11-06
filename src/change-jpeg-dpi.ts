@@ -1,4 +1,4 @@
-export function changeJpegDpi(uint8Array: Uint8Array, dpi: number) {
+export function changeJpegDpi(uint8Array: Uint8Array, dpi: number): Uint8Array {
   uint8Array[13] = 1 // 1 pixel per inch or 2 pixel per cm
   uint8Array[14] = dpi >> 8 // dpiX high byte
   uint8Array[15] = dpi & 0xFF // dpiX low byte

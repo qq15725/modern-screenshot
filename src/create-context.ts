@@ -1,17 +1,17 @@
+import type { Context, Request } from './context'
+import type { Options } from './options'
 import { createLogger } from './create-logger'
 import { getDefaultRequestInit } from './get-default-request-init'
 import {
-  IN_BROWSER,
-  SUPPORT_WEB_WORKER,
-  XMLNS,
   consoleWarn,
+  IN_BROWSER,
   isContext,
   isElementNode,
+  SUPPORT_WEB_WORKER,
   supportWebp,
   waitUntilLoad,
+  XMLNS,
 } from './utils'
-import type { Context, Request } from './context'
-import type { Options } from './options'
 
 export async function orCreateContext<T extends Node>(context: Context<T>): Promise<Context<T>>
 export async function orCreateContext<T extends Node>(node: T, options?: Options): Promise<Context<T>>
@@ -73,40 +73,42 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     svgStyles: new Map(),
     defaultComputedStyles: new Map(),
     workers: [
-      ...new Array(
-        SUPPORT_WEB_WORKER && workerUrl && workerNumber
+      ...Array.from({
+        length: SUPPORT_WEB_WORKER && workerUrl && workerNumber
           ? workerNumber
           : 0,
-      ),
+      }),
     ].map(() => {
       try {
         const worker = new Worker(workerUrl!)
-        worker.onmessage = async event => {
+        worker.onmessage = async (event) => {
           const { url, result } = event.data
           if (result) {
             requests.get(url)?.resolve?.(result)
-          } else {
-            requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
+          }
+          else {
+            requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${url}`))
           }
         }
-        worker.onmessageerror = event => {
+        worker.onmessageerror = (event) => {
           const { url } = event.data
-          requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${ url }`))
+          requests.get(url)?.reject?.(new Error(`Error receiving message from worker: ${url}`))
         }
         return worker
-      } catch (error) {
+      }
+      catch (error) {
         consoleWarn('Failed to new Worker', error)
         return null
       }
     }).filter(Boolean) as any,
     fontFamilies: new Set(),
     fontCssTexts: new Map(),
-    acceptOfImage: `${ [
+    acceptOfImage: `${[
       supportWebp(ownerDocument) && 'image/webp',
       'image/svg+xml',
       'image/*',
       '*/*',
-    ].filter(Boolean).join(',') };q=0.8`,
+    ].filter(Boolean).join(',')};q=0.8`,
     requests,
     drawImageCount: 0,
     tasks: [],
@@ -134,8 +136,9 @@ export async function createContext<T extends Node>(node: T, options?: Options &
   return context
 }
 
-export function createStyleElement(ownerDocument?: Document) {
-  if (!ownerDocument) return undefined
+export function createStyleElement(ownerDocument?: Document): HTMLStyleElement | undefined {
+  if (!ownerDocument)
+    return undefined
   const style = ownerDocument.createElement('style')
   const cssText = style.ownerDocument.createTextNode(`
 .______background-clip--text {
@@ -147,21 +150,21 @@ export function createStyleElement(ownerDocument?: Document) {
   return style
 }
 
-function resolveBoundingBox(node: Node, context: Context) {
+function resolveBoundingBox(node: Node, context: Context): { width: number, height: number } {
   let { width, height } = context
 
   if (isElementNode(node) && (!width || !height)) {
     const box = node.getBoundingClientRect()
 
     width = width
-      || box.width
-      || Number(node.getAttribute('width'))
-      || 0
+    || box.width
+    || Number(node.getAttribute('width'))
+    || 0
 
     height = height
-      || box.height
-      || Number(node.getAttribute('height'))
-      || 0
+    || box.height
+    || Number(node.getAttribute('height'))
+    || 0
   }
 
   return { width, height }

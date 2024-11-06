@@ -1,14 +1,14 @@
+import type { Context } from './context'
 import { getDefaultStyle } from './get-default-style'
 import { getDiffStyle } from './get-diff-style'
 import { IN_CHROME } from './utils'
-import type { Context } from './context'
 
 export function copyCssStyles<T extends HTMLElement | SVGElement>(
   node: T,
   cloned: T,
   isRoot: boolean,
   context: Context,
-) {
+): Map<string, [string, string]> {
   const { ownerWindow, includeStyleProperties, currentParentNodeStyle } = context
   const clonedStyle = cloned.style
   const computedStyle = ownerWindow!.getComputedStyle(node)
@@ -41,7 +41,8 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   // fix chromium
   // https://github.com/RigoCorp/html-to-image/blob/master/src/cssFixes.ts
   if (IN_CHROME) {
-    if (!style.has('font-kerning')) style.set('font-kerning', ['normal', ''])
+    if (!style.has('font-kerning'))
+      style.set('font-kerning', ['normal', ''])
 
     if (
       (

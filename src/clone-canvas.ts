@@ -9,8 +9,9 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
       if (dataURL !== 'data:,') {
         return createImage(dataURL, canvas.ownerDocument)
       }
-    } catch (error) {
-      //
+    }
+    catch (error) {
+      consoleWarn('Failed to clone canvas', error)
     }
   }
 
@@ -22,11 +23,13 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
     if (ctx && clonedCtx) {
       clonedCtx.putImageData(
         ctx.getImageData(0, 0, canvas.width, canvas.height),
-        0, 0,
+        0,
+        0,
       )
     }
     return cloned
-  } catch (error) {
+  }
+  catch (error) {
     consoleWarn('Failed to clone canvas', error)
   }
 

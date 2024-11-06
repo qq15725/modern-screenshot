@@ -19,7 +19,7 @@
 
 ### Before submitting the PR, please make sure you do the following
 
-- [ ] Read the [Pull Request Guidelines](https://github.com/qq15725/modern-screenshot/blob/master/.github/pull-request-guidelines.md) and follow the [PR Title Convention](https://github.com/qq15725/modern-screenshot/blob/master/.github/commit-convention.md).
+- [ ] Read the [Pull Request Guidelines](https://github.com/qq15725/modern-screenshot/blob/main/.github/pull-request-guidelines.md) and follow the [PR Title Convention](https://github.com/qq15725/modern-screenshot/blob/main/.github/commit-convention.md).
 - [ ] Check that there isn't already a PR that solves the problem the same way to avoid creating a duplicate.
 - [ ] Provide a description in this PR that addresses **what** the PR is solving, or reference the issue that it solves (e.g. `fixes #123`).
 - [ ] Ideally, include relevant tests that fail without this PR but pass with it.

@@ -32,7 +32,7 @@ export async function cloneVideo<T extends HTMLVideoElement>(
       return cloned
     }
     cloned.currentTime = video.currentTime
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       cloned.addEventListener('seeked', resolve, { once: true })
     })
     const canvas = ownerDocument.createElement('canvas')
@@ -40,8 +40,10 @@ export async function cloneVideo<T extends HTMLVideoElement>(
     canvas.height = video.offsetHeight
     try {
       const ctx = canvas.getContext('2d')
-      if (ctx) ctx.drawImage(cloned, 0, 0, canvas.width, canvas.height)
-    } catch (error) {
+      if (ctx)
+        ctx.drawImage(cloned, 0, 0, canvas.width, canvas.height)
+    }
+    catch (error) {
       consoleWarn('Failed to clone video', error)
       if (video.poster) {
         return createImage(video.poster, video.ownerDocument)

@@ -1,5 +1,5 @@
-import { IN_FIREFOX, IN_SAFARI, blobToDataUrl, consoleWarn } from './utils'
 import type { Context } from './context'
+import { blobToDataUrl, consoleWarn, IN_FIREFOX, IN_SAFARI } from './utils'
 
 export type BaseFetchOptions = RequestInit & {
   url: string
@@ -22,7 +22,7 @@ export function baseFetch(options: BaseFetchOptions): Promise<string> {
     : undefined
 
   return fetch(url, { signal: controller.signal, ...requestInit })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error('Failed fetch, not 2xx response', { cause: response })
       }
@@ -37,7 +37,7 @@ export function baseFetch(options: BaseFetchOptions): Promise<string> {
     .finally(() => clearTimeout(timer))
 }
 
-export function contextFetch(context: Context, options: ContextFetchOptions) {
+export function contextFetch(context: Context, options: ContextFetchOptions): Promise<string> {
   const { url: rawUrl, requestType = 'text', responseType = 'text', imageDom } = options
   let url = rawUrl
 
@@ -87,7 +87,8 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
       if (fetchFn && requestType === 'image') {
         const result = await fetchFn(rawUrl)
 
-        if (result) return result
+        if (result)
+          return result
       }
 
       if (!IN_SAFARI && rawUrl.startsWith('http') && workers.length) {
@@ -100,7 +101,7 @@ export function contextFetch(context: Context, options: ContextFetchOptions) {
       }
 
       return baseFetch(baseFetchOptions)
-    })().catch(error => {
+    })().catch((error) => {
       requests.delete(rawUrl)
 
       if (requestType === 'image' && placeholderImage) {

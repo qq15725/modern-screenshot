@@ -1,6 +1,6 @@
-import { IN_FIREFOX, IN_SAFARI, isDataUrl, isImageElement, isSVGElementNode } from './utils'
-import { contextFetch } from './fetch'
 import type { Context } from './context'
+import { contextFetch } from './fetch'
+import { IN_FIREFOX, IN_SAFARI, isDataUrl, isImageElement, isSVGElementNode } from './utils'
 
 export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
   cloned: T,
@@ -16,8 +16,9 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
           imageDom: cloned,
           requestType: 'image',
           responseType: 'dataUrl',
-        }).then(url => {
-          if (!url) return
+        }).then((url) => {
+          if (!url)
+            return
           cloned.srcset = ''
           cloned.dataset.originalSrc = originalSrc
           cloned.src = url || ''
@@ -28,7 +29,8 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
     if (IN_SAFARI || IN_FIREFOX) {
       context.drawImageCount++
     }
-  } else if (isSVGElementNode(cloned) && !isDataUrl(cloned.href.baseVal)) {
+  }
+  else if (isSVGElementNode(cloned) && !isDataUrl(cloned.href.baseVal)) {
     const originalSrc = cloned.href.baseVal
     return [
       contextFetch(context, {
@@ -36,8 +38,9 @@ export function embedImageElement<T extends HTMLImageElement | SVGImageElement>(
         imageDom: cloned,
         requestType: 'image',
         responseType: 'dataUrl',
-      }).then(url => {
-        if (!url) return
+      }).then((url) => {
+        if (!url)
+          return
         cloned.dataset.originalSrc = originalSrc
         cloned.href.baseVal = url || ''
       }),

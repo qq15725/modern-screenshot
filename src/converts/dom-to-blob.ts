@@ -1,14 +1,14 @@
+import type { Context } from '../context'
+import type { Options } from '../options'
 import { changeJpegDpi } from '../change-jpeg-dpi'
 import { changePngDpi } from '../change-png-dpi'
 import { orCreateContext } from '../create-context'
 import { blobToArrayBuffer, canvasToBlob } from '../utils'
 import { domToCanvas } from './dom-to-canvas'
-import type { Context } from '../context'
-import type { Options } from '../options'
 
 export async function domToBlob<T extends Node>(node: T, options?: Options): Promise<Blob>
 export async function domToBlob<T extends Node>(context: Context<T>): Promise<Blob>
-export async function domToBlob(node: any, options?: any) {
+export async function domToBlob(node: any, options?: any): Promise<Blob> {
   const context = await orCreateContext(node, options)
   const { log, type, quality, dpi } = context
   const canvas = await domToCanvas(context)
@@ -19,7 +19,8 @@ export async function domToBlob(node: any, options?: any) {
     let uint8Array = new Uint8Array(arrayBuffer)
     if (type === 'image/png') {
       uint8Array = changePngDpi(uint8Array, dpi)
-    } else if (type === 'image/jpeg') {
+    }
+    else if (type === 'image/jpeg') {
       uint8Array = changeJpegDpi(uint8Array, dpi)
     }
     log.timeEnd('canvas to blob')

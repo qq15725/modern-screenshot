@@ -1,23 +1,24 @@
+import type { Context } from '../context'
+import type { Options } from '../options'
 import { cloneNode } from '../clone-node'
 import { orCreateContext } from '../create-context'
 import { destroyContext } from '../destroy-context'
-import { embedWebFont } from '../embed-web-font'
 import { embedNode } from '../embed-node'
+import { embedWebFont } from '../embed-web-font'
 import {
   consoleWarn,
   createSvg,
   isElementNode,
   isSVGElementNode,
 } from '../utils'
-import type { Context } from '../context'
-import type { Options } from '../options'
 
 export async function domToForeignObjectSvg<T extends Node>(node: T, options?: Options): Promise<SVGElement>
 export async function domToForeignObjectSvg<T extends Node>(context: Context<T>): Promise<SVGElement>
-export async function domToForeignObjectSvg(node: any, options?: any) {
+export async function domToForeignObjectSvg(node: any, options?: any): Promise<SVGElement> {
   const context = await orCreateContext(node, options)
 
-  if (isElementNode(context.node) && isSVGElementNode(context.node)) return context.node
+  if (isElementNode(context.node) && isSVGElementNode(context.node))
+    return context.node
 
   const {
     ownerDocument,
@@ -39,7 +40,7 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   if (svgStyleElement && ownerDocument) {
     let allCssText = ''
     svgStyles.forEach((klasses, cssText) => {
-      allCssText += `${ klasses.join(',\n') } {\n  ${ cssText }\n}\n`
+      allCssText += `${klasses.join(',\n')} {\n  ${cssText}\n}\n`
     })
     svgStyleElement.appendChild(ownerDocument.createTextNode(allCssText))
   }
@@ -57,20 +58,22 @@ export async function domToForeignObjectSvg(node: any, options?: any) {
   embedNode(clone, context)
   const count = tasks.length
   let current = 0
-  const runTask = async () => {
+  const runTask = async (): Promise<void> => {
     while (true) {
       const task = tasks.pop()
-      if (!task) break
+      if (!task)
+        break
       try {
         await task
-      } catch (error) {
+      }
+      catch (error) {
         consoleWarn('Failed to run task', error)
       }
       progress?.(++current, count)
     }
   }
   progress?.(current, count)
-  await Promise.all([...Array(4)].map(runTask))
+  await Promise.all([...Array.from({ length: 4 })].map(runTask))
   log.timeEnd('embed node')
 
   onEmbedNode?.(clone)

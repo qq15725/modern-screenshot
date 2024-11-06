@@ -1,12 +1,12 @@
+import type { Context } from '../context'
+import type { Options } from '../options'
 import { orCreateContext } from '../create-context'
 import { createSvg, svgToDataUrl } from '../utils'
 import { domToDataUrl } from './dom-to-data-url'
-import type { Context } from '../context'
-import type { Options } from '../options'
 
 export async function domToSvg<T extends Node>(node: T, options?: Options): Promise<string>
 export async function domToSvg<T extends Node>(context: Context<T>): Promise<string>
-export async function domToSvg(node: any, options?: any) {
+export async function domToSvg(node: any, options?: any): Promise<string> {
   const context = await orCreateContext(node, options)
   const { width, height, ownerDocument } = context
   const dataUrl = await domToDataUrl(context)

@@ -1,5 +1,5 @@
-import { consoleWarn, loadMedia } from './utils'
 import type { Context } from './context'
+import { consoleWarn, loadMedia } from './utils'
 
 export async function imageToCanvas<T extends HTMLImageElement>(
   image: T,
@@ -15,10 +15,11 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   log.time('image to canvas')
   const loaded = await loadMedia(image, { timeout })
   const { canvas, context2d } = createCanvas(image.ownerDocument, context)
-  const drawImage = () => {
+  const drawImage = (): void => {
     try {
       context2d?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
-    } catch (error) {
+    }
+    catch (error) {
       consoleWarn('Failed to drawImage', error)
     }
   }
@@ -27,7 +28,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
 
   if (context.isEnable('fixSvgXmlDecode')) {
     for (let i = 0; i < drawImageCount; i++) {
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         setTimeout(() => {
           drawImage()
           resolve()
@@ -42,15 +43,15 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   return canvas
 }
 
-function createCanvas(ownerDocument: Document, context: Context) {
+function createCanvas(ownerDocument: Document, context: Context): { canvas: HTMLCanvasElement, context2d: CanvasRenderingContext2D | null } {
   const { width, height, scale, backgroundColor, maximumCanvasSize: max } = context
 
   const canvas = ownerDocument.createElement('canvas')
 
   canvas.width = Math.floor(width * scale)
   canvas.height = Math.floor(height * scale)
-  canvas.style.width = `${ width }px`
-  canvas.style.height = `${ height }px`
+  canvas.style.width = `${width}px`
+  canvas.style.height = `${height}px`
 
   if (max) {
     if (canvas.width > max || canvas.height > max) {
@@ -58,14 +59,17 @@ function createCanvas(ownerDocument: Document, context: Context) {
         if (canvas.width > canvas.height) {
           canvas.height *= max / canvas.width
           canvas.width = max
-        } else {
+        }
+        else {
           canvas.width *= max / canvas.height
           canvas.height = max
         }
-      } else if (canvas.width > max) {
+      }
+      else if (canvas.width > max) {
         canvas.height *= max / canvas.width
         canvas.width = max
-      } else {
+      }
+      else {
         canvas.width *= max / canvas.height
         canvas.height = max
       }

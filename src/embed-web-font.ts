@@ -1,12 +1,12 @@
-import { URL_RE, hasCssUrl, replaceCssUrlToDataUrl } from './css-url'
-import { contextFetch } from './fetch'
-import { consoleWarn, isCSSImportRule, isCssFontFaceRule, resolveUrl, splitFontFamily } from './utils'
 import type { Context } from './context'
+import { hasCssUrl, replaceCssUrlToDataUrl, URL_RE } from './css-url'
+import { contextFetch } from './fetch'
+import { consoleWarn, isCssFontFaceRule, isCSSImportRule, resolveUrl, splitFontFamily } from './utils'
 
 export async function embedWebFont<T extends Element>(
   clone: T,
   context: Context,
-) {
+): Promise<void> {
   const {
     ownerDocument,
     svgStyleElement,
@@ -20,23 +20,27 @@ export async function embedWebFont<T extends Element>(
     !ownerDocument
     || !svgStyleElement
     || !fontFamilies.size
-  ) return
+  ) {
+    return
+  }
 
   if (font && font.cssText) {
     const cssText = filterPreferredFormat(font.cssText, context)
-    svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
-  } else {
-    const styleSheets = Array.from(ownerDocument.styleSheets).filter(styleSheet => {
+    svgStyleElement.appendChild(ownerDocument.createTextNode(`${cssText}\n`))
+  }
+  else {
+    const styleSheets = Array.from(ownerDocument.styleSheets).filter((styleSheet) => {
       try {
         return 'cssRules' in styleSheet && Boolean(styleSheet.cssRules.length)
-      } catch (error) {
-        consoleWarn(`Error while reading CSS rules from ${ styleSheet.href }`, error)
+      }
+      catch (error) {
+        consoleWarn(`Error while reading CSS rules from ${styleSheet.href}`, error)
         return false
       }
     })
 
     await Promise.all(
-      styleSheets.flatMap(styleSheet => {
+      styleSheets.flatMap((styleSheet) => {
         return Array.from(styleSheet.cssRules).map(async (cssRule, index) => {
           if (isCSSImportRule(cssRule)) {
             let importIndex = index + 1
@@ -48,8 +52,9 @@ export async function embedWebFont<T extends Element>(
                 requestType: 'text',
                 responseType: 'text',
               })
-            } catch (error) {
-              consoleWarn(`Error fetch remote css import from ${ baseUrl }`, error)
+            }
+            catch (error) {
+              consoleWarn(`Error fetch remote css import from ${baseUrl}`, error)
             }
             const replacedCssText = cssText.replace(
               URL_RE,
@@ -63,7 +68,8 @@ export async function embedWebFont<T extends Element>(
                     ? (importIndex += 1)
                     : styleSheet.cssRules.length!,
                 )
-              } catch (error) {
+              }
+              catch (error) {
                 consoleWarn('Error inserting rule from remote css import', { rule, error })
               }
             }
@@ -85,8 +91,9 @@ export async function embedWebFont<T extends Element>(
         const rule = value as CSSFontFaceRule
         const cssText = fontCssTexts.get(rule.cssText)
         if (cssText) {
-          svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
-        } else {
+          svgStyleElement.appendChild(ownerDocument.createTextNode(`${cssText}\n`))
+        }
+        else {
           tasks.push(
             replaceCssUrlToDataUrl(
               rule.cssText,
@@ -94,10 +101,10 @@ export async function embedWebFont<T extends Element>(
                 ? rule.parentStyleSheet.href
                 : null,
               context,
-            ).then(cssText => {
+            ).then((cssText) => {
               cssText = filterPreferredFormat(cssText, context)
               fontCssTexts.set(rule.cssText, cssText)
-              svgStyleElement.appendChild(ownerDocument.createTextNode(`${ cssText }\n`))
+              svgStyleElement.appendChild(ownerDocument.createTextNode(`${cssText}\n`))
             }),
           )
         }
@@ -105,23 +112,28 @@ export async function embedWebFont<T extends Element>(
   }
 }
 
-const COMMENTS_RE = /(\/\*[\s\S]*?\*\/)/gi
+const COMMENTS_RE = /(\/\*[\s\S]*?\*\/)/g
+// eslint-disable-next-line
 const KEYFRAMES_RE = /((@.*?keyframes [\s\S]*?){([\s\S]*?}\s*?)})/gi
 
-function parseCss(source: string) {
-  if (source == null) return []
+function parseCss(source: string): string[] {
+  if (source == null)
+    return []
   const result: string[] = []
   let cssText = source.replace(COMMENTS_RE, '')
   while (true) {
     const matches = KEYFRAMES_RE.exec(cssText)
-    if (!matches) break
+    if (!matches)
+      break
     result.push(matches[0])
   }
   cssText = cssText.replace(KEYFRAMES_RE, '')
   // to match css & media queries together
   const IMPORT_RE = /@import[\s\S]*?url\([^)]*\)[\s\S]*?;/gi
   const UNIFIED_RE = new RegExp(
+    // eslint-disable-next-line
     '((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]'
+    // eslint-disable-next-line
     + '*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})',
     'gi',
   )
@@ -131,10 +143,12 @@ function parseCss(source: string) {
       matches = UNIFIED_RE.exec(cssText)
       if (!matches) {
         break
-      } else {
+      }
+      else {
         IMPORT_RE.lastIndex = UNIFIED_RE.lastIndex
       }
-    } else {
+    }
+    else {
       UNIFIED_RE.lastIndex = IMPORT_RE.lastIndex
     }
     result.push(matches[0])
@@ -159,10 +173,11 @@ function filterPreferredFormat(
     ? str.replace(FONT_SRC_RE, (match: string) => {
       while (true) {
         const [src, , format] = URL_WITH_FORMAT_RE.exec(match) || []
-        if (!format) return ''
-        if (format === preferredFormat) return `src: ${ src };`
+        if (!format)
+          return ''
+        if (format === preferredFormat)
+          return `src: ${src};`
       }
     })
     : str
 }
-

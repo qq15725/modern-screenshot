@@ -1,6 +1,6 @@
+import type { Context } from './context'
 import { replaceCssUrlToDataUrl } from './css-url'
 import { IN_FIREFOX, IN_SAFARI } from './utils'
-import type { Context } from './context'
 
 const properties = [
   'background-image',
@@ -15,7 +15,7 @@ export function embedCssStyleImage(
   context: Context,
 ): Promise<void>[] {
   return properties
-    .map(property => {
+    .map((property) => {
       const value = style.getPropertyValue(property)
       if (!value || value === 'none') {
         return null
@@ -23,8 +23,9 @@ export function embedCssStyleImage(
       if (IN_SAFARI || IN_FIREFOX) {
         context.drawImageCount++
       }
-      return replaceCssUrlToDataUrl(value, null, context, true).then(newValue => {
-        if (!newValue || value === newValue) return
+      return replaceCssUrlToDataUrl(value, null, context, true).then((newValue) => {
+        if (!newValue || value === newValue)
+          return
         style.setProperty(
           property,
           newValue,

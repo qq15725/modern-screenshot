@@ -26,14 +26,12 @@ jobs:
   test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    name: "Build&Test: node-16.x, ubuntu-latest"
+    name: 'Build&Test: node-lts, ubuntu-latest'
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          # Assume PRs are less than 50 commits
-          fetch-depth: 50
-
+          fetch-depth: 0
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@57d9664f8e2aa45f26bcb59095f99aa47ae8e90d # v35.4.4
@@ -41,27 +39,25 @@ jobs:
           files: |
             docs/**
             .github/**
+            .vscode/**
             !.github/workflows/ci.yml
             **.md
-
       - name: 🎉 Install pnpm
         if: steps.changed-files.outputs.only_changed != 'true'
-        uses: pnpm/action-setup@v2.2.4
-
-      - name: 🎉 Set node version to 16.x
+        uses: pnpm/action-setup@v4
+      - name: 🎉 Set node version to lts
         if: steps.changed-files.outputs.only_changed != 'true'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
-
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          cache: pnpm
       - name: 🚧 Install deps
         if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm install
-
       - name: 📦 Build
         if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm run build
-
       - name: 🔀 Test unit
         if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm run test
@@ -69,29 +65,24 @@ jobs:
   lint:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    name: "Lint: node-16, ubuntu-latest"
+    name: 'Lint: node-lts, ubuntu-latest'
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - name: 🎉 Install pnpm
-        uses: pnpm/action-setup@v2.2.4
-
-      - name: 🎉 Set node version to 16.x
-        uses: actions/setup-node@v3
+        uses: pnpm/action-setup@v4
+      - name: 🎉 Set node version to lts
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
-          cache: "pnpm"
-
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          cache: pnpm
       - name: 🚧 Install deps
         run: pnpm install
-
       - name: 📦 Build
         run: pnpm run build
-
       - name: 🔀 Lint
         run: pnpm run lint
-
       # From https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
       - name: 🔀 Check workflow files
         run: |

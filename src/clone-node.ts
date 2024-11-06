@@ -1,20 +1,20 @@
-import { copyPseudoClass } from './copy-pseudo-class'
-import { copyInputValue } from './copy-input-value'
+import type { Context } from './context'
+import { cloneElement } from './clone-element'
 import { copyCssStyles } from './copy-css-styles'
+import { copyInputValue } from './copy-input-value'
+import { copyPseudoClass } from './copy-pseudo-class'
 import {
   isCommentNode,
   isElementNode,
   isHTMLElementNode,
-  isSVGElementNode,
   isScriptElement,
   isSlotElement,
   isStyleElement,
+  isSVGElementNode,
   isTextNode,
   isVideoElement,
   splitFontFamily,
 } from './utils'
-import { cloneElement } from './clone-element'
-import type { Context } from './context'
 
 const excludeParentNodes = new Set([
   'symbol', // test/fixtures/svg.symbol.html
@@ -26,16 +26,19 @@ async function appendChildNode<T extends Node>(
   child: ChildNode,
   context: Context,
 ): Promise<void> {
-  if (isElementNode(child) && (isStyleElement(child) || isScriptElement(child))) return
+  if (isElementNode(child) && (isStyleElement(child) || isScriptElement(child)))
+    return
 
-  if (context.filter && !context.filter(child)) return
+  if (context.filter && !context.filter(child))
+    return
 
   if (
     excludeParentNodes.has(cloned.nodeName)
     || excludeParentNodes.has(child.nodeName)
   ) {
     context.currentParentNodeStyle = undefined
-  } else {
+  }
+  else {
     context.currentParentNodeStyle = context.currentNodeStyle
   }
 
@@ -60,7 +63,8 @@ async function cloneChildNodes<T extends Node>(
   ) ?? node.firstChild
 
   for (let child = firstChild; child; child = child.nextSibling) {
-    if (isCommentNode(child)) continue
+    if (isCommentNode(child))
+      continue
     if (
       isElementNode(child)
       && isSlotElement(child)
@@ -70,7 +74,8 @@ async function cloneChildNodes<T extends Node>(
       for (let i = 0; i < nodes.length; i++) {
         await appendChildNode(node, cloned, nodes[i] as ChildNode, context)
       }
-    } else {
+    }
+    else {
       await appendChildNode(node, cloned, child, context)
     }
   }
@@ -79,8 +84,9 @@ async function cloneChildNodes<T extends Node>(
 function restoreScrollPosition<T extends Node>(
   node: T,
   chlidCloned: T,
-) {
-  if (!isHTMLElementNode(node) || !isHTMLElementNode(chlidCloned)) return
+): void {
+  if (!isHTMLElementNode(node) || !isHTMLElementNode(chlidCloned))
+    return
 
   const { scrollTop, scrollLeft } = node
 
@@ -107,16 +113,22 @@ function restoreScrollPosition<T extends Node>(
 function applyCssStyleWithOptions(
   cloned: HTMLElement | SVGElement,
   context: Context,
-) {
+): void {
   const { backgroundColor, width, height, style: styles } = context
   const clonedStyle = cloned.style
-  if (backgroundColor) clonedStyle.setProperty('background-color', backgroundColor, 'important')
-  if (width) clonedStyle.setProperty('width', `${ width }px`, 'important')
-  if (height) clonedStyle.setProperty('height', `${ height }px`, 'important')
-  if (styles) for (const name in styles) clonedStyle[name] = styles[name]!
+  if (backgroundColor)
+    clonedStyle.setProperty('background-color', backgroundColor, 'important')
+  if (width)
+    clonedStyle.setProperty('width', `${width}px`, 'important')
+  if (height)
+    clonedStyle.setProperty('height', `${height}px`, 'important')
+  if (styles) {
+    for (const name in styles) clonedStyle[name] = styles[name]!
+  }
 }
 
 /** @example "'{ */
+// eslint-disable-next-line regexp/strict
 const NORMAL_ATTRIBUTE_RE = /^[\w-:]+$/
 
 export async function cloneNode<T extends Node>(
@@ -152,7 +164,8 @@ export async function cloneNode<T extends Node>(
       = context.currentNodeStyle
       = copyCssStyles(node, cloned, isRoot, context)
 
-    if (isRoot) applyCssStyleWithOptions(cloned, context)
+    if (isRoot)
+      applyCssStyleWithOptions(cloned, context)
 
     let copyScrollbar = false
     if (context.isEnable('copyScrollbar')) {
@@ -161,10 +174,10 @@ export async function cloneNode<T extends Node>(
         style.get('overflow-y')?.[1],
       ]
       copyScrollbar = (overflow.includes('scroll'))
-        || (
-          (overflow.includes('auto') || overflow.includes('overlay'))
-          && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
-        )
+      || (
+        (overflow.includes('auto') || overflow.includes('overlay'))
+        && (node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth)
+      )
     }
 
     copyPseudoClass(node, cloned, copyScrollbar, context)

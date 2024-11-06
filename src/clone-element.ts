@@ -1,14 +1,14 @@
+import type { Context } from './context'
+import { cloneCanvas } from './clone-canvas'
+import { cloneIframe } from './clone-iframe'
+import { cloneImage } from './clone-image'
+import { cloneVideo } from './clone-video'
 import {
   isCanvasElement,
   isIFrameElement,
   isImageElement,
   isVideoElement,
 } from './utils'
-import { cloneIframe } from './clone-iframe'
-import { cloneCanvas } from './clone-canvas'
-import { cloneVideo } from './clone-video'
-import { cloneImage } from './clone-image'
-import type { Context } from './context'
 
 export function cloneElement<T extends HTMLElement | SVGElement>(
   node: T,

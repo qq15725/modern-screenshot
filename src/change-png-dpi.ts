@@ -5,7 +5,7 @@ const _S = 's'.charCodeAt(0)
 
 let pngDataTable: ReturnType<typeof createPngDataTable>
 
-function createPngDataTable() {
+function createPngDataTable(): Int32Array {
   /* Table of CRCs of all 8-bit messages. */
   const crcTable = new Int32Array(256)
   for (let n = 0; n < 256; n++) {
@@ -18,16 +18,17 @@ function createPngDataTable() {
   return crcTable
 }
 
-function calcCrc(uint8Array: Uint8Array) {
+function calcCrc(uint8Array: Uint8Array): number {
   let c = -1
-  if (!pngDataTable) pngDataTable = createPngDataTable()
+  if (!pngDataTable)
+    pngDataTable = createPngDataTable()
   for (let n = 0; n < uint8Array.length; n++) {
     c = pngDataTable[(c ^ uint8Array[n]) & 0xFF] ^ (c >>> 8)
   }
   return c ^ -1
 }
 
-function searchStartOfPhys(uint8Array: Uint8Array) {
+function searchStartOfPhys(uint8Array: Uint8Array): number {
   const length = uint8Array.length - 1
   // we check from the end since we cut the string in proximity of the header
   // the header is within 21 bytes from the end.
@@ -41,7 +42,7 @@ function searchStartOfPhys(uint8Array: Uint8Array) {
   return 0
 }
 
-export function changePngDpi(uint8Array: Uint8Array, dpi: number, overwritepHYs = false) {
+export function changePngDpi(uint8Array: Uint8Array, dpi: number, overwritepHYs = false): Uint8Array {
   const physChunk = new Uint8Array(13)
   // chunk header pHYs
   // 9 bytes of data
@@ -75,7 +76,8 @@ export function changePngDpi(uint8Array: Uint8Array, dpi: number, overwritepHYs 
     uint8Array.set(physChunk, startingIndex)
     uint8Array.set(crcChunk, startingIndex + 13)
     return uint8Array
-  } else {
+  }
+  else {
     // i need to give back an array of data that is divisible by 3 so that
     // dataurl encoding gives me integers, for luck this chunk is 17 + 4 = 21
     // if it was we could add a text chunk contaning some info, untill desired
@@ -108,7 +110,7 @@ const b64PhysSignature1 = 'AAlwSFlz'
 const b64PhysSignature2 = 'AAAJcEhZ'
 const b64PhysSignature3 = 'AAAACXBI'
 
-export function detectPhysChunkFromDataUrl(dataUrl: string) {
+export function detectPhysChunkFromDataUrl(dataUrl: string): number {
   let b64index = dataUrl.indexOf(b64PhysSignature1)
   if (b64index === -1) {
     b64index = dataUrl.indexOf(b64PhysSignature2)

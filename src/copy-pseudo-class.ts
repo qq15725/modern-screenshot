@@ -1,7 +1,7 @@
+import type { Context } from './context'
 import { getDefaultStyle } from './get-default-style'
 import { getDiffStyle } from './get-diff-style'
-import { uuid } from './utils'
-import type { Context } from './context'
+import { consoleWarn, uuid } from './utils'
 
 const pseudoClasses = [
   ':before',
@@ -26,16 +26,18 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   cloned: T,
   copyScrollbar: boolean,
   context: Context,
-) {
+): void {
   const { ownerWindow, svgStyleElement, svgStyles, currentNodeStyle } = context
 
-  if (!svgStyleElement || !ownerWindow) return
+  if (!svgStyleElement || !ownerWindow)
+    return
 
-  function copyBy(pseudoClass: string) {
+  function copyBy(pseudoClass: string): void {
     const computedStyle = ownerWindow!.getComputedStyle(node, pseudoClass)
     let content = computedStyle.getPropertyValue('content')
 
-    if (!content || content === 'none') return
+    if (!content || content === 'none')
+      return
 
     content = content
       // TODO support css.counter
@@ -57,18 +59,21 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
     }
 
     const cloneStyle = [
-      `content: '${ content }';`,
+      `content: '${content}';`,
     ]
 
     style.forEach(([value, priority], name) => {
-      cloneStyle.push(`${ name }: ${ value }${ priority ? ' !important' : '' };`)
+      cloneStyle.push(`${name}: ${value}${priority ? ' !important' : ''};`)
     })
 
-    if (cloneStyle.length === 1) return
+    if (cloneStyle.length === 1)
+      return
 
     try {
       (cloned as any).className = [(cloned as any).className, ...klasses].join(' ')
-    } catch (err) {
+    }
+    catch (err) {
+      consoleWarn('Failed to copyPseudoClass', err)
       return
     }
 
@@ -78,10 +83,11 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
       allClasses = []
       svgStyles.set(cssText, allClasses)
     }
-    allClasses.push(`.${ klasses[0] }:${ pseudoClass }`)
+    allClasses.push(`.${klasses[0]}:${pseudoClass}`)
   }
 
   pseudoClasses.forEach(copyBy)
 
-  if (copyScrollbar) scrollbarPseudoClasses.forEach(copyBy)
+  if (copyScrollbar)
+    scrollbarPseudoClasses.forEach(copyBy)
 }

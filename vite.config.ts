@@ -1,6 +1,6 @@
 import { basename, resolve } from 'path'
 import { defineConfig } from 'vite'
-import { browser, exports, module, name } from './package.json'
+import { browser, name } from './package.json'
 
 const resolvePath = (str: string) => resolve(__dirname, str)
 
@@ -11,15 +11,14 @@ export default defineConfig({
   build: {
     target: 'es2015',
     lib: {
-      formats: ['es', 'cjs', 'umd'],
-      fileName: format => {
-        if (format === 'es') return basename(module)
-        if (format === 'umd') return basename(browser)
-        if (format === 'cjs') return basename(exports['.'].require)
-        return `${ name }.${ format }`
+      formats: ['umd'],
+      fileName: (format) => {
+        if (format === 'umd')
+          return basename(browser)
+        return `${name}.${format}`
       },
       entry: resolvePath('./src/index.ts'),
-      name: name.replace(/-(\w)/ig, (_, v) => v.toUpperCase()),
+      name: name.replace(/-(\w)/g, (_, v) => v.toUpperCase()),
     },
   },
   test: {

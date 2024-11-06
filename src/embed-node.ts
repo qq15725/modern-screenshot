@@ -1,5 +1,6 @@
-import { embedImageElement } from './embed-image-element'
+import type { Context } from './context'
 import { embedCssStyleImage } from './embed-css-style-image'
+import { embedImageElement } from './embed-image-element'
 import { embedSvgUse } from './embed-svg-use'
 import {
   isElementNode,
@@ -8,9 +9,8 @@ import {
   isSVGImageElementNode,
   isSVGUseElementNode,
 } from './utils'
-import type { Context } from './context'
 
-export function embedNode<T extends Node>(cloned: T, context: Context) {
+export function embedNode<T extends Node>(cloned: T, context: Context): void {
   const { tasks } = context
 
   if (isElementNode(cloned)) {
@@ -27,7 +27,7 @@ export function embedNode<T extends Node>(cloned: T, context: Context) {
     tasks.push(...embedCssStyleImage(cloned.style, context))
   }
 
-  cloned.childNodes.forEach(child => {
+  cloned.childNodes.forEach((child) => {
     embedNode(child, context)
   })
 }

@@ -1,6 +1,6 @@
 import type { Options } from './options'
 
-export type Request = {
+export interface Request {
   type: 'image' | 'text'
   resolve?: (response: string) => void
   reject?: (error: Error) => void
