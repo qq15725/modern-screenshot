@@ -6,7 +6,6 @@ import { destroyContext } from '../destroy-context'
 import { embedNode } from '../embed-node'
 import { embedWebFont } from '../embed-web-font'
 import {
-  consoleWarn,
   createSvg,
   isElementNode,
   isSVGElementNode,
@@ -67,7 +66,7 @@ export async function domToForeignObjectSvg(node: any, options?: any): Promise<S
         await task
       }
       catch (error) {
-        consoleWarn('Failed to run task', error)
+        context.log.warn('Failed to run task', error)
       }
       progress?.(++current, count)
     }

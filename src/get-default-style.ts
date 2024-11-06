@@ -1,5 +1,6 @@
 import type { Context } from './context'
-import { consoleWarn, isSVGElementNode, uuid, XMLNS } from './utils'
+import { getSandBox } from './sandbox'
+import { isSVGElementNode, XMLNS } from './utils'
 
 const ignoredStyles = [
   'width',
@@ -17,7 +18,7 @@ export function getDefaultStyle(
   pseudoElement: string | null,
   context: Context,
 ): Map<string, any> {
-  const { defaultComputedStyles, ownerDocument } = context
+  const { defaultComputedStyles } = context
 
   const nodeName = node.nodeName.toLowerCase()
   const isSvgNode = isSVGElementNode(node) && nodeName !== 'svg'
@@ -39,32 +40,11 @@ export function getDefaultStyle(
   if (defaultComputedStyles.has(key))
     return defaultComputedStyles.get(key)!
 
-  let sandbox = context.sandbox
-  if (!sandbox) {
-    try {
-      if (ownerDocument) {
-        sandbox = ownerDocument.createElement('iframe')
-        sandbox.id = `__SANDBOX__-${uuid()}`
-        sandbox.width = '0'
-        sandbox.height = '0'
-        sandbox.style.visibility = 'hidden'
-        sandbox.style.position = 'fixed'
-        ownerDocument.body.appendChild(sandbox)
-        sandbox.contentWindow?.document.write('<!DOCTYPE html><meta charset="UTF-8"><title></title><body>')
-        context.sandbox = sandbox
-      }
-    }
-    catch (error) {
-      consoleWarn('Failed to create iframe sandbox', error)
-    }
-  }
-  if (!sandbox)
-    return new Map()
-
-  const sandboxWindow = sandbox.contentWindow
+  const sandbox = getSandBox(context)
+  const sandboxWindow = sandbox?.contentWindow
   if (!sandboxWindow)
     return new Map()
-  const sandboxDocument = sandboxWindow.document
+  const sandboxDocument = sandboxWindow?.document
 
   let root: HTMLElement | SVGSVGElement
   let el: Element

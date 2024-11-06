@@ -3,7 +3,6 @@ import type { Options } from './options'
 import { createLogger } from './create-logger'
 import { getDefaultRequestInit } from './get-default-request-init'
 import {
-  consoleWarn,
   IN_BROWSER,
   isContext,
   isElementNode,
@@ -97,7 +96,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
         return worker
       }
       catch (error) {
-        consoleWarn('Failed to new Worker', error)
+        context.log.warn('Failed to new Worker', error)
         return null
       }
     }).filter(Boolean) as any,
@@ -126,7 +125,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
   }
 
   context.log.time('wait until load')
-  await waitUntilLoad(node, context.timeout)
+  await waitUntilLoad(node, { timeout: context.timeout, onWarn: context.log.warn })
   context.log.timeEnd('wait until load')
 
   const { width, height } = resolveBoundingBox(node, context)

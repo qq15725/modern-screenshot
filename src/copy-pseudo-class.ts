@@ -1,7 +1,7 @@
 import type { Context } from './context'
 import { getDefaultStyle } from './get-default-style'
 import { getDiffStyle } from './get-diff-style'
-import { consoleWarn, uuid } from './utils'
+import { uuid } from './utils'
 
 const pseudoClasses = [
   ':before',
@@ -76,7 +76,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
       (cloned as any).className = [(cloned as any).className, ...klasses].join(' ')
     }
     catch (err) {
-      consoleWarn('Failed to copyPseudoClass', err)
+      context.log.warn('Failed to copyPseudoClass', err)
       return
     }
 

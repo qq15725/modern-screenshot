@@ -1,5 +1,5 @@
 import type { Context } from './context'
-import { consoleWarn, loadMedia } from './utils'
+import { loadMedia } from './utils'
 
 export async function imageToCanvas<T extends HTMLImageElement>(
   image: T,
@@ -13,14 +13,14 @@ export async function imageToCanvas<T extends HTMLImageElement>(
   } = context
 
   log.time('image to canvas')
-  const loaded = await loadMedia(image, { timeout })
+  const loaded = await loadMedia(image, { timeout, onWarn: context.log.warn })
   const { canvas, context2d } = createCanvas(image.ownerDocument, context)
   const drawImage = (): void => {
     try {
       context2d?.drawImage(loaded, 0, 0, canvas.width, canvas.height)
     }
     catch (error) {
-      consoleWarn('Failed to drawImage', error)
+      context.log.warn('Failed to drawImage', error)
     }
   }
 

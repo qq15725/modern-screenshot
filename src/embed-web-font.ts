@@ -1,7 +1,7 @@
 import type { Context } from './context'
 import { hasCssUrl, replaceCssUrlToDataUrl, URL_RE } from './css-url'
 import { contextFetch } from './fetch'
-import { consoleWarn, isCssFontFaceRule, isCSSImportRule, resolveUrl, splitFontFamily } from './utils'
+import { isCssFontFaceRule, isCSSImportRule, resolveUrl, splitFontFamily } from './utils'
 
 export async function embedWebFont<T extends Element>(
   clone: T,
@@ -34,7 +34,7 @@ export async function embedWebFont<T extends Element>(
         return 'cssRules' in styleSheet && Boolean(styleSheet.cssRules.length)
       }
       catch (error) {
-        consoleWarn(`Error while reading CSS rules from ${styleSheet.href}`, error)
+        context.log.warn(`Error while reading CSS rules from ${styleSheet.href}`, error)
         return false
       }
     })
@@ -54,7 +54,7 @@ export async function embedWebFont<T extends Element>(
               })
             }
             catch (error) {
-              consoleWarn(`Error fetch remote css import from ${baseUrl}`, error)
+              context.log.warn(`Error fetch remote css import from ${baseUrl}`, error)
             }
             const replacedCssText = cssText.replace(
               URL_RE,
@@ -70,7 +70,7 @@ export async function embedWebFont<T extends Element>(
                 )
               }
               catch (error) {
-                consoleWarn('Error inserting rule from remote css import', { rule, error })
+                context.log.warn('Error inserting rule from remote css import', { rule, error })
               }
             }
           }

@@ -1,7 +1,9 @@
-import { consoleWarn, createImage } from './utils'
+import type { Context } from './context'
+import { createImage } from './utils'
 
 export function cloneCanvas<T extends HTMLCanvasElement>(
   canvas: T,
+  context: Context,
 ): HTMLCanvasElement | HTMLImageElement {
   if (canvas.ownerDocument) {
     try {
@@ -11,7 +13,7 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
       }
     }
     catch (error) {
-      consoleWarn('Failed to clone canvas', error)
+      context.log.warn('Failed to clone canvas', error)
     }
   }
 
@@ -30,7 +32,7 @@ export function cloneCanvas<T extends HTMLCanvasElement>(
     return cloned
   }
   catch (error) {
-    consoleWarn('Failed to clone canvas', error)
+    context.log.warn('Failed to clone canvas', error)
   }
 
   return cloned

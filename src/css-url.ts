@@ -1,6 +1,6 @@
 import type { Context } from './context'
 import { contextFetch } from './fetch'
-import { consoleWarn, isDataUrl, resolveUrl } from './utils'
+import { isDataUrl, resolveUrl } from './utils'
 
 export async function replaceCssUrlToDataUrl(
   cssText: string,
@@ -24,7 +24,7 @@ export async function replaceCssUrlToDataUrl(
       cssText = cssText.replace(toRE(rawUrl), `$1${dataUrl}$3`)
     }
     catch (error) {
-      consoleWarn('Failed to fetch css data url', rawUrl, error)
+      context.log.warn('Failed to fetch css data url', rawUrl, error)
     }
   }
 

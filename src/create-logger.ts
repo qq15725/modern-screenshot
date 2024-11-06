@@ -1,4 +1,4 @@
-import { consoleTime, consoleTimeEnd, consoleWarn } from './utils'
+import { consoleWarn, PREFIX } from './utils'
 
 export interface Logger {
   time: (label: string) => void
@@ -8,8 +8,10 @@ export interface Logger {
 
 export function createLogger(debug: boolean): Logger {
   return {
-    time: (label: string) => debug && consoleTime(label),
-    timeEnd: (label: string) => debug && consoleTimeEnd(label),
+    // eslint-disable-next-line no-console
+    time: (label: string) => debug && console.time(`${PREFIX} ${label}`),
+    // eslint-disable-next-line no-console
+    timeEnd: (label: string) => debug && console.timeEnd(`${PREFIX} ${label}`),
     warn: (...args: any[]) => debug && consoleWarn(...args),
   }
 }

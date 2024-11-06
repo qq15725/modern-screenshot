@@ -1,8 +1,10 @@
+import type { Context } from './context'
 import { cloneCanvas } from './clone-canvas'
-import { consoleWarn, createImage, loadMedia } from './utils'
+import { createImage, loadMedia } from './utils'
 
 export async function cloneVideo<T extends HTMLVideoElement>(
   video: T,
+  context: Context,
 ): Promise<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement> {
   if (
     video.ownerDocument
@@ -22,9 +24,7 @@ export async function cloneVideo<T extends HTMLVideoElement>(
   const ownerDocument = cloned.ownerDocument
   if (ownerDocument) {
     let canPlay = true
-    await loadMedia(cloned, {
-      onError: () => canPlay = false,
-    })
+    await loadMedia(cloned, { onError: () => canPlay = false, onWarn: context.log.warn })
     if (!canPlay) {
       if (video.poster) {
         return createImage(video.poster, video.ownerDocument)
@@ -44,13 +44,13 @@ export async function cloneVideo<T extends HTMLVideoElement>(
         ctx.drawImage(cloned, 0, 0, canvas.width, canvas.height)
     }
     catch (error) {
-      consoleWarn('Failed to clone video', error)
+      context.log.warn('Failed to clone video', error)
       if (video.poster) {
         return createImage(video.poster, video.ownerDocument)
       }
       return cloned
     }
-    return cloneCanvas(canvas)
+    return cloneCanvas(canvas, context)
   }
 
   return cloned

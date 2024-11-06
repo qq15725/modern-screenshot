@@ -15,7 +15,7 @@ export function cloneElement<T extends HTMLElement | SVGElement>(
   context: Context,
 ): (HTMLElement | SVGElement) | Promise<HTMLElement | SVGElement> {
   if (isCanvasElement(node)) {
-    return cloneCanvas(node)
+    return cloneCanvas(node, context)
   }
 
   if (isIFrameElement(node)) {
@@ -27,7 +27,7 @@ export function cloneElement<T extends HTMLElement | SVGElement>(
   }
 
   if (isVideoElement(node)) {
-    return cloneVideo(node)
+    return cloneVideo(node, context)
   }
 
   return node.cloneNode(false) as T

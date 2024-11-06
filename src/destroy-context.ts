@@ -1,5 +1,4 @@
 import type { Context } from './context'
-import { consoleWarn } from './utils'
 
 export function destroyContext(context: Context): void {
   context.ownerDocument = undefined
@@ -13,7 +12,7 @@ export function destroyContext(context: Context): void {
       context.sandbox.remove()
     }
     catch (err) {
-      consoleWarn('Failed to destroyContext', err)
+      context.log.warn('Failed to destroyContext', err)
     }
     context.sandbox = undefined
   }

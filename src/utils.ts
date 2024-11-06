@@ -39,10 +39,6 @@ export const isIFrameElement = (node: Element): node is HTMLIFrameElement => nod
 
 // Console
 export const consoleWarn = (...args: any[]): void => console.warn(PREFIX, ...args)
-// eslint-disable-next-line no-console
-export const consoleTime = (label: string): void => console.time(`${PREFIX} ${label}`)
-// eslint-disable-next-line no-console
-export const consoleTimeEnd = (label: string): void => console.timeEnd(`${PREFIX} ${label}`)
 
 // Supports
 export function supportWebp(ownerDocument?: Document): boolean {
@@ -132,7 +128,6 @@ export async function canvasToBlob(canvas: HTMLCanvasElement, type = 'image/png'
   }
   catch (error) {
     if (SUPPORT_ATOB) {
-      consoleWarn('Failed canvas to blob', { type, quality }, error)
       return dataUrlToBlob(canvas.toDataURL(type, quality))
     }
     throw error
@@ -184,13 +179,14 @@ interface LoadMediaOptions {
   ownerDocument?: Document
   timeout?: number
   onError?: (error: Error) => void
+  onWarn?: (...args: any[]) => void
 }
 
 export function loadMedia<T extends Media>(media: T, options?: LoadMediaOptions): Promise<T>
 export function loadMedia(media: string, options?: LoadMediaOptions): Promise<HTMLImageElement>
 export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> {
   return new Promise((resolve) => {
-    const { timeout, ownerDocument, onError: userOnError } = options ?? {}
+    const { timeout, ownerDocument, onError: userOnError, onWarn } = options ?? {}
     const node: Media = typeof media === 'string'
       ? createImage(media, getDocument(ownerDocument))
       : media
@@ -220,7 +216,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       }
       const onLoadeddata = onResolve
       const onError = (error: any): void => {
-        consoleWarn(
+        onWarn?.(
           'Failed video load',
           currentSrc,
           error,
@@ -250,7 +246,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
             await node.decode()
           }
           catch (error) {
-            consoleWarn(
+            onWarn?.(
               'Failed to decode image, trying to render anyway',
               node.dataset.originalSrc || currentSrc,
               error,
@@ -261,7 +257,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       }
 
       const onError = (error: any): void => {
-        consoleWarn(
+        onWarn?.(
           'Failed image load',
           node.dataset.originalSrc || currentSrc,
           error,
@@ -284,16 +280,16 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
   })
 }
 
-export async function waitUntilLoad(node: Node, timeout: number): Promise<void> {
+export async function waitUntilLoad(node: Node, options?: LoadMediaOptions): Promise<void> {
   if (isHTMLElementNode(node)) {
     if (isImageElement(node) || isVideoElement(node)) {
-      await loadMedia(node, { timeout })
+      await loadMedia(node, options)
     }
     else {
       await Promise.all(
         ['img', 'video'].flatMap((selectors) => {
           return Array.from(node.querySelectorAll(selectors))
-            .map(el => loadMedia(el as any, { timeout }))
+            .map(el => loadMedia(el as any, options))
         }),
       )
     }

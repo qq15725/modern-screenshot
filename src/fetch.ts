@@ -1,5 +1,5 @@
 import type { Context } from './context'
-import { blobToDataUrl, consoleWarn, IN_FIREFOX, IN_SAFARI } from './utils'
+import { blobToDataUrl, IN_FIREFOX, IN_SAFARI } from './utils'
 
 export type BaseFetchOptions = RequestInit & {
   url: string
@@ -122,7 +122,7 @@ export function contextFetch(context: Context, options: ContextFetchOptions): Pr
       requests.delete(rawUrl)
 
       if (requestType === 'image' && placeholderImage) {
-        consoleWarn('Failed to fetch image base64, trying to use placeholder image', url)
+        context.log.warn('Failed to fetch image base64, trying to use placeholder image', url)
         return typeof placeholderImage === 'string'
           ? placeholderImage
           : placeholderImage(imageDom!)
