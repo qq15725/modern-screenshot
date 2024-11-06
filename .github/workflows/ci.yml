@@ -58,6 +58,8 @@ jobs:
       - name: 📦 Build
         if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm run build
+      - name: 🚧 Install Puppeteer Chrome browser
+        run: npx puppeteer browsers install chrome
       - name: 🔀 Test unit
         if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm run test
