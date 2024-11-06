@@ -4,7 +4,7 @@ import { blobToDataUrl, consoleWarn, IN_FIREFOX, IN_SAFARI } from './utils'
 export type BaseFetchOptions = RequestInit & {
   url: string
   timeout?: number
-  responseType?: 'text' | 'dataUrl'
+  responseType?: 'text' | 'dataUrl' | 'arrayBuffer'
 }
 
 export type ContextFetchOptions = BaseFetchOptions & {
@@ -12,7 +12,7 @@ export type ContextFetchOptions = BaseFetchOptions & {
   imageDom?: HTMLImageElement | SVGImageElement
 }
 
-export function baseFetch(options: BaseFetchOptions): Promise<string> {
+export function baseFetch<T = any>(options: BaseFetchOptions): Promise<T> {
   const { url, timeout, responseType, ...requestInit } = options
 
   const controller = new AbortController()
@@ -27,6 +27,8 @@ export function baseFetch(options: BaseFetchOptions): Promise<string> {
         throw new Error('Failed fetch, not 2xx response', { cause: response })
       }
       switch (responseType) {
+        case 'arrayBuffer':
+          return response.arrayBuffer() as any
         case 'dataUrl':
           return response.blob().then(blobToDataUrl)
         case 'text':
@@ -51,7 +53,9 @@ export function contextFetch(context: Context, options: ContextFetchOptions): Pr
       bypassingCache,
       placeholderImage,
     },
+    font,
     workers,
+    fontFamilies,
   } = context
 
   if (requestType === 'image' && (IN_SAFARI || IN_FIREFOX)) {
@@ -68,10 +72,23 @@ export function contextFetch(context: Context, options: ContextFetchOptions): Pr
       }
     }
 
+    // Font minify
+    const canFontMinify = requestType.startsWith('font') && font && font.minify
+    const fontTexts = new Set()
+    if (canFontMinify) {
+      const families = requestType.split(';')[1].split(',')
+      families.forEach((family) => {
+        if (!fontFamilies.has(family))
+          return
+        fontFamilies.get(family)!.forEach(text => fontTexts.add(text))
+      })
+    }
+    const needFontMinify = canFontMinify && fontTexts.size
+
     const baseFetchOptions: BaseFetchOptions = {
       url,
       timeout,
-      responseType,
+      responseType: needFontMinify ? 'arrayBuffer' : responseType,
       headers: requestType === 'image' ? { accept: acceptOfImage } : undefined,
       ...requestInit,
     }

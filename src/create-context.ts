@@ -101,7 +101,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
         return null
       }
     }).filter(Boolean) as any,
-    fontFamilies: new Set(),
+    fontFamilies: new Map(),
     fontCssTexts: new Map(),
     acceptOfImage: `${[
       supportWebp(ownerDocument) && 'image/webp',

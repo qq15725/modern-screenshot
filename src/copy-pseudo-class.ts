@@ -26,6 +26,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
   cloned: T,
   copyScrollbar: boolean,
   context: Context,
+  addWordToFontFamilies?: (text: string) => void,
 ): void {
   const { ownerWindow, svgStyleElement, svgStyles, currentNodeStyle } = context
 
@@ -38,6 +39,8 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
 
     if (!content || content === 'none')
       return
+
+    addWordToFontFamilies?.(content)
 
     content = content
       // TODO support css.counter

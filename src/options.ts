@@ -122,6 +122,11 @@ export interface Options {
    */
   font?: false | {
     /**
+     * Font minify
+     */
+    minify?: (font: ArrayBuffer, subset: string) => ArrayBuffer
+
+    /**
      * The preferred font format. If specified all other font formats are ignored.
      */
     preferredFormat?: 'woff' | 'woff2' | 'truetype' | 'opentype' | 'embedded-opentype' | 'svg' | string

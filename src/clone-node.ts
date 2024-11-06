@@ -25,6 +25,7 @@ async function appendChildNode<T extends Node>(
   cloned: T,
   child: ChildNode,
   context: Context,
+  addWordToFontFamilies?: (text: string) => void,
 ): Promise<void> {
   if (isElementNode(child) && (isStyleElement(child) || isScriptElement(child)))
     return
@@ -42,7 +43,7 @@ async function appendChildNode<T extends Node>(
     context.currentParentNodeStyle = context.currentNodeStyle
   }
 
-  const childCloned = await cloneNode(child, context)
+  const childCloned = await cloneNode(child, context, false, addWordToFontFamilies)
 
   if (context.isEnable('restoreScrollPosition')) {
     restoreScrollPosition(node, childCloned)
@@ -55,6 +56,7 @@ async function cloneChildNodes<T extends Node>(
   node: T,
   cloned: T,
   context: Context,
+  addWordToFontFamilies?: (text: string) => void,
 ): Promise<void> {
   const firstChild = (
     isElementNode(node)
@@ -72,11 +74,11 @@ async function cloneChildNodes<T extends Node>(
     ) {
       const nodes = child.assignedNodes()
       for (let i = 0; i < nodes.length; i++) {
-        await appendChildNode(node, cloned, nodes[i] as ChildNode, context)
+        await appendChildNode(node, cloned, nodes[i] as ChildNode, context, addWordToFontFamilies)
       }
     }
     else {
-      await appendChildNode(node, cloned, child, context)
+      await appendChildNode(node, cloned, child, context, addWordToFontFamilies)
     }
   }
 }
@@ -135,10 +137,14 @@ export async function cloneNode<T extends Node>(
   node: T,
   context: Context,
   isRoot = false,
+  addWordToFontFamilies?: (text: string) => void,
 ): Promise<Node> {
   const { ownerDocument, ownerWindow, fontFamilies } = context
 
   if (ownerDocument && isTextNode(node)) {
+    if (addWordToFontFamilies && /\S/.test(node.data)) {
+      addWordToFontFamilies(node.data)
+    }
     return ownerDocument.createTextNode(node.data)
   }
 
@@ -180,15 +186,44 @@ export async function cloneNode<T extends Node>(
       )
     }
 
-    copyPseudoClass(node, cloned, copyScrollbar, context)
+    const textTransform = style.get('text-transform')?.[0]
+    const families = splitFontFamily(style.get('font-family')?.[0])
+    const addWordToFontFamilies = families
+      ? (word: string) => {
+          if (textTransform === 'uppercase') {
+            word = word.toUpperCase()
+          }
+          else if (textTransform === 'lowercase') {
+            word = word.toLowerCase()
+          }
+          else if (textTransform === 'capitalize') {
+            word = word[0].toUpperCase() + word.substring(1)
+          }
+          families!.forEach((family) => {
+            let fontFamily = fontFamilies.get(family)
+            if (!fontFamily) {
+              fontFamilies.set(family, fontFamily = new Set())
+            }
+            word.split('').forEach(text => fontFamily!.add(text))
+          })
+        }
+      : undefined
+
+    copyPseudoClass(
+      node,
+      cloned,
+      copyScrollbar,
+      context,
+      addWordToFontFamilies,
+    )
 
     copyInputValue(node, cloned)
 
-    splitFontFamily(style.get('font-family')?.[0])
-      ?.forEach(val => fontFamilies.add(val))
-
     if (!isVideoElement(node)) {
-      await cloneChildNodes(node, cloned, context)
+      await cloneChildNodes(
+        node, cloned, context,
+        addWordToFontFamilies,
+      )
     }
 
     return cloned

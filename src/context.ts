@@ -77,9 +77,9 @@ export interface InternalContext<T extends Node> {
   workers: Worker[]
 
   /**
-   * The set of `font-family` values for all cloned elements
+   * The map of `font-family` values for all cloend elements
    */
-  fontFamilies: Set<string>
+  fontFamilies: Map<string, Set<string>>
 
   /**
    * Map<CssUrl, DataUrl>
