@@ -1,3 +1,12 @@
+## [4.5.1](https://github.com/qq15725/modern-screenshot/compare/v4.5.0...v4.5.1) (2024-11-06)
+
+
+### Bug Fixes
+
+* a typographic anomaly caused by getComputedStyle getting px values only to 4-bit precision (close [#104](https://github.com/qq15725/modern-screenshot/issues/104)) ([ed8d711](https://github.com/qq15725/modern-screenshot/commit/ed8d711b08432fd0fef2f87f4ca55dff9f298bfe))
+
+
+
 # [4.5.0](https://github.com/qq15725/modern-screenshot/compare/v4.4.39...v4.5.0) (2024-11-06)
 
 
