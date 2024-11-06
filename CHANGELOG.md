@@ -1,3 +1,19 @@
+# [4.5.0](https://github.com/qq15725/modern-screenshot/compare/v4.4.39...v4.5.0) (2024-11-06)
+
+
+### Bug Fixes
+
+* 修复onCloneNode没有等待用户处理结束导致在回调中处理样式无效 ([868758a](https://github.com/qq15725/modern-screenshot/commit/868758a9f71b84ec6ffa52fd3f346f53abc46555))
+
+
+### Features
+
+* hooks are supported to return promises ([67d75b2](https://github.com/qq15725/modern-screenshot/commit/67d75b2e30f481741326c7f5e83d5835b160b525))
+* support font minify using external lib ([f702db8](https://github.com/qq15725/modern-screenshot/commit/f702db81dd85ed95422d20e8fafe7964ec0e769f))
+* warnings are printed only when debug is enabled (close [#106](https://github.com/qq15725/modern-screenshot/issues/106)) ([b50711a](https://github.com/qq15725/modern-screenshot/commit/b50711a2d7f9bbe7d1baec19d6a78f2b727be8e4))
+
+
+
 ## [4.4.39](https://github.com/qq15725/modern-screenshot/compare/v4.4.38...v4.4.39) (2024-04-10)
 
 
