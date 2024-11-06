@@ -196,17 +196,17 @@ export interface Options {
   /**
    * Triggered after a node is cloned
    */
-  onCloneNode?: ((cloned: Node) => void) | null
+  onCloneNode?: ((cloned: Node) => void | Promise<void>) | null
 
   /**
    * Triggered after a node is embed
    */
-  onEmbedNode?: ((cloned: Node) => void) | null
+  onEmbedNode?: ((cloned: Node) => void | Promise<void>) | null
 
   /**
    * Triggered after a ForeignObjectSvg is created
    */
-  onCreateForeignObjectSvg?: ((svg: SVGSVGElement) => void) | null
+  onCreateForeignObjectSvg?: ((svg: SVGSVGElement) => void | Promise<void>) | null
 
   /**
    * An array of style property names.

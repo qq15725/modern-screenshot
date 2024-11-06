@@ -76,7 +76,7 @@ export async function domToForeignObjectSvg(node: any, options?: any): Promise<S
   await Promise.all([...Array.from({ length: 4 })].map(runTask))
   log.timeEnd('embed node')
 
-  onEmbedNode?.(clone)
+  await onEmbedNode?.(clone)
 
   const svg = createForeignObjectSvg(clone, context)
   svgDefsElement && svg.insertBefore(svgDefsElement, svg.children[0])
@@ -84,7 +84,7 @@ export async function domToForeignObjectSvg(node: any, options?: any): Promise<S
 
   autoDestruct && destroyContext(context)
 
-  onCreateForeignObjectSvg?.(svg)
+  await onCreateForeignObjectSvg?.(svg)
 
   return svg
 }
