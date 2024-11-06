@@ -3,6 +3,8 @@ import { getDefaultStyle } from './get-default-style'
 import { getDiffStyle } from './get-diff-style'
 import { IN_CHROME } from './utils'
 
+const px4PrecisionRE = /^\d+\.\d{4}px$/
+
 export function copyCssStyles<T extends HTMLElement | SVGElement>(
   node: T,
   cloned: T,
@@ -57,6 +59,10 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   }
 
   style.forEach(([value, priority], name) => {
+    // fix a typographic anomaly caused by getComputedStyle getting px values only to 4-bit precision
+    if (px4PrecisionRE.test(value)) {
+      value = `${Number.parseFloat(value) + 0.0001}px`
+    }
     clonedStyle.setProperty(name, value, priority)
   })
 
