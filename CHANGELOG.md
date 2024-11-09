@@ -1,3 +1,12 @@
+## [4.5.2](https://github.com/qq15725/modern-screenshot/compare/v4.5.1...v4.5.2) (2024-11-09)
+
+
+### Bug Fixes
+
+* revert to before fix 4-bit precision ([afeb6f6](https://github.com/qq15725/modern-screenshot/commit/afeb6f6d8c131d23a840c87a3371941b870f64da))
+
+
+
 ## [4.5.1](https://github.com/qq15725/modern-screenshot/compare/v4.5.0...v4.5.1) (2024-11-06)
 
 
