@@ -33,9 +33,9 @@
       "require": "./dist/index.cjs"
     },
     "./worker": {
-      "types": "./dist/worker.d.ts",
-      "import": "./dist/worker.mjs",
-      "require": "./dist/worker.cjs"
+      "types": "./worker.d.ts",
+      "import": "./dist/worker.js",
+      "require": "./dist/worker.js"
     },
     "./*": "./*"
   },
@@ -52,6 +52,7 @@
     }
   },
   "files": [
+    "worker.d.ts",
     "dist"
   ],
   "scripts": {
@@ -60,8 +61,9 @@
     "lint:fix": "eslint src --fix",
     "test": "vitest --no-isolate",
     "coverage": "vitest run --coverage",
+    "build:lib": "vite build && unbuild",
     "build:worker": "vite build --config vite.worker.config.ts",
-    "build": "vite build && unbuild && pnpm build:worker",
+    "build": "pnpm build:lib && pnpm build:worker",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "release": "bumpp package.json --commit \"release: v%s\" --push --all --tag",
     "typecheck": "tsc --noEmit",
