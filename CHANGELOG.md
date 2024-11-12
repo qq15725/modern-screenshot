@@ -1,3 +1,12 @@
+## [4.5.3](https://github.com/qq15725/modern-screenshot/compare/v4.5.2...v4.5.3) (2024-11-12)
+
+
+### Bug Fixes
+
+* worker export in the package.json ([d163943](https://github.com/qq15725/modern-screenshot/commit/d163943763969d6bf1d2846f76edf7fff88cb8dc))
+
+
+
 ## [4.5.2](https://github.com/qq15725/modern-screenshot/compare/v4.5.1...v4.5.2) (2024-11-09)
 
 
