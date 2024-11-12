@@ -34,8 +34,8 @@
     },
     "./worker": {
       "types": "./dist/worker.d.ts",
-      "require": "./dist/worker.mjs",
-      "import": "./dist/worker.cjs"
+      "import": "./dist/worker.mjs",
+      "require": "./dist/worker.cjs"
     },
     "./*": "./*"
   },
