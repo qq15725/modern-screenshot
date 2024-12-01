@@ -177,7 +177,7 @@ export async function cloneNode<T extends Node>(
     if (context.isEnable('copyScrollbar')) {
       const overflow = [
         style.get('overflow-x')?.[0],
-        style.get('overflow-y')?.[1],
+        style.get('overflow-y')?.[0],
       ]
       copyScrollbar = (overflow.includes('scroll'))
       || (
