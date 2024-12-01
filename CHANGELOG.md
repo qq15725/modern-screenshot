@@ -1,3 +1,12 @@
+## [4.5.5](https://github.com/qq15725/modern-screenshot/compare/v4.5.4...v4.5.5) (2024-12-01)
+
+
+### Bug Fixes
+
+* judgment error in copyScrollbar (link [#120](https://github.com/qq15725/modern-screenshot/issues/120)) ([028e994](https://github.com/qq15725/modern-screenshot/commit/028e99458aa28df1fea55492e8d9d3835f628623))
+
+
+
 ## [4.5.4](https://github.com/qq15725/modern-screenshot/compare/v4.5.3...v4.5.4) (2024-11-12)
 
 
