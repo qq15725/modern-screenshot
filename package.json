@@ -2,7 +2,7 @@
   "name": "modern-screenshot",
   "type": "module",
   "version": "4.5.5",
-  "packageManager": "pnpm@9.12.3",
+  "packageManager": "pnpm@9.15.1",
   "description": "Quickly generate image from DOM node using HTML5 canvas and SVG",
   "author": "wxm",
   "license": "MIT",
@@ -84,7 +84,7 @@
     "puppeteer": "^23.7.0",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.2",
-    "unbuild": "^2.0.0",
+    "unbuild": "^3.0.1",
     "vite": "^5.4.10",
     "vitest": "^2.1.4"
   },
