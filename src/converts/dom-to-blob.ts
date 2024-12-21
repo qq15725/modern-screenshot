@@ -16,7 +16,7 @@ export async function domToBlob(node: any, options?: any): Promise<Blob> {
   const blob = await canvasToBlob(canvas, type, quality)
   if (['image/png', 'image/jpeg'].includes(type) && dpi) {
     const arrayBuffer = await blobToArrayBuffer(blob.slice(0, 33))
-    let uint8Array = new Uint8Array(arrayBuffer)
+    let uint8Array = new Uint8Array<any>(arrayBuffer)
     if (type === 'image/png') {
       uint8Array = changePngDpi(uint8Array, dpi)
     }
