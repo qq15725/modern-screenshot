@@ -56,6 +56,10 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
     }
   }
 
+  for (let len = clonedStyle.length, i = 0; i < len; i++) {
+    clonedStyle.removeProperty(clonedStyle.item(i))
+  }
+
   style.forEach(([value, priority], name) => {
     clonedStyle.setProperty(name, value, priority)
   })

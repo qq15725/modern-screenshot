@@ -1,0 +1,26 @@
+<style>
+  .container .root {
+    background-color: blue;
+    margin-bottom: 50px;
+  }
+  .container .min-height {
+    max-height: unset !important;
+  }
+</style>
+
+<template>
+  <div id="root">
+    <div class="container">
+      <div class="root">
+        <div class="min-height" style="max-height: 50px; overflow: hidden">
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
