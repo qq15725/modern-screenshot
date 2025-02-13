@@ -74,6 +74,7 @@ describe('dom to image in browser', async () => {
     browser = await puppeteer.launch({
       headless: !debug,
       devtools: debug,
+      args: ['--no-sandbox'],
     })
     page = await browser.newPage()
     await page.setContent(`<!DOCTYPE html>
@@ -81,6 +82,16 @@ describe('dom to image in browser', async () => {
 <head>
   <meta charset="utf-8">
   <title>Puppeteer Vitest Test Page</title>
+  <style>
+    @font-face {
+      font-family: "SourceHanSansCN-Normal";
+      src: url(__BASE_URL__/font/SourceHanSansCN-Normal.woff);
+    }
+
+    body, html {
+      font-family: "SourceHanSansCN-Normal";
+    }
+  </style>
   <style id="style"></style>
   <script src="${indexURL}"></script>
 </head>
@@ -123,16 +134,15 @@ describe('dom to image in browser', async () => {
         expect(buffer).toMatchImageSnapshot(options)
       }
       catch (err) {
-        // TODO 先跳过检查 puppeteer 在各环境下 svg 截图不完全一致了
         console.warn(skipExpect, err)
-        // if (!skipExpect) {
-        //   // eslint-disable-next-line no-console
-        //   console.log(png)
-        //   expect(buffer).toMatchImageSnapshot(options)
-        // }
-        // else {
-        expect(base64).not.toBe('')
-        // }
+        if (!skipExpect) {
+          // eslint-disable-next-line no-console
+          console.log(png)
+          expect(buffer).toMatchImageSnapshot(options)
+        }
+        else {
+          expect(base64).not.toBe('')
+        }
       }
     })
   })
