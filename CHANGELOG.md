@@ -1,3 +1,14 @@
+# [4.6.0](https://github.com/qq15725/modern-screenshot/compare/v4.5.5...v4.6.0) (2025-02-13)
+
+
+### Bug Fixes
+
+* copy css styles (closes [#131](https://github.com/qq15725/modern-screenshot/issues/131)) ([810cce6](https://github.com/qq15725/modern-screenshot/commit/810cce6f5577c86a895cc804df705642c93e1270))
+* log prefix (closes [#129](https://github.com/qq15725/modern-screenshot/issues/129)) ([e8b2d3f](https://github.com/qq15725/modern-screenshot/commit/e8b2d3f757874a052aac1961347662a10e007bbc))
+* textarea content rendered twice (closes [#50](https://github.com/qq15725/modern-screenshot/issues/50)) ([30ae39d](https://github.com/qq15725/modern-screenshot/commit/30ae39d6aaf8ac0f211a99eda6814d9efe406739))
+
+
+
 ## [4.5.5](https://github.com/qq15725/modern-screenshot/compare/v4.5.4...v4.5.5) (2024-12-01)
 
 
