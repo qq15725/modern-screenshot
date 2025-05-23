@@ -1,18 +1,18 @@
 {
-  "name": "modern-screenshot",
+  "name": "modern-screenshot-x",
   "type": "module",
-  "version": "4.6.0",
+  "version": "1.0.0",
   "packageManager": "pnpm@9.15.1",
   "description": "Quickly generate image from DOM node using HTML5 canvas and SVG",
   "author": "wxm",
   "license": "MIT",
-  "homepage": "https://github.com/qq15725/modern-screenshot",
+  "homepage": "https://github.com/devxiyang/modern-screenshot",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qq15725/modern-screenshot.git"
+    "url": "git+https://github.com/devxiyang/modern-screenshot.git"
   },
   "bugs": {
-    "url": "https://github.com/qq15725/modern-screenshot/issues"
+    "url": "https://github.com/devxiyang/modern-screenshot/issues"
   },
   "keywords": [
     "dom",
