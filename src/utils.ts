@@ -53,6 +53,11 @@ export function supportWebp(ownerDocument?: Document): boolean {
 
 export const isDataUrl = (url: string): boolean => url.startsWith('data:')
 export function resolveUrl(url: string, baseUrl: string | null): string {
+  // resolve svg internal url like #id
+  if (url.startsWith('#')) {
+    return url
+  }
+  
   // url is absolute already
   if (url.match(/^[a-z]+:\/\//i))
     return url
