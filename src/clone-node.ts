@@ -34,6 +34,8 @@ async function appendChildNode<T extends Node>(
   if (context.filter && !context.filter(child))
     return
 
+  context.currentParentNode = cloned
+
   if (
     excludeParentNodes.has(cloned.nodeName)
     || excludeParentNodes.has(child.nodeName)
@@ -155,9 +157,9 @@ export async function cloneNode<T extends Node>(
     && isElementNode(node)
     && (isHTMLElementNode(node) || isSVGElementNode(node))
   ) {
-    ;(node as any).__skipStyleCopying = (node.parentNode as any)?.__skipStyleCopying || isSVGDefsElementNode(node)
-
     const cloned = await cloneElement(node, context)
+
+    ;(cloned as any).__skipStyleCopying = (context.currentParentNode as any)?.__skipStyleCopying || isSVGDefsElementNode(node)
 
     if (context.isEnable('removeAbnormalAttributes')) {
       const names = cloned.getAttributeNames()
@@ -171,7 +173,7 @@ export async function cloneNode<T extends Node>(
 
     const style
       = context.currentNodeStyle
-      = (node as any).__skipStyleCopying
+      = (cloned as any).__skipStyleCopying
           ? new Map<string, [string, string]>()
           : copyCssStyles(node, cloned, isRoot, context)
 

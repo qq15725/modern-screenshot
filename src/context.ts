@@ -122,6 +122,7 @@ export interface InternalContext<T extends Node> {
    * To get the node style set by the user
    */
   currentNodeStyle?: Map<string, [string, string]>
+  currentParentNode?: Node
   currentParentNodeStyle?: Map<string, [string, string]>
 }
 
