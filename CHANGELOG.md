@@ -1,3 +1,12 @@
+## [4.6.1](https://github.com/qq15725/modern-screenshot/compare/v4.6.0...v4.6.1) (2025-06-09)
+
+
+### Bug Fixes
+
+* skip copying styles for SVG Defs and their children ([14fc8b3](https://github.com/qq15725/modern-screenshot/commit/14fc8b3cf86711f48f95e63052d4261889f5acd1))
+
+
+
 # [4.6.0](https://github.com/qq15725/modern-screenshot/compare/v4.5.5...v4.6.0) (2025-02-13)
 
 
