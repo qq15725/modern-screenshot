@@ -35,7 +35,7 @@ npm i modern-screenshot
 ```ts
 import { domToPng } from 'modern-screenshot'
 
-domToPng(document.querySelector('#app')).then(dataUrl => {
+domToPng(document.querySelector('#app')).then((dataUrl) => {
   const link = document.createElement('a')
   link.download = 'screenshot.png'
   link.href = dataUrl
@@ -67,7 +67,7 @@ domToPng(document.querySelector('#app')).then(dataUrl => {
 
 ```js
 const script = document.createElement('script')
-script.src = "https://unpkg.com/modern-screenshot"
+script.src = 'https://unpkg.com/modern-screenshot/dist/index.js'
 document.getElementsByTagName('head')[0].appendChild(script)
 
 script.onload = () => {
@@ -75,16 +75,16 @@ script.onload = () => {
     .domToImage(document.querySelector('body'), {
       debug: true,
       progress: (current, total) => {
-        console.log(`${ current }/${ total }`)
+        console.log(`${current}/${total}`)
       }
     })
-    .then(img => {
+    .then((img) => {
       const width = 600
       const height = img.height * (width / img.width)
       console.log('%c ', [
-        `padding: 0 ${ width / 2 }px;`,
-        `line-height: ${ height }px;`,
-        `background-image: url('${ img.src }');`,
+        `padding: 0 ${width / 2}px;`,
+        `line-height: ${height}px;`,
+        `background-image: url('${img.src}');`,
         `background-size: 100% 100%;`,
       ].join(''))
     })
@@ -125,9 +125,9 @@ See the [options.ts](src/options.ts)
 Quick screenshots per second by reusing context and web worker
 
 ```ts
+import { createContext, destroyContext, domToPng } from 'modern-screenshot'
 // use vite
 import workerUrl from 'modern-screenshot/worker?url'
-import { createContext, destroyContext, domToPng } from 'modern-screenshot'
 
 async function screenshotsPerSecond() {
   const context = await createContext(document.querySelector('#app'), {
@@ -135,9 +135,9 @@ async function screenshotsPerSecond() {
     workerNumber: 1,
   })
   for (let i = 0; i < 10; i++) {
-    domToPng(context).then(dataUrl => {
+    domToPng(context).then((dataUrl) => {
       const link = document.createElement('a')
-      link.download = `screenshot-${ i + 1 }.png`
+      link.download = `screenshot-${i + 1}.png`
       link.href = dataUrl
       link.click()
       if (i + 1 === 10) {

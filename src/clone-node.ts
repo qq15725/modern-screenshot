@@ -10,6 +10,7 @@ import {
   isScriptElement,
   isSlotElement,
   isStyleElement,
+  isSVGDefsElementNode,
   isSVGElementNode,
   isTextNode,
   isVideoElement,
@@ -154,6 +155,8 @@ export async function cloneNode<T extends Node>(
     && isElementNode(node)
     && (isHTMLElementNode(node) || isSVGElementNode(node))
   ) {
+    context.skipStyleCopying = context.skipStyleCopying || isSVGDefsElementNode(node)
+
     const cloned = await cloneElement(node, context)
 
     if (context.isEnable('removeAbnormalAttributes')) {
@@ -168,7 +171,9 @@ export async function cloneNode<T extends Node>(
 
     const style
       = context.currentNodeStyle
-      = copyCssStyles(node, cloned, isRoot, context)
+      = context.skipStyleCopying
+          ? new Map<string, [string, string]>()
+          : copyCssStyles(node, cloned, isRoot, context)
 
     if (isRoot)
       applyCssStyleWithOptions(cloned, context)
