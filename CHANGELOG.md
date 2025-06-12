@@ -1,3 +1,12 @@
+## [4.6.3](https://github.com/qq15725/modern-screenshot/compare/v4.6.2...v4.6.3) (2025-06-12)
+
+
+### Bug Fixes
+
+* rollback previous commit. fix SVG use in shadowDOM (closes [#140](https://github.com/qq15725/modern-screenshot/issues/140)) ([9be4f5e](https://github.com/qq15725/modern-screenshot/commit/9be4f5eedaeefd8a853be6b9babbd8e033631abf))
+
+
+
 ## [4.6.2](https://github.com/qq15725/modern-screenshot/compare/v4.6.1...v4.6.2) (2025-06-09)
 
 
