@@ -10,7 +10,6 @@ import {
   isScriptElement,
   isSlotElement,
   isStyleElement,
-  isSVGDefsElementNode,
   isSVGElementNode,
   isTextNode,
   isVideoElement,
@@ -33,8 +32,6 @@ async function appendChildNode<T extends Node>(
 
   if (context.filter && !context.filter(child))
     return
-
-  context.currentParentNode = cloned
 
   if (
     excludeParentNodes.has(cloned.nodeName)
@@ -61,11 +58,13 @@ async function cloneChildNodes<T extends Node>(
   context: Context,
   addWordToFontFamilies?: (text: string) => void,
 ): Promise<void> {
-  const firstChild = (
-    isElementNode(node)
-      ? node.shadowRoot?.firstChild
-      : undefined
-  ) ?? node.firstChild
+  let firstChild = node.firstChild
+  if (isElementNode(node)) {
+    if (node.shadowRoot) {
+      firstChild = node.shadowRoot?.firstChild
+      context.shadowRoots.push(node.shadowRoot)
+    }
+  }
 
   for (let child = firstChild; child; child = child.nextSibling) {
     if (isCommentNode(child))
@@ -159,8 +158,6 @@ export async function cloneNode<T extends Node>(
   ) {
     const cloned = await cloneElement(node, context)
 
-    ;(cloned as any).__skipStyleCopying = (context.currentParentNode as any)?.__skipStyleCopying || isSVGDefsElementNode(node)
-
     if (context.isEnable('removeAbnormalAttributes')) {
       const names = cloned.getAttributeNames()
       for (let len = names.length, i = 0; i < len; i++) {
@@ -173,9 +170,7 @@ export async function cloneNode<T extends Node>(
 
     const style
       = context.currentNodeStyle
-      = (cloned as any).__skipStyleCopying
-          ? new Map<string, [string, string]>()
-          : copyCssStyles(node, cloned, isRoot, context)
+      = copyCssStyles(node, cloned, isRoot, context)
 
     if (isRoot)
       applyCssStyleWithOptions(cloned, context)

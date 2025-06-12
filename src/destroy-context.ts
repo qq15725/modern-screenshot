@@ -21,4 +21,5 @@ export function destroyContext(context: Context): void {
   context.fontCssTexts.clear()
   context.requests.clear()
   context.tasks = []
+  context.shadowRoots = []
 }

@@ -17,7 +17,12 @@ export function embedSvgUse<T extends SVGUseElement>(
 
   if (id) {
     const query = `#${id}`
-    const definition = ownerDocument?.querySelector(`svg ${query}`)
+    const definition = context.shadowRoots.reduce(
+      (res, root) => {
+        return res ?? root.querySelector(`svg ${query}`)
+      },
+      ownerDocument?.querySelector(`svg ${query}`),
+    )
 
     if (svgUrl) {
       // change the href attribute to use a local symbol on this cloned use-node

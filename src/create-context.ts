@@ -122,6 +122,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
       }
       return (features as any)[key] ?? true
     },
+    shadowRoots: [],
   }
 
   context.log.time('wait until load')

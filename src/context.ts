@@ -119,11 +119,15 @@ export interface InternalContext<T extends Node> {
   isEnable: (key: string) => boolean
 
   /**
-   * To get the node style set by the user
+   * [cloning phase] To get the node style set by the user
    */
   currentNodeStyle?: Map<string, [string, string]>
-  currentParentNode?: Node
   currentParentNodeStyle?: Map<string, [string, string]>
+
+  /**
+   * [cloning phase] shadowDOM root list
+   */
+  shadowRoots: ShadowRoot[]
 }
 
 export type Context<T extends Node = Node> = InternalContext<T> & Required<Options>
