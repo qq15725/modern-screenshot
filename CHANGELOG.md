@@ -1,3 +1,12 @@
+## [4.6.4](https://github.com/qq15725/modern-screenshot/compare/v4.6.3...v4.6.4) (2025-06-12)
+
+
+### Bug Fixes
+
+* use `HTMLIFrameElement.srcdoc` replace `HTMLIFrameElement.contentWindow.document.write` remove browser warning (closes [#136](https://github.com/qq15725/modern-screenshot/issues/136)) ([ea2ddf4](https://github.com/qq15725/modern-screenshot/commit/ea2ddf43c81bce5982c6479524efd3f7752f5bf1))
+
+
+
 ## [4.6.3](https://github.com/qq15725/modern-screenshot/compare/v4.6.2...v4.6.3) (2025-06-12)
 
 
