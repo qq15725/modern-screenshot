@@ -53,6 +53,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
     drawImageInterval: 100,
     workerUrl: null,
     workerNumber,
+    onCloneEachNode: null,
     onCloneNode: null,
     onEmbedNode: null,
     onCreateForeignObjectSvg: null,

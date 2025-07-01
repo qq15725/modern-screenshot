@@ -141,7 +141,7 @@ export async function cloneNode<T extends Node>(
   isRoot = false,
   addWordToFontFamilies?: (text: string) => void,
 ): Promise<Node> {
-  const { ownerDocument, ownerWindow, fontFamilies } = context
+  const { ownerDocument, ownerWindow, fontFamilies, onCloneEachNode } = context
 
   if (ownerDocument && isTextNode(node)) {
     if (addWordToFontFamilies && /\S/.test(node.data)) {
@@ -228,12 +228,16 @@ export async function cloneNode<T extends Node>(
       )
     }
 
+    await onCloneEachNode?.(cloned)
+
     return cloned
   }
 
   const cloned = node.cloneNode(false)
 
   await cloneChildNodes(node, cloned, context)
+
+  await onCloneEachNode?.(cloned)
 
   return cloned
 }
