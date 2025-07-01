@@ -199,6 +199,11 @@ export interface Options {
   workerNumber?: number
 
   /**
+   * Triggered after each node is cloned
+   */
+  onCloneEachNode?: ((cloned: Node) => void | Promise<void>) | null
+
+  /**
    * Triggered after a node is cloned
    */
   onCloneNode?: ((cloned: Node) => void | Promise<void>) | null
