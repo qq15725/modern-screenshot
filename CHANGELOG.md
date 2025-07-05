@@ -1,3 +1,12 @@
+## [4.6.5](https://github.com/qq15725/modern-screenshot/compare/v4.6.4...v4.6.5) (2025-07-05)
+
+
+### Features
+
+* Add the `onCloneEachNode` callback to execute when each node is cloned. ([f9fe0db](https://github.com/qq15725/modern-screenshot/commit/f9fe0dbd4aea4babdd59a51334802f418ef58b29))
+
+
+
 ## [4.6.4](https://github.com/qq15725/modern-screenshot/compare/v4.6.3...v4.6.4) (2025-06-12)
 
 
