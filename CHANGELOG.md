@@ -1,3 +1,7 @@
+## [4.6.6](https://github.com/qq15725/modern-screenshot/compare/v4.6.5...v4.6.6) (2025-08-19)
+
+
+
 ## [4.6.5](https://github.com/qq15725/modern-screenshot/compare/v4.6.4...v4.6.5) (2025-07-05)
 
 
