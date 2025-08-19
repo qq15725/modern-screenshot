@@ -30,6 +30,7 @@ export async function imageToCanvas<T extends HTMLImageElement>(
     for (let i = 0; i < drawImageCount; i++) {
       await new Promise<void>((resolve) => {
         setTimeout(() => {
+          context2d?.clearRect(0, 0, canvas.width, canvas.height)
           drawImage()
           resolve()
         }, i + drawImageInterval)
