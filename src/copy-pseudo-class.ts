@@ -4,21 +4,21 @@ import { getDiffStyle } from './get-diff-style'
 import { uuid } from './utils'
 
 const pseudoClasses = [
-  ':before',
-  ':after',
-  // ':placeholder', TODO
+  '::before',
+  '::after',
+  // '::placeholder', TODO
 ]
 
 const scrollbarPseudoClasses = [
-  ':-webkit-scrollbar',
-  ':-webkit-scrollbar-button',
-  // ':-webkit-scrollbar:horizontal', TODO
-  ':-webkit-scrollbar-thumb',
-  ':-webkit-scrollbar-track',
-  ':-webkit-scrollbar-track-piece',
-  // ':-webkit-scrollbar:vertical', TODO
-  ':-webkit-scrollbar-corner',
-  ':-webkit-resizer',
+  '::-webkit-scrollbar',
+  '::-webkit-scrollbar-button',
+  // '::-webkit-scrollbar:horizontal', TODO
+  '::-webkit-scrollbar-thumb',
+  '::-webkit-scrollbar-track',
+  '::-webkit-scrollbar-track-piece',
+  // '::-webkit-scrollbar:vertical', TODO
+  '::-webkit-scrollbar-corner',
+  '::-webkit-resizer',
 ]
 
 export function copyPseudoClass<T extends HTMLElement | SVGElement>(
@@ -86,7 +86,7 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
       allClasses = []
       svgStyles.set(cssText, allClasses)
     }
-    allClasses.push(`.${klasses[0]}:${pseudoClass}`)
+    allClasses.push(`.${klasses[0]}${pseudoClass}`)
   }
 
   pseudoClasses.forEach(copyBy)
