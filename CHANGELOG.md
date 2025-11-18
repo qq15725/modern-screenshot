@@ -1,3 +1,12 @@
+## [4.6.7](https://github.com/qq15725/modern-screenshot/compare/v4.6.6...v4.6.7) (2025-11-18)
+
+
+### Bug Fixes
+
+* ensure WebKit scrollbar pseudo-classes are cloned correctly ([1d10f48](https://github.com/qq15725/modern-screenshot/commit/1d10f48e39b3d6dbb44b372209cdc18f1163380f))
+
+
+
 ## [4.6.6](https://github.com/qq15725/modern-screenshot/compare/v4.6.5...v4.6.6) (2025-08-19)
 
 
