@@ -11,12 +11,21 @@ import {
   isSVGElementNode,
 } from '../utils'
 
+// Matches href="..." or xlink:href="..." that are NOT data URLs
+// Internal #refs also need processing since the referenced symbol may be in another SVG in the document
+const SVG_EXTERNAL_RESOURCE_REGEX = /\bx?link:?href\s*=\s*["'](?!data:)[^"']+["']/i
+
+function svgHasExternalResources(svg: SVGElement): boolean {
+  return SVG_EXTERNAL_RESOURCE_REGEX.test(svg.innerHTML)
+}
+
 export async function domToForeignObjectSvg<T extends Node>(node: T, options?: Options): Promise<SVGElement>
 export async function domToForeignObjectSvg<T extends Node>(context: Context<T>): Promise<SVGElement>
 export async function domToForeignObjectSvg(node: any, options?: any): Promise<SVGElement> {
   const context = await orCreateContext(node, options)
 
-  if (isElementNode(context.node) && isSVGElementNode(context.node))
+  // Skip processing for SVG elements that don't have external resources to embed
+  if (isElementNode(context.node) && isSVGElementNode(context.node) && !svgHasExternalResources(context.node))
     return context.node
 
   const {
