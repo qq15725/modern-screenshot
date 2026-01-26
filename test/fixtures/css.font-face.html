@@ -1,0 +1,46 @@
+<style>
+  @import url(__BASE_URL__/font/font.css);
+
+  @font-face {
+    font-family: 'NoLayerFont';
+    font-style: normal;
+    font-weight: 400;
+    src: url(__BASE_URL__/font/SourceHanSansCN-Normal.woff) format('woff2');
+  }
+
+  .font-family-nolayer {
+    font-family: "NoLayerFont";
+  }
+
+  @layer base, font;
+
+  @layer base {
+    #root {
+      width: 380px;
+      font-size: 40px;
+    }
+  }
+
+  @layer font {
+    @font-face {
+      font-family: 'LayerFont';
+      font-style: normal;
+      font-weight: 400;
+      src: url(__BASE_URL__/font/latin.woff2) format('woff2');
+    }
+
+    .font-family-layer {
+      font-family: "LayerFont";
+    }
+  }
+</style>
+
+<template>
+  <div id="root">
+    <div class="font-family-nolayer">no layer</div>
+    <div class="font-family-layer">with layer</div>
+    <div class="">no font</div>
+  </div>
+</template>
+
+<skip-expect />
