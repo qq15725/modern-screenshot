@@ -17,6 +17,7 @@ export const isContext = <T extends Node>(value: any): value is Context<T> => va
 // CSS
 export const isCssFontFaceRule = (rule: CSSRule): rule is CSSFontFaceRule => rule.constructor.name === 'CSSFontFaceRule'
 export const isCSSImportRule = (rule: CSSRule): rule is CSSImportRule => rule.constructor.name === 'CSSImportRule'
+export const isLayerBlockRule = (rule: CSSRule): rule is CSSLayerBlockRule => rule.constructor.name === 'CSSLayerBlockRule'
 
 // Element
 export const isElementNode = (node: Node): node is Element => node.nodeType === 1 // Node.ELEMENT_NODE

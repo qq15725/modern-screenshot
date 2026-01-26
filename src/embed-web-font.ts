@@ -1,7 +1,7 @@
 import type { Context } from './context'
 import { hasCssUrl, replaceCssUrlToDataUrl, URL_RE } from './css-url'
 import { contextFetch } from './fetch'
-import { isCssFontFaceRule, isCSSImportRule, resolveUrl, splitFontFamily } from './utils'
+import { isCssFontFaceRule, isCSSImportRule, resolveUrl, splitFontFamily, isLayerBlockRule } from './utils'
 
 export async function embedWebFont<T extends Element>(
   clone: T,
@@ -78,7 +78,10 @@ export async function embedWebFont<T extends Element>(
       }),
     )
 
-    const cssRules = styleSheets.flatMap(styleSheet => Array.from(styleSheet.cssRules))
+    const cssRules: CSSRule[] = []
+    styleSheets.forEach((sheet) => {
+      unwrapCssLayers(sheet.cssRules, cssRules)
+    })
 
     cssRules
       .filter(cssRule => (
@@ -180,4 +183,21 @@ function filterPreferredFormat(
       }
     })
     : str
+}
+
+function unwrapCssLayers(
+  rules: CSSRuleList | readonly CSSRule[],
+  out: CSSRule[] = []
+): CSSRule[] {
+  
+  for (const rule of Array.from(rules)) {
+     if (isLayerBlockRule(rule)) {
+      out.push(...unwrapCssLayers(rule.cssRules))
+    } else if ('cssRules' in rule) {
+      unwrapCssLayers((rule as CSSGroupingRule).cssRules, out)
+    } else {
+      out.push(rule)
+    }
+  }
+  return out
 }
