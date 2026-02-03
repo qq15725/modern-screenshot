@@ -1,6 +1,15 @@
 import type { Context } from './context'
 import { contextFetch } from './fetch'
 
+function findDescendantById(root: ParentNode, id: string, selector = '[id]'): Element | null {
+  for (const element of root.querySelectorAll(selector)) {
+    if (element.id === id)
+      return element
+  }
+
+  return null
+}
+
 export function embedSvgUse<T extends SVGUseElement>(
   cloned: T,
   context: Context,
@@ -19,9 +28,9 @@ export function embedSvgUse<T extends SVGUseElement>(
     const query = `#${id}`
     const definition = context.shadowRoots.reduce(
       (res, root) => {
-        return res ?? root.querySelector(`svg ${query}`)
+        return res ?? findDescendantById(root, id, 'svg [id]')
       },
-      ownerDocument?.querySelector(`svg ${query}`),
+      ownerDocument ? findDescendantById(ownerDocument, id, 'svg [id]') : null,
     )
 
     if (svgUrl) {
@@ -30,7 +39,7 @@ export function embedSvgUse<T extends SVGUseElement>(
       // No need to set xlink:href since this is ignored when href is set
     }
 
-    if (svgDefsElement?.querySelector(query))
+    if (svgDefsElement && findDescendantById(svgDefsElement, id))
       return [] // already exists in defs
 
     if (definition) { // found local embedded definition
