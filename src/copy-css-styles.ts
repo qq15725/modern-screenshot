@@ -24,6 +24,7 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
   style.delete('d') // svg: d
   style.delete('content') // Safari shows pseudoelements if content is set
   if (isRoot) {
+    style.delete('position') // blank image output if position is absolute or fixed
     style.delete('margin-top')
     style.delete('margin-right')
     style.delete('margin-bottom')
