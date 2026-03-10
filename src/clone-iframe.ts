@@ -4,10 +4,10 @@ import { cloneNode } from './clone-node'
 export function cloneIframe<T extends HTMLIFrameElement>(
   iframe: T,
   context: Context,
-): HTMLIFrameElement | Promise<HTMLBodyElement> {
+): HTMLIFrameElement | Promise<HTMLElement> {
   try {
-    if (iframe?.contentDocument?.body) {
-      return cloneNode(iframe.contentDocument.body, context) as Promise<HTMLBodyElement>
+    if (iframe?.contentDocument?.documentElement) {
+      return cloneNode(iframe.contentDocument.documentElement, context) as Promise<HTMLElement>
     }
   }
   catch (error) {
