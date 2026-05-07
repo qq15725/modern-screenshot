@@ -32,6 +32,7 @@ export const isVideoElement = (node: Element): node is HTMLVideoElement => node.
 export const isCanvasElement = (node: Element): node is HTMLCanvasElement => node.tagName === 'CANVAS'
 export const isTextareaElement = (node: Element): node is HTMLTextAreaElement => node.tagName === 'TEXTAREA'
 export const isInputElement = (node: Element): node is HTMLInputElement => node.tagName === 'INPUT'
+export const isOptionElement = (node: Element): node is HTMLOptionElement => node.tagName === 'OPTION'
 export const isStyleElement = (node: Element): node is HTMLStyleElement => node.tagName === 'STYLE'
 export const isScriptElement = (node: Element): node is HTMLScriptElement => node.tagName === 'SCRIPT'
 export const isSelectElement = (node: Element): node is HTMLSelectElement => node.tagName === 'SELECT'
