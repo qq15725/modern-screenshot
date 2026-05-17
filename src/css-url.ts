@@ -13,15 +13,16 @@ export async function replaceCssUrlToDataUrl(
 
   for (const [rawUrl, url] of parseCssUrls(cssText, baseUrl)) {
     try {
+      const [resourceUrl, fragment] = splitUrlFragment(url)
       const dataUrl = await contextFetch(
         context,
         {
-          url,
+          url: resourceUrl,
           requestType: isImage ? 'image' : 'text',
           responseType: 'dataUrl',
         },
       )
-      cssText = cssText.replace(toRE(rawUrl), `$1${dataUrl}$3`)
+      cssText = cssText.replace(toRE(rawUrl), `$1${dataUrl}${fragment}$3`)
     }
     catch (error) {
       context.log.warn('Failed to fetch css data url', rawUrl, error)
@@ -47,6 +48,14 @@ function parseCssUrls(cssText: string, baseUrl: string | null): [string, string]
   })
 
   return result.filter(([url]) => !isDataUrl(url))
+}
+
+function splitUrlFragment(url: string): [string, string] {
+  const index = url.indexOf('#')
+  if (index < 0)
+    return [url, '']
+
+  return [url.slice(0, index), url.slice(index)]
 }
 
 function toRE(url: string): RegExp {
