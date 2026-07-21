@@ -55,6 +55,19 @@ export function copyCssStyles<T extends HTMLElement | SVGElement>(
     ) {
       style.set('text-overflow', ['clip', ''])
     }
+
+    // fix multi-line ellipsis
+    // Chromium reports the computed `display` of a `display: -webkit-box`
+    // element as `flow-root` while `-webkit-line-clamp` is clamping it, so
+    // the cloned node loses the box layout and renders unclamped
+    // https://github.com/qq15725/modern-screenshot/issues/121
+    if (
+      style.get('display')?.[0] === 'flow-root'
+      && style.get('-webkit-box-orient')?.[0] === 'vertical'
+      && (style.get('-webkit-line-clamp')?.[0] ?? 'none') !== 'none'
+    ) {
+      style.set('display', ['-webkit-box', style.get('display')![1]])
+    }
   }
 
   for (let len = clonedStyle.length, i = 0; i < len; i++) {
