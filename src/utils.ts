@@ -200,7 +200,7 @@ export function loadMedia(media: any, options?: LoadMediaOptions): Promise<any> 
       removeEventListeners?.()
     }
 
-    if (timeout) {
+    if (timeout != null) {
       timer = setTimeout(onResolve, timeout)
     }
 
