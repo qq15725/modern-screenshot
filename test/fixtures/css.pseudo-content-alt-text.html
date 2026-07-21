@@ -1,0 +1,19 @@
+<style>
+  #root {
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  /* generated-content alt text: the `/ "star"` part is never rendered by the browser, but was
+     leaking into the clone as a stray "/" (same root cause as Font Awesome's `content: var(--fa) / ""`). */
+  #root::before {
+    content: "★" / "star";
+    color: gold;
+  }
+</style>
+
+<template>
+  <div id="root"></div>
+</template>
+
+<skip-expect />
