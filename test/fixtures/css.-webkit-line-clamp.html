@@ -1,0 +1,17 @@
+<style>
+  #root {
+    width: 160px;
+    font-size: 16px;
+    line-height: 20px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+</style>
+
+<template>
+  <div id="root">This long text should be clamped to two lines and end with a multi-line ellipsis instead of rendering every line.</div>
+</template>
+
+<skip-expect />
