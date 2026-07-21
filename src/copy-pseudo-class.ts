@@ -43,6 +43,10 @@ export function copyPseudoClass<T extends HTMLElement | SVGElement>(
     addWordToFontFamilies?.(content)
 
     content = content
+      // Drop the pseudo-element's alt text (`content: "icon" / "alt"`), which is never rendered.
+      // Without this the `/` separator leaks into the clone — most visibly Font Awesome's
+      // `content: var(--fa) / ""`, which then renders the icon followed by a stray "/".
+      .replace(/ \/ .+$/, '')
       // TODO support css.counter
       .replace(/(')|(")|(counter\(.+\))/g, '')
 
