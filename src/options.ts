@@ -178,6 +178,14 @@ export interface Options {
      * default: false
      */
     restoreScrollPosition?: boolean
+
+    /**
+     * Move identical inline styles into shared CSS rules after embedding resources.
+     * This reduces SVG size for repeated content without deduplicating img sources.
+     *
+     * default: false (must be explicitly enabled, including when features is true)
+     */
+    compactStyles?: boolean
   }
 
   /**

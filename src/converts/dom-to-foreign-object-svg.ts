@@ -1,6 +1,7 @@
 import type { Context } from '../context'
 import type { Options } from '../options'
 import { cloneNode } from '../clone-node'
+import { compactStyles } from '../compact-styles'
 import { orCreateContext } from '../create-context'
 import { destroyContext } from '../destroy-context'
 import { embedNode } from '../embed-node'
@@ -85,6 +86,9 @@ export async function domToForeignObjectSvg(node: any, options?: any): Promise<S
   log.timeEnd('embed node')
 
   await onEmbedNode?.(clone)
+
+  if (context.isEnable('compactStyles'))
+    compactStyles(clone, svgStyleElement)
 
   const svg = createForeignObjectSvg(clone, context)
   svgDefsElement && svg.insertBefore(svgDefsElement, svg.children[0])

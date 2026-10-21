@@ -115,7 +115,7 @@ export async function createContext<T extends Node>(node: T, options?: Options &
 
     features,
     isEnable: (key: string): boolean => {
-      if (key === 'restoreScrollPosition') {
+      if (key === 'restoreScrollPosition' || key === 'compactStyles') {
         return typeof features === 'boolean' ? false : (features as any)[key] ?? false
       }
       if (typeof features === 'boolean') {

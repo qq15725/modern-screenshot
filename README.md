@@ -120,6 +120,17 @@ DOM to HTMLElement
 
 See the [options.ts](src/options.ts)
 
+For large lists with repeated styles or background images, opt in to a smaller SVG:
+
+```ts
+domToPng(node, { features: { compactStyles: true } })
+```
+
+This moves identical inline declaration blocks into shared CSS rules after resources
+are embedded. It is disabled by default, including when `features: true` is used.
+It does not merge `<img>` sources or change output dimensions.
+Custom hooks that depend on inline-style attributes or specificity should leave it disabled.
+
 ## Singleton context and web worker
 
 Quick screenshots per second by reusing context and web worker
